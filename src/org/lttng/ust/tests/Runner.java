@@ -3,28 +3,24 @@ package org.lttng.ust.tests;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class Runner implements Runnable {
 
     private final List<Worker> workers;
     private final List<Thread> workerThreads;
 
-    public Runner(int nbThreads, Logger log) throws SecurityException,
-            IOException {
+    public Runner(int nbThreads, int nbIter, Logger log)
+            throws SecurityException, IOException {
         Worker curWorker;
 
-        workers = new LinkedList<>();
-        workerThreads = new LinkedList<>();
+        this.workers = new LinkedList<>();
+        this.workerThreads = new LinkedList<>();
 
-        for (int i = 0; i < nbThreads; i++) {
-            curWorker = new Worker(i, log);
+        for (int id = 0; id < nbThreads; id++) {
+            curWorker = new Worker(id, nbIter, log);
             workers.add(curWorker);
-            workerThreads.add(new Thread(curWorker, "worker " + i));
+            workerThreads.add(new Thread(curWorker, "worker " + id));
         }
     }
 

@@ -7,23 +7,25 @@ import org.lttng.ust.LTTngUst;
 public class Worker implements Runnable {
 
     private final Logger log;
-    private final int threadNumber;
+    private final int threadId;
+    private final int nbIter;
     private long curCount;
 
-    public Worker(int nb, Logger log) {
+    public Worker(int threadId, int nbIter, Logger log) {
         this.log = log;
-        threadNumber = nb;
+        this.threadId = threadId;
+        this.nbIter = nbIter;
         curCount = 0;
     }
 
     @Override
     public void run() {
-        for (int i = 0; i < 10000; i++) {
-            // log.info("Thread " + threadNumber + ", iteration " + i);
-            LTTngUst.tracepointIntInt("Thread/Iteration", threadNumber, i);
+        for (int i = 0; i < nbIter; i++) {
+//            log.info("Thread " + threadId + ", iteration " + i);
+            LTTngUst.tracepointIntInt("Thread/Iteration", threadId, i);
             curCount += i;
         }
-        // System.out.println(curCount);
+//        System.out.println(curCount);
     }
 
 }
