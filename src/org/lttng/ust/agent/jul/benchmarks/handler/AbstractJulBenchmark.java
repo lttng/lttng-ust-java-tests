@@ -1,4 +1,4 @@
-package org.lttng.ust.agent.jul.benchmarks;
+package org.lttng.ust.agent.jul.benchmarks.handler;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +29,7 @@ public abstract class AbstractJulBenchmark {
     // Attributes
     // ------------------------------------------------------------------------
 
-    private Logger logger;
+    protected Logger logger;
     protected Handler handler;
 
     // ------------------------------------------------------------------------
@@ -48,8 +48,8 @@ public abstract class AbstractJulBenchmark {
 
     @After
     public void teardown() {
-        logger.removeHandler(handler);
         if (handler != null) {
+            logger.removeHandler(handler);
             handler.close();
         }
         handler = null;

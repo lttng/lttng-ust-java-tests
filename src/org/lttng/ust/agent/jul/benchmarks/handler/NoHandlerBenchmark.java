@@ -1,4 +1,4 @@
-package org.lttng.ust.agent.jul.benchmarks;
+package org.lttng.ust.agent.jul.benchmarks.handler;
 
 public class NoHandlerBenchmark extends AbstractJulBenchmark {
 
