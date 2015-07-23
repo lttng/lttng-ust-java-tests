@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>lttng-ust-agent-jul-benchmarks</name>
+	<name>ust-java-tests</name>
 	<comment></comment>
 	<projects>
 	</projects>

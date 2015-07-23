@@ -1,4 +1,4 @@
-package org.lttng.ust.agent.jul.benchmarks.handler;
+package org.lttng.ust.agent.benchmarks.jul.handler;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;

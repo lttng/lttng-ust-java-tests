@@ -1,4 +1,4 @@
-package org.lttng.ust.agent.jul.benchmarks.handler;
+package org.lttng.ust.agent.benchmarks.jul.handler;
 
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;

@@ -1,4 +1,4 @@
-package org.lttng.ust.agent.jul.benchmarks.handler.lttng.old;
+package org.lttng.ust.agent.benchmarks.jul.handler.lttng.old;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -9,24 +9,23 @@ import java.lang.reflect.Field;
 import org.junit.After;
 import org.junit.Before;
 import org.lttng.ust.agent.LTTngAgent;
-import org.lttng.ust.agent.jul.LTTngJUL;
-import org.lttng.ust.agent.jul.LTTngLogHandler;
-import org.lttng.ust.agent.jul.benchmarks.handler.AbstractJulBenchmark;
-import org.lttng.ust.agent.jul.benchmarks.utils.LttngSessionControl;
+import org.lttng.ust.agent.benchmarks.jul.handler.AbstractJulBenchmark;
+import org.lttng.ust.agent.jul.LttngLogHandler;
+import org.lttng.ust.agent.utils.LttngSessionControl;
+import org.lttng.ust.agent.utils.LttngSessionControl.Domain;
 
 @SuppressWarnings("deprecation")
 public class OldLttngJulHandlerTracingEnabledBenchmark extends AbstractJulBenchmark {
 
-    private LTTngAgent agent;
-    private LTTngLogHandler oldHandler;
+    private LttngLogHandler agentHandler;
 
     @Before
     public void testSetup() throws IOException {
-        agent = LTTngAgent.getLTTngAgent();
+        LTTngAgent agentInstance = LTTngAgent.getLTTngAgent();
 
         /*
          * The "old API" works by attaching a handler managed by the agent to
-         * the root JUL logger. This causes problem here, because we use
+         * the root JUL logger. This causes problems here, because we use
          * logger.setUserParentHandler(false), which does not trigger the
          * handler as would be expected.
          *
@@ -34,21 +33,17 @@ public class OldLttngJulHandlerTracingEnabledBenchmark extends AbstractJulBenchm
          * it to our own logger here for the duration of the test.
          */
         try {
-            Field julRootField = LTTngAgent.class.getDeclaredField("julRoot");
-            julRootField.setAccessible(true);
-            LTTngJUL lf = (LTTngJUL) julRootField.get(null); // static field
+            Field julHandlerField = LTTngAgent.class.getDeclaredField("julHandler");
+            julHandlerField.setAccessible(true);
+            agentHandler = (LttngLogHandler) julHandlerField.get(agentInstance);
 
-            Field handlerField = LTTngJUL.class.getDeclaredField("handler");
-            handlerField.setAccessible(true);
-            oldHandler = (LTTngLogHandler) handlerField.get(lf);
-
-            logger.addHandler(oldHandler);
+            logger.addHandler(agentHandler);
 
         } catch (ReflectiveOperationException e) {
             fail();
         }
 
-        assertTrue(LttngSessionControl.setupJulSessionAllEvents());
+        assertTrue(LttngSessionControl.setupSessionAllEvents(null, Domain.JUL));
     }
 
     @After
@@ -56,7 +51,7 @@ public class OldLttngJulHandlerTracingEnabledBenchmark extends AbstractJulBenchm
         assertTrue(LttngSessionControl.stopSession());
         assertTrue(LttngSessionControl.destroySession());
 
-        logger.removeHandler(oldHandler);
-        agent.dispose();
+        logger.removeHandler(agentHandler);
+        LTTngAgent.dispose();
     }
 }
