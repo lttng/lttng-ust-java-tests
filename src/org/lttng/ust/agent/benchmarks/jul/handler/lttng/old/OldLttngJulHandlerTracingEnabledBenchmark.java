@@ -48,8 +48,8 @@ public class OldLttngJulHandlerTracingEnabledBenchmark extends AbstractJulBenchm
 
     @After
     public void testTeardown() {
-        assertTrue(LttngSessionControl.stopSession());
-        assertTrue(LttngSessionControl.destroySession());
+        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(LttngSessionControl.destroySession(null));
 
         logger.removeHandler(agentHandler);
         LTTngAgent.dispose();

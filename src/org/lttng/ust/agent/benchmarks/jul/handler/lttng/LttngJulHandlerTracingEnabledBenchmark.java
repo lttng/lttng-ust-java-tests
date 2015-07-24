@@ -22,7 +22,7 @@ public class LttngJulHandlerTracingEnabledBenchmark extends AbstractJulBenchmark
 
     @After
     public void testTeardown() {
-        assertTrue(LttngSessionControl.stopSession());
-        assertTrue(LttngSessionControl.destroySession());
+        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(LttngSessionControl.destroySession(null));
     }
 }
