@@ -134,7 +134,7 @@ public class LttngSession implements AutoCloseable {
      * @return The output of Babeltrace on the session's current trace
      */
     public List<String> view() {
-        return TestUtils.getOutputFromCommand(Arrays.asList("lttng", "view", sessionName));
+        return MiscTestUtils.getOutputFromCommand(Arrays.asList("lttng", "view", sessionName));
     }
 
     /**

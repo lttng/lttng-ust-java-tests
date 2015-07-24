@@ -11,13 +11,13 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.lttng.ust.agent.integration.common.MultiSessionTest;
+import org.lttng.ust.agent.integration.EnabledEventsTestBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
-import org.lttng.ust.agent.utils.TestUtils;
+import org.lttng.ust.agent.utils.MiscTestUtils;
 
-public class JulMultiSessionTest extends MultiSessionTest {
+public class JulEnabledEventsTest extends EnabledEventsTestBase {
 
     private static final Domain DOMAIN = Domain.JUL;
 
@@ -29,8 +29,8 @@ public class JulMultiSessionTest extends MultiSessionTest {
     @BeforeClass
     public static void julClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(TestUtils.checkForJulLibrary());
-        assumeTrue(TestUtils.checkForLttngTools(Domain.JUL));
+        assumeTrue(MiscTestUtils.checkForJulLibrary());
+        assumeTrue(MiscTestUtils.checkForLttngTools(Domain.JUL));
 
         LttngSession.destroyAllSessions();
     }
@@ -55,12 +55,10 @@ public class JulMultiSessionTest extends MultiSessionTest {
         handlerA = new LttngLogHandler();
         handlerB = new LttngLogHandler();
         handlerC = new LttngLogHandler();
-        handlerD = new LttngLogHandler();
 
         loggerA.addHandler((Handler) handlerA);
         loggerB.addHandler((Handler) handlerB);
         loggerC.addHandler((Handler) handlerC);
-        loggerD.addHandler((Handler) handlerD);
     }
 
     @After
@@ -68,7 +66,6 @@ public class JulMultiSessionTest extends MultiSessionTest {
         loggerA.removeHandler((Handler) handlerA);
         loggerB.removeHandler((Handler) handlerB);
         loggerC.removeHandler((Handler) handlerC);
-        loggerD.removeHandler((Handler) handlerD);
 
         loggerA = null;
         loggerB = null;

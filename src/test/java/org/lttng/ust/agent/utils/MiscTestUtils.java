@@ -14,9 +14,9 @@ import org.lttng.ust.agent.utils.LttngSession.Domain;
 /**
  * Utility methods to help with UST-Java tests
  */
-public final class TestUtils {
+public final class MiscTestUtils {
 
-    private TestUtils() {}
+    private MiscTestUtils() {}
 
     /**
      * Check the the JUL native library is available, effectively allowing LTTng
@@ -96,7 +96,7 @@ public final class TestUtils {
 
 
     static List<String> getOutputFromCommand(List<String> command) {
-        return TestUtils.getOutputFromCommand(true, command);
+        return MiscTestUtils.getOutputFromCommand(true, command);
     }
 
     static List<String> getOutputFromCommand(boolean print, List<String> command) {

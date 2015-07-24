@@ -20,7 +20,7 @@ import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.LTTngAgent;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
-import org.lttng.ust.agent.utils.TestUtils;
+import org.lttng.ust.agent.utils.MiscTestUtils;
 
 @SuppressWarnings("deprecation")
 public class JulLegacyApiTest {
@@ -38,8 +38,8 @@ public class JulLegacyApiTest {
     @BeforeClass
     public static void julClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(TestUtils.checkForJulLibrary());
-        assumeTrue(TestUtils.checkForLttngTools(Domain.JUL));
+        assumeTrue(MiscTestUtils.checkForJulLibrary());
+        assumeTrue(MiscTestUtils.checkForLttngTools(Domain.JUL));
 
         LttngSession.destroyAllSessions();
     }

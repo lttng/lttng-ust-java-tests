@@ -1,4 +1,4 @@
-package org.lttng.ust.agent.integration.common;
+package org.lttng.ust.agent.integration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -16,7 +16,7 @@ import org.lttng.ust.agent.utils.LttngSession.Domain;
 /**
  * Tests with multiple concurrent tracing sessions
  */
-public abstract class MultiSessionTest {
+public abstract class MultiSessionTestBase {
 
     protected static final String EVENT_NAME_A = "EventA";
     protected static final String EVENT_NAME_B = "EventAB";

@@ -11,13 +11,13 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.lttng.ust.agent.integration.common.EnabledEventsTest;
+import org.lttng.ust.agent.integration.EnabledEventsTestBase;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
-import org.lttng.ust.agent.utils.TestUtils;
+import org.lttng.ust.agent.utils.MiscTestUtils;
 
-public class Log4jEnabledEventsTest extends EnabledEventsTest {
+public class Log4jEnabledEventsTest extends EnabledEventsTestBase {
 
     private static final Domain DOMAIN = Domain.LOG4J;
 
@@ -29,8 +29,8 @@ public class Log4jEnabledEventsTest extends EnabledEventsTest {
     @BeforeClass
     public static void log4jClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(TestUtils.checkForLog4jLibrary());
-        assumeTrue(TestUtils.checkForLttngTools(Domain.LOG4J));
+        assumeTrue(MiscTestUtils.checkForLog4jLibrary());
+        assumeTrue(MiscTestUtils.checkForLttngTools(Domain.LOG4J));
 
         LttngSession.destroyAllSessions();
     }

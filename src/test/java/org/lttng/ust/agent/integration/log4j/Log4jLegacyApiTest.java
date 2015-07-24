@@ -20,7 +20,7 @@ import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.LTTngAgent;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
-import org.lttng.ust.agent.utils.TestUtils;
+import org.lttng.ust.agent.utils.MiscTestUtils;
 
 @SuppressWarnings("deprecation")
 public class Log4jLegacyApiTest {
@@ -38,8 +38,8 @@ public class Log4jLegacyApiTest {
     @BeforeClass
     public static void classSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(TestUtils.checkForLog4jLibrary());
-        assumeTrue(TestUtils.checkForLttngTools(Domain.LOG4J));
+        assumeTrue(MiscTestUtils.checkForLog4jLibrary());
+        assumeTrue(MiscTestUtils.checkForLttngTools(Domain.LOG4J));
 
         LttngSession.destroyAllSessions();
     }

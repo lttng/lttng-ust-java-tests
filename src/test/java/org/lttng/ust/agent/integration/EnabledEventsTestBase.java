@@ -1,4 +1,4 @@
-package org.lttng.ust.agent.integration.common;
+package org.lttng.ust.agent.integration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -13,7 +13,7 @@ import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 
-public abstract class EnabledEventsTest {
+public abstract class EnabledEventsTestBase {
 
     protected static final String EVENT_NAME_A = "EventA";
     protected static final String EVENT_NAME_B = "EventAB";
