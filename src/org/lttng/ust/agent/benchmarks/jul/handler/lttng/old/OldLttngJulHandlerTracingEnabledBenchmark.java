@@ -3,7 +3,6 @@ package org.lttng.ust.agent.benchmarks.jul.handler.lttng.old;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 
 import org.junit.After;
@@ -11,16 +10,17 @@ import org.junit.Before;
 import org.lttng.ust.agent.LTTngAgent;
 import org.lttng.ust.agent.benchmarks.jul.handler.AbstractJulBenchmark;
 import org.lttng.ust.agent.jul.LttngLogHandler;
-import org.lttng.ust.agent.utils.LttngSessionControl;
-import org.lttng.ust.agent.utils.LttngSessionControl.Domain;
+import org.lttng.ust.agent.utils.LttngSession;
+import org.lttng.ust.agent.utils.LttngSession.Domain;
 
 @SuppressWarnings("deprecation")
 public class OldLttngJulHandlerTracingEnabledBenchmark extends AbstractJulBenchmark {
 
+    private LttngSession session;
     private LttngLogHandler agentHandler;
 
     @Before
-    public void testSetup() throws IOException {
+    public void testSetup() {
         LTTngAgent agentInstance = LTTngAgent.getLTTngAgent();
 
         /*
@@ -43,13 +43,15 @@ public class OldLttngJulHandlerTracingEnabledBenchmark extends AbstractJulBenchm
             fail();
         }
 
-        assertTrue(LttngSessionControl.setupSessionAllEvents(null, Domain.JUL));
+        session = new LttngSession(null, Domain.JUL);
+        assertTrue(session.enableAllEvents());
+        assertTrue(session.start());
     }
 
     @After
     public void testTeardown() {
-        assertTrue(LttngSessionControl.stopSession(null));
-        assertTrue(LttngSessionControl.destroySession(null));
+        assertTrue(session.stop());
+        session.close();
 
         logger.removeHandler(agentHandler);
         LTTngAgent.dispose();

@@ -8,21 +8,25 @@ import org.junit.After;
 import org.junit.Before;
 import org.lttng.ust.agent.benchmarks.jul.handler.AbstractJulBenchmark;
 import org.lttng.ust.agent.jul.LttngLogHandler;
-import org.lttng.ust.agent.utils.LttngSessionControl;
-import org.lttng.ust.agent.utils.LttngSessionControl.Domain;
+import org.lttng.ust.agent.utils.LttngSession;
+import org.lttng.ust.agent.utils.LttngSession.Domain;
 
 public class LttngJulHandlerTracingDisabledBenchmark extends AbstractJulBenchmark {
+
+    private LttngSession session;
 
     @Before
     public void testSetup() throws IOException {
         handler = new LttngLogHandler();
 
-        assertTrue(LttngSessionControl.setupSession(null, Domain.JUL));
+        session = new LttngSession(null, Domain.JUL);
+        assertTrue(session.enableEvents("non-event"));
+        assertTrue(session.start());
     }
 
     @After
     public void testTeardown() {
-        assertTrue(LttngSessionControl.stopSession(null));
-        assertTrue(LttngSessionControl.destroySession(null));
+        assertTrue(session.stop());
+        session.close();
     }
 }

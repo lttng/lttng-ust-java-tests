@@ -3,7 +3,6 @@ package org.lttng.ust.agent.integration.log4j;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
@@ -14,8 +13,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.ust.agent.integration.common.EnabledEventsTest;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
-import org.lttng.ust.agent.utils.LttngSessionControl;
-import org.lttng.ust.agent.utils.LttngSessionControl.Domain;
+import org.lttng.ust.agent.utils.LttngSession;
+import org.lttng.ust.agent.utils.LttngSession.Domain;
+import org.lttng.ust.agent.utils.TestUtils;
 
 public class Log4jEnabledEventsTest extends EnabledEventsTest {
 
@@ -29,25 +29,13 @@ public class Log4jEnabledEventsTest extends EnabledEventsTest {
     @BeforeClass
     public static void julClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        try {
-            LttngLogAppender testHandler = new LttngLogAppender();
-            testHandler.close();
-        } catch (SecurityException | IOException e) {
-            assumeTrue(false);
-        }
-
-        boolean ret1 = LttngSessionControl.setupSession(null, DOMAIN);
-        boolean ret2 = LttngSessionControl.stopSession(null);
-        /* "lttng view" also tests that Babeltrace is installed and working */
-        List<String> contents = LttngSessionControl.viewSession(null);
-        boolean ret3 = LttngSessionControl.destroySession(null);
-        assumeTrue(ret1 && ret2 && ret3);
-        assumeTrue(contents.isEmpty());
+        assumeTrue(TestUtils.checkForLog4jLibrary());
+        assumeTrue(TestUtils.checkForLttngTools(Domain.LOG4J));
     }
 
     @AfterClass
     public static void julClassCleanup() {
-        LttngSessionControl.deleteAllTracee();
+        LttngSession.deleteAllTracee();
     }
 
     @Before
@@ -92,23 +80,9 @@ public class Log4jEnabledEventsTest extends EnabledEventsTest {
 
     @Override
     protected void sendEventsToLoggers() {
-        send10Events(loggerA);
-        send10Events(loggerB);
-        send10Events(loggerC);
-        send10Events(loggerD);
-    }
-
-    static void send10Events(Logger logger) {
-        // Levels/priorities are DEBUG, ERROR, FATAL, INFO, TRACE, WARN
-        logger.debug("Debug message. Lost among so many.");
-        logger.debug("Debug message with a throwable", new IOException());
-        logger.error("Error messsage. This might be bad.");
-        logger.error("Error message with a throwable", new IOException());
-        logger.fatal("A fatal message. You are already dead.");
-        logger.info("A info message. Lol, who cares.");
-        logger.trace("A trace message. No, no *that* trace");
-        logger.warn("A warn message. Yellow underline.");
-        logger.log(Level.DEBUG, "A debug message using .log()");
-        logger.log(Level.ERROR, "A error message using .log()");
+        Log4jTestUtils.send10Events(loggerA);
+        Log4jTestUtils.send10Events(loggerB);
+        Log4jTestUtils.send10Events(loggerC);
+        Log4jTestUtils.send10Events(loggerD);
     }
 }

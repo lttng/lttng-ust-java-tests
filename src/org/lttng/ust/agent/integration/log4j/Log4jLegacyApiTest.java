@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -19,9 +18,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.LTTngAgent;
-import org.lttng.ust.agent.log4j.LttngLogAppender;
-import org.lttng.ust.agent.utils.LttngSessionControl;
-import org.lttng.ust.agent.utils.LttngSessionControl.Domain;
+import org.lttng.ust.agent.utils.LttngSession;
+import org.lttng.ust.agent.utils.LttngSession.Domain;
+import org.lttng.ust.agent.utils.TestUtils;
 
 @SuppressWarnings("deprecation")
 public class Log4jLegacyApiTest {
@@ -31,31 +30,21 @@ public class Log4jLegacyApiTest {
     private static final String EVENT_NAME_A = "EventA";
     private static final String EVENT_NAME_B = "EventB";
 
+    private LttngSession session;
+
     private Logger loggerA;
     private Logger loggerB;
 
     @BeforeClass
     public static void classSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        try {
-            LttngLogAppender testAppender = new LttngLogAppender();
-            testAppender.close();
-        } catch (SecurityException | IOException e) {
-            assumeTrue(false);
-        }
-
-        boolean ret1 = LttngSessionControl.setupSession(null, DOMAIN);
-        boolean ret2 = LttngSessionControl.stopSession(null);
-        /* "lttng view" also tests that Babeltrace is installed and working */
-        List<String> contents = LttngSessionControl.viewSession(null);
-        boolean ret3 = LttngSessionControl.destroySession(null);
-        assumeTrue(ret1 && ret2 && ret3);
-        assumeTrue(contents.isEmpty());
+        assumeTrue(TestUtils.checkForLog4jLibrary());
+        assumeTrue(TestUtils.checkForLttngTools(Domain.LOG4J));
     }
 
     @AfterClass
     public static void classCleanup() {
-        LttngSessionControl.deleteAllTracee();
+        LttngSession.deleteAllTracee();
     }
 
     @Before
@@ -66,12 +55,13 @@ public class Log4jLegacyApiTest {
 
         loggerA.setLevel(Level.ALL);
         loggerB.setLevel(Level.ALL);
+
+        session = new LttngSession(null, DOMAIN);
     }
 
     @After
     public void tearDown() {
-        /* In case the test fails before destroying the session */
-        LttngSessionControl.tryDestroySession(null);
+        session.close();
 
         LTTngAgent.dispose();
 
@@ -81,18 +71,16 @@ public class Log4jLegacyApiTest {
 
     @Test
     public void testNoEvents() {
-        assertTrue(LttngSessionControl.setupSession(null, DOMAIN));
+        assertTrue(session.start());
 
-        Log4jEnabledEventsTest.send10Events(loggerA);
-        Log4jEnabledEventsTest.send10Events(loggerB);
+        Log4jTestUtils.send10Events(loggerA);
+        Log4jTestUtils.send10Events(loggerB);
 
-        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(session.stop());
 
-        List<String> output = LttngSessionControl.viewSession(null);
+        List<String> output = session.view();
         assertNotNull(output);
         assertTrue(output.isEmpty());
-
-        assertTrue(LttngSessionControl.destroySession(null));
 
         ILttngHandler handler = getAgentHandler();
         assertEquals(0, handler.getEventCount());
@@ -100,18 +88,17 @@ public class Log4jLegacyApiTest {
 
     @Test
     public void testAllEvents() {
-        assertTrue(LttngSessionControl.setupSessionAllEvents(null, DOMAIN));
+        assertTrue(session.enableAllEvents());
+        assertTrue(session.start());
 
-        Log4jEnabledEventsTest.send10Events(loggerA);
-        Log4jEnabledEventsTest.send10Events(loggerB);
+        Log4jTestUtils.send10Events(loggerA);
+        Log4jTestUtils.send10Events(loggerB);
 
-        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(session.stop());
 
-        List<String> output = LttngSessionControl.viewSession(null);
+        List<String> output = session.view();
         assertNotNull(output);
         assertEquals(20, output.size());
-
-        assertTrue(LttngSessionControl.destroySession(null));
 
         ILttngHandler handler = getAgentHandler();
         assertEquals(20, handler.getEventCount());
@@ -119,19 +106,17 @@ public class Log4jLegacyApiTest {
 
     @Test
     public void testSomeEvents() {
-        assertTrue(LttngSessionControl.setupSession(null, DOMAIN,
-                EVENT_NAME_A));
+        assertTrue(session.enableEvents(EVENT_NAME_A));
+        assertTrue(session.start());
 
-        Log4jEnabledEventsTest.send10Events(loggerA);
-        Log4jEnabledEventsTest.send10Events(loggerB);
+        Log4jTestUtils.send10Events(loggerA);
+        Log4jTestUtils.send10Events(loggerB);
 
-        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(session.stop());
 
-        List<String> output = LttngSessionControl.viewSession(null);
+        List<String> output = session.view();
         assertNotNull(output);
         assertEquals(10, output.size());
-
-        assertTrue(LttngSessionControl.destroySession(null));
 
         ILttngHandler handler = getAgentHandler();
         assertEquals(10, handler.getEventCount());
@@ -143,7 +128,7 @@ public class Log4jLegacyApiTest {
      *
      * @return The agent's Log4j handler
      */
-    private ILttngHandler getAgentHandler() {
+    private static ILttngHandler getAgentHandler() {
         try {
             Field log4jAppenderField = LTTngAgent.class.getDeclaredField("log4jAppender");
             log4jAppenderField.setAccessible(true);

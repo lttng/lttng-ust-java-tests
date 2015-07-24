@@ -10,8 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.lttng.ust.agent.ILttngHandler;
-import org.lttng.ust.agent.utils.LttngSessionControl;
-import org.lttng.ust.agent.utils.LttngSessionControl.Domain;
+import org.lttng.ust.agent.utils.LttngSession;
+import org.lttng.ust.agent.utils.LttngSession.Domain;
 
 public abstract class EnabledEventsTest {
 
@@ -19,6 +19,8 @@ public abstract class EnabledEventsTest {
     protected static final String EVENT_NAME_B = "EventAB";
     protected static final String EVENT_NAME_C = "EventABC";
     protected static final String EVENT_NAME_D = "EventABCD";
+
+    private LttngSession session;
 
     /* Fields defined by the sub-class */
     protected ILttngHandler handlerA;
@@ -31,13 +33,12 @@ public abstract class EnabledEventsTest {
 
     @Before
     public void testSetup() {
-
+        session = new LttngSession(null, getDomain());
     }
 
     @After
     public void testTeardown() {
-        /* In case the test fails before destroying the session */
-        LttngSessionControl.tryDestroySession(null);
+        session.close();
 
         handlerA.close();
         handlerB.close();
@@ -55,17 +56,15 @@ public abstract class EnabledEventsTest {
      */
     @Test
     public void testNoEvents() {
-        assertTrue(LttngSessionControl.setupSession(null, getDomain()));
+        assertTrue(session.start());
 
         sendEventsToLoggers();
 
-        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(session.stop());
 
-        List<String> output = LttngSessionControl.viewSession(null);
+        List<String> output = session.view();
         assertNotNull(output);
         assertTrue(output.isEmpty());
-
-        assertTrue(LttngSessionControl.destroySession(null));
 
         assertEquals(0, handlerA.getEventCount());
         assertEquals(0, handlerB.getEventCount());
@@ -78,17 +77,16 @@ public abstract class EnabledEventsTest {
      */
     @Test
     public void testAllEvents() {
-        assertTrue(LttngSessionControl.setupSessionAllEvents(null, getDomain()));
+        assertTrue(session.enableAllEvents());
+        assertTrue(session.start());
 
         sendEventsToLoggers();
 
-        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(session.stop());
 
-        List<String> output = LttngSessionControl.viewSession(null);
+        List<String> output = session.view();
         assertNotNull(output);
         assertEquals(30, output.size()); // loggerD has no handler attached
-
-        assertTrue(LttngSessionControl.destroySession(null));
 
         assertEquals(10, handlerA.getEventCount());
         assertEquals(10, handlerB.getEventCount());
@@ -101,18 +99,16 @@ public abstract class EnabledEventsTest {
      */
     @Test
     public void testSomeEvents() {
-        assertTrue(LttngSessionControl.setupSession(null, getDomain(),
-                EVENT_NAME_A, EVENT_NAME_C, EVENT_NAME_D));
+        assertTrue(session.enableEvents(EVENT_NAME_A, EVENT_NAME_C, EVENT_NAME_D));
+        assertTrue(session.start());
 
         sendEventsToLoggers();
 
-        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(session.stop());
 
-        List<String> output = LttngSessionControl.viewSession(null);
+        List<String> output = session.view();
         assertNotNull(output);
         assertEquals(20, output.size());
-
-        assertTrue(LttngSessionControl.destroySession(null));
 
         assertEquals(10, handlerA.getEventCount());
         assertEquals(0, handlerB.getEventCount());
@@ -125,19 +121,17 @@ public abstract class EnabledEventsTest {
      */
     @Test
     public void testAllEventsAndSome() {
-        assertTrue(LttngSessionControl.setupSessionAllEvents(null, getDomain()));
-        assertTrue(LttngSessionControl.enableEvents(null, getDomain(),
-                EVENT_NAME_A, EVENT_NAME_B));
+        assertTrue(session.enableAllEvents());
+        assertTrue(session.enableEvents(EVENT_NAME_A, EVENT_NAME_B));
+        assertTrue(session.start());
 
         sendEventsToLoggers();
 
-        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(session.stop());
 
-        List<String> output = LttngSessionControl.viewSession(null);
+        List<String> output = session.view();
         assertNotNull(output);
         assertEquals(30, output.size());
-
-        assertTrue(LttngSessionControl.destroySession(null));
 
         assertEquals(10, handlerA.getEventCount());
         assertEquals(10, handlerB.getEventCount());
@@ -150,21 +144,17 @@ public abstract class EnabledEventsTest {
      */
     @Test
     public void testSomeEventsAfterDisabling() {
-        assertTrue(LttngSessionControl.setupSession(null, getDomain(),
-                EVENT_NAME_A, EVENT_NAME_C, EVENT_NAME_D));
-
-        assertTrue(LttngSessionControl.disableEvents(null, getDomain(),
-                EVENT_NAME_C));
+        assertTrue(session.enableEvents(EVENT_NAME_A, EVENT_NAME_C, EVENT_NAME_D));
+        assertTrue(session.disableEvents(EVENT_NAME_C));
+        assertTrue(session.start());
 
         sendEventsToLoggers();
 
-        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(session.stop());
 
-        List<String> output = LttngSessionControl.viewSession(null);
+        List<String> output = session.view();
         assertNotNull(output);
         assertEquals(10, output.size());
-
-        assertTrue(LttngSessionControl.destroySession(null));
 
         assertEquals(10, handlerA.getEventCount());
         assertEquals(0, handlerB.getEventCount());
@@ -177,18 +167,17 @@ public abstract class EnabledEventsTest {
      */
     @Test
     public void testEventPrefix() {
-        assertTrue(LttngSessionControl.setupSession(null, getDomain(),
-                "EventAB*")); // should match event/loggers B and C, but not A.
+        // should match event/loggers B and C, but not A.
+        assertTrue(session.enableEvents("EventAB*"));
+        assertTrue(session.start());
 
         sendEventsToLoggers();
 
-        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(session.stop());
 
-        List<String> output = LttngSessionControl.viewSession(null);
+        List<String> output = session.view();
         assertNotNull(output);
         assertEquals(20, output.size());
-
-        assertTrue(LttngSessionControl.destroySession(null));
 
         assertEquals(0, handlerA.getEventCount());
         assertEquals(10, handlerB.getEventCount());
@@ -202,18 +191,17 @@ public abstract class EnabledEventsTest {
      */
     @Test
     public void testEventPrefixOverlapping() {
-        assertTrue(LttngSessionControl.setupSession(null, getDomain(),
-                "EventAB*", "EventABC*")); // should still match B and C
+        // should still match B and C
+        assertTrue(session.enableEvents("EventAB*", "EventABC*"));
+        assertTrue(session.start());
 
         sendEventsToLoggers();
 
-        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(session.stop());
 
-        List<String> output = LttngSessionControl.viewSession(null);
+        List<String> output = session.view();
         assertNotNull(output);
         assertEquals(20, output.size());
-
-        assertTrue(LttngSessionControl.destroySession(null));
 
         assertEquals(0, handlerA.getEventCount());
         assertEquals(10, handlerB.getEventCount());
@@ -226,19 +214,17 @@ public abstract class EnabledEventsTest {
      */
     @Test
     public void testAllEventsAndPrefix() {
-        assertTrue(LttngSessionControl.setupSessionAllEvents(null, getDomain()));
-        assertTrue(LttngSessionControl.enableEvents(null, getDomain(),
-                "EventAB*")); // should match B and C
+        assertTrue(session.enableAllEvents());
+        assertTrue(session.enableEvents("EventAB*"));
+        assertTrue(session.start());
 
         sendEventsToLoggers();
 
-        assertTrue(LttngSessionControl.stopSession(null));
+        assertTrue(session.stop());
 
-        List<String> output = LttngSessionControl.viewSession(null);
+        List<String> output = session.view();
         assertNotNull(output);
         assertEquals(30, output.size());
-
-        assertTrue(LttngSessionControl.destroySession(null));
 
         assertEquals(10, handlerA.getEventCount());
         assertEquals(10, handlerB.getEventCount());

@@ -3,7 +3,6 @@ package org.lttng.ust.agent.integration.jul;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,8 +13,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.ust.agent.integration.common.EnabledEventsTest;
 import org.lttng.ust.agent.jul.LttngLogHandler;
-import org.lttng.ust.agent.utils.LttngSessionControl;
-import org.lttng.ust.agent.utils.LttngSessionControl.Domain;
+import org.lttng.ust.agent.utils.LttngSession;
+import org.lttng.ust.agent.utils.LttngSession.Domain;
+import org.lttng.ust.agent.utils.TestUtils;
 
 public class JulEnabledEventsTest extends EnabledEventsTest {
 
@@ -29,25 +29,13 @@ public class JulEnabledEventsTest extends EnabledEventsTest {
     @BeforeClass
     public static void julClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        try {
-            LttngLogHandler testHandler = new LttngLogHandler();
-            testHandler.close();
-        } catch (SecurityException | IOException e) {
-            assumeTrue(false);
-        }
-
-        boolean ret1 = LttngSessionControl.setupSession(null, DOMAIN);
-        boolean ret2 = LttngSessionControl.stopSession(null);
-        /* "lttng view" also tests that Babeltrace is installed and working */
-        List<String> contents = LttngSessionControl.viewSession(null);
-        boolean ret3 = LttngSessionControl.destroySession(null);
-        assumeTrue(ret1 && ret2 && ret3);
-        assumeTrue(contents.isEmpty());
+        assumeTrue(TestUtils.checkForJulLibrary());
+        assumeTrue(TestUtils.checkForLttngTools(Domain.JUL));
     }
 
     @AfterClass
     public static void julClassCleanup() {
-        LttngSessionControl.deleteAllTracee();
+        LttngSession.deleteAllTracee();
     }
 
     @Before
@@ -92,26 +80,9 @@ public class JulEnabledEventsTest extends EnabledEventsTest {
 
     @Override
     protected void sendEventsToLoggers() {
-        send10Events(loggerA);
-        send10Events(loggerB);
-        send10Events(loggerC);
-        send10Events(loggerD);
-    }
-
-    static void send10Events(Logger logger) {
-        String a = new String("a");
-        Object[] params = { a, new String("b"), new Object() };
-
-        // Levels are FINE, FINER, FINEST, INFO, SEVERE, WARNING
-        logger.fine("A fine level message");
-        logger.finer("A finer level message");
-        logger.finest("A finest level message");
-        logger.info("A info level message");
-        logger.severe("A severe level message");
-        logger.warning("A warning level message");
-        logger.warning("Another warning level message");
-        logger.log(Level.WARNING, "A warning message using Logger.log()");
-        logger.log(Level.INFO, "A message with one parameter", a);
-        logger.log(Level.INFO, "A message with parameters", params);
+        JulTestUtils.send10EventsTo(loggerA);
+        JulTestUtils.send10EventsTo(loggerB);
+        JulTestUtils.send10EventsTo(loggerC);
+        JulTestUtils.send10EventsTo(loggerD);
     }
 }
