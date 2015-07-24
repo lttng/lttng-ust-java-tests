@@ -1,25 +1,25 @@
-package org.lttng.ust.agent.integration.jul;
+package org.lttng.ust.agent.integration.log4j;
 
 import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Appender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.ust.agent.integration.common.EnabledEventsTest;
-import org.lttng.ust.agent.jul.LttngLogHandler;
+import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.LttngSessionControl;
 import org.lttng.ust.agent.utils.LttngSessionControl.Domain;
 
-public class JulEnabledEventsTest extends EnabledEventsTest {
+public class Log4jEnabledEventsTest extends EnabledEventsTest {
 
-    private static final Domain DOMAIN = Domain.JUL;
+    private static final Domain DOMAIN = Domain.LOG4J;
 
     private Logger loggerA;
     private Logger loggerB;
@@ -30,7 +30,7 @@ public class JulEnabledEventsTest extends EnabledEventsTest {
     public static void julClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
         try {
-            LttngLogHandler testHandler = new LttngLogHandler();
+            LttngLogAppender testHandler = new LttngLogAppender();
             testHandler.close();
         } catch (SecurityException | IOException e) {
             assumeTrue(false);
@@ -64,20 +64,20 @@ public class JulEnabledEventsTest extends EnabledEventsTest {
         loggerC.setLevel(Level.ALL);
         loggerD.setLevel(Level.ALL);
 
-        handlerA = new LttngLogHandler();
-        handlerB = new LttngLogHandler();
-        handlerC = new LttngLogHandler();
+        handlerA = new LttngLogAppender();
+        handlerB = new LttngLogAppender();
+        handlerC = new LttngLogAppender();
 
-        loggerA.addHandler((Handler) handlerA);
-        loggerB.addHandler((Handler) handlerB);
-        loggerC.addHandler((Handler) handlerC);
+        loggerA.addAppender((Appender) handlerA);
+        loggerB.addAppender((Appender) handlerB);
+        loggerC.addAppender((Appender) handlerC);
     }
 
     @After
     public void julTeardown() {
-        loggerA.removeHandler((Handler) handlerA);
-        loggerB.removeHandler((Handler) handlerB);
-        loggerC.removeHandler((Handler) handlerC);
+        loggerA.removeAppender((Appender) handlerA);
+        loggerB.removeAppender((Appender) handlerB);
+        loggerC.removeAppender((Appender) handlerC);
 
         loggerA = null;
         loggerB = null;
@@ -99,19 +99,16 @@ public class JulEnabledEventsTest extends EnabledEventsTest {
     }
 
     static void send10Events(Logger logger) {
-        String a = new String("a");
-        Object[] params = { a, new String("b"), new Object() };
-
-        // Levels are FINE, FINER, FINEST, INFO, SEVERE, WARNING
-        logger.fine("A fine level message");
-        logger.finer("A finer level message");
-        logger.finest("A finest level message");
-        logger.info("A info level message");
-        logger.severe("A severe level message");
-        logger.warning("A warning level message");
-        logger.warning("Another warning level message");
-        logger.log(Level.WARNING, "A warning message using Logger.log()");
-        logger.log(Level.INFO, "A message with one parameter", a);
-        logger.log(Level.INFO, "A message with parameters", params);
+        // Levels/priorities are DEBUG, ERROR, FATAL, INFO, TRACE, WARN
+        logger.debug("Debug message. Lost among so many.");
+        logger.debug("Debug message with a throwable", new IOException());
+        logger.error("Error messsage. This might be bad.");
+        logger.error("Error message with a throwable", new IOException());
+        logger.fatal("A fatal message. You are already dead.");
+        logger.info("A info message. Lol, who cares.");
+        logger.trace("A trace message. No, no *that* trace");
+        logger.warn("A warn message. Yellow underline.");
+        logger.log(Level.DEBUG, "A debug message using .log()");
+        logger.log(Level.ERROR, "A error message using .log()");
     }
 }

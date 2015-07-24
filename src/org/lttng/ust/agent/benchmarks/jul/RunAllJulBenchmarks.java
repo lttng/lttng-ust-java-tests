@@ -13,5 +13,5 @@ import org.junit.runners.Suite;
     org.lttng.ust.agent.benchmarks.jul.handler.lttng.old.OldLttngJulHandlerTracingDisabledBenchmark.class,
     org.lttng.ust.agent.benchmarks.jul.handler.lttng.old.OldLttngJulHandlerTracingEnabledBenchmark.class
 })
-public class RunAllBenchmarks {
+public class RunAllJulBenchmarks {
 }

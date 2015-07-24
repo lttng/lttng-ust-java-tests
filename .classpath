@@ -5,5 +5,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/lttng-ust-agent-jul"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/lttng-ust-agent-common"/>
+	<classpathentry kind="lib" path="/usr/share/java/log4j-1.2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/lttng-ust-agent-log4j"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
