@@ -40,6 +40,8 @@ public class JulLegacyApiTest {
         /* Skip tests if we can't find the JNI library or lttng-tools */
         assumeTrue(TestUtils.checkForJulLibrary());
         assumeTrue(TestUtils.checkForLttngTools(Domain.JUL));
+
+        LttngSession.destroyAllSessions();
     }
 
     @AfterClass

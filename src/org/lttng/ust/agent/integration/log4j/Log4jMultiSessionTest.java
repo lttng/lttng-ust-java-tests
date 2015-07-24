@@ -11,13 +11,13 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.lttng.ust.agent.integration.common.EnabledEventsTest;
+import org.lttng.ust.agent.integration.common.MultiSessionTest;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 import org.lttng.ust.agent.utils.TestUtils;
 
-public class Log4jEnabledEventsTest extends EnabledEventsTest {
+public class Log4jMultiSessionTest extends MultiSessionTest {
 
     private static final Domain DOMAIN = Domain.LOG4J;
 
@@ -42,6 +42,8 @@ public class Log4jEnabledEventsTest extends EnabledEventsTest {
 
     @Before
     public void log4jSetup() throws SecurityException, IOException {
+        // TODO Wipe all existing LTTng sessions?
+
         loggerA = Logger.getLogger(EVENT_NAME_A);
         loggerB = Logger.getLogger(EVENT_NAME_B);
         loggerC = Logger.getLogger(EVENT_NAME_C);
@@ -55,10 +57,12 @@ public class Log4jEnabledEventsTest extends EnabledEventsTest {
         handlerA = new LttngLogAppender();
         handlerB = new LttngLogAppender();
         handlerC = new LttngLogAppender();
+        handlerD = new LttngLogAppender();
 
         loggerA.addAppender((Appender) handlerA);
         loggerB.addAppender((Appender) handlerB);
         loggerC.addAppender((Appender) handlerC);
+        loggerD.addAppender((Appender) handlerD);
     }
 
     @After
@@ -66,6 +70,7 @@ public class Log4jEnabledEventsTest extends EnabledEventsTest {
         loggerA.removeAppender((Appender) handlerA);
         loggerB.removeAppender((Appender) handlerB);
         loggerC.removeAppender((Appender) handlerC);
+        loggerD.removeAppender((Appender) handlerD);
 
         loggerA = null;
         loggerB = null;

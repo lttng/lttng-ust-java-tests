@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     JulEnabledEventsTest.class,
-    JulLegacyApiTest.class
+    JulLegacyApiTest.class,
+    JulMultiSessionTest.class
 })
 public class AllTests {
 

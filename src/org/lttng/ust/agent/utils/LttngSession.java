@@ -138,6 +138,14 @@ public class LttngSession implements AutoCloseable {
     }
 
     /**
+     * Utility method to destroy all existing sessions. Useful when first
+     * setting up a test to make sure no existing session interferes.
+     */
+    public static void destroyAllSessions() {
+        executeCommand(Arrays.asList("lttng", "destroy", "-a"));
+    }
+
+    /**
      * Outside of the scope of lttng-tools, but this utility method can be used
      * to delete all traces currently under ~/lttng-traces/. This can be used by
      * tests to cleanup a trace they have created.

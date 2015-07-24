@@ -11,13 +11,13 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.lttng.ust.agent.integration.common.EnabledEventsTest;
+import org.lttng.ust.agent.integration.common.MultiSessionTest;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 import org.lttng.ust.agent.utils.TestUtils;
 
-public class JulEnabledEventsTest extends EnabledEventsTest {
+public class JulMultiSessionTest extends MultiSessionTest {
 
     private static final Domain DOMAIN = Domain.JUL;
 
@@ -55,10 +55,12 @@ public class JulEnabledEventsTest extends EnabledEventsTest {
         handlerA = new LttngLogHandler();
         handlerB = new LttngLogHandler();
         handlerC = new LttngLogHandler();
+        handlerD = new LttngLogHandler();
 
         loggerA.addHandler((Handler) handlerA);
         loggerB.addHandler((Handler) handlerB);
         loggerC.addHandler((Handler) handlerC);
+        loggerD.addHandler((Handler) handlerD);
     }
 
     @After
@@ -66,6 +68,7 @@ public class JulEnabledEventsTest extends EnabledEventsTest {
         loggerA.removeHandler((Handler) handlerA);
         loggerB.removeHandler((Handler) handlerB);
         loggerC.removeHandler((Handler) handlerC);
+        loggerD.removeHandler((Handler) handlerD);
 
         loggerA = null;
         loggerB = null;

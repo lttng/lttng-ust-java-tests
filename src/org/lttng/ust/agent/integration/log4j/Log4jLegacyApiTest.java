@@ -40,6 +40,8 @@ public class Log4jLegacyApiTest {
         /* Skip tests if we can't find the JNI library or lttng-tools */
         assumeTrue(TestUtils.checkForLog4jLibrary());
         assumeTrue(TestUtils.checkForLttngTools(Domain.LOG4J));
+
+        LttngSession.destroyAllSessions();
     }
 
     @AfterClass
