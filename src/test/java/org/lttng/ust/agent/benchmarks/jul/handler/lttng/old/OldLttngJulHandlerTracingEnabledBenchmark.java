@@ -8,13 +8,13 @@ import java.lang.reflect.Field;
 import org.junit.After;
 import org.junit.Before;
 import org.lttng.ust.agent.LTTngAgent;
-import org.lttng.ust.agent.benchmarks.jul.handler.AbstractJulBenchmark;
+import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 
 @SuppressWarnings("deprecation")
-public class OldLttngJulHandlerTracingEnabledBenchmark extends AbstractJulBenchmark {
+public class OldLttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchmarkBase {
 
     private LttngSession session;
     private LttngLogHandler agentHandler;

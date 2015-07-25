@@ -5,12 +5,12 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.lttng.ust.agent.LTTngAgent;
-import org.lttng.ust.agent.benchmarks.jul.handler.AbstractJulBenchmark;
+import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 
 @SuppressWarnings("deprecation")
-public class OldLttngJulHandlerTracingDisabledBenchmark extends AbstractJulBenchmark {
+public class OldLttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchmarkBase {
 
     private LttngSession session;
 

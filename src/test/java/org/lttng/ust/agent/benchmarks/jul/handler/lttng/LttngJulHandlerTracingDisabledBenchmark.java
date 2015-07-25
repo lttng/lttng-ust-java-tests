@@ -6,12 +6,12 @@ import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.lttng.ust.agent.benchmarks.jul.handler.AbstractJulBenchmark;
+import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 
-public class LttngJulHandlerTracingDisabledBenchmark extends AbstractJulBenchmark {
+public class LttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchmarkBase {
 
     private LttngSession session;
 

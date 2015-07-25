@@ -1,4 +1,4 @@
-package org.lttng.ust.agent.benchmarks.jul.handler;
+package org.lttng.ust.agent.benchmarks.jul.handler.builtin;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,8 +8,9 @@ import java.util.logging.SimpleFormatter;
 
 import org.junit.After;
 import org.junit.Before;
+import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 
-public class FileHandlerBenchmark extends AbstractJulBenchmark {
+public class FileHandlerBenchmark extends JulHandlerBenchmarkBase {
 
     private Path outputFile;
 

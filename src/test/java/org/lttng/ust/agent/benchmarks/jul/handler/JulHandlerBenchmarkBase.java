@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class AbstractJulBenchmark {
+public abstract class JulHandlerBenchmarkBase {
 
     // ------------------------------------------------------------------------
     // Configurable test parameters
