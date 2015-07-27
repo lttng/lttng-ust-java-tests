@@ -28,20 +28,37 @@ import org.junit.After;
 import org.junit.Before;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 
+/**
+ * Test class using a {@link FileHandler}, which a {@link SimpleFormatter}.
+ */
 public class FileHandlerBenchmark extends JulHandlerBenchmarkBase {
 
     private Path outputFile;
 
-    @Before
-    public void testSetup() throws SecurityException, IOException {
-        outputFile = Files.createTempFile(this.getClass().getSimpleName(), null);
+	/**
+	 * Test setup
+	 *
+	 * @throws SecurityException
+	 *             If there is problem setting up the handler
+	 * @throws IOException
+	 *             If there is problem setting up the handler
+	 */
+	@Before
+	public void testSetup() throws SecurityException, IOException {
+		outputFile = Files.createTempFile(this.getClass().getSimpleName(), null);
 
-        handler = new FileHandler(outputFile.toString(), false);
-        handler.setFormatter(new SimpleFormatter());
-    }
+		handler = new FileHandler(outputFile.toString(), false);
+		handler.setFormatter(new SimpleFormatter());
+	}
 
-    @After
-    public void testTeardown() throws IOException {
-        Files.deleteIfExists(outputFile);
-    }
+	/**
+	 * Test cleanup
+	 *
+	 * @throws IOException
+	 *             If we could not delete the test file
+	 */
+	@After
+	public void testTeardown() throws IOException {
+		Files.deleteIfExists(outputFile);
+	}
 }

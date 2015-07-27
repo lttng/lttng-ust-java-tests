@@ -32,7 +32,7 @@ import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 
 /**
- * Tests with multiple concurrent tracing sessions
+ * Base abstract class for tests with multiple concurrent tracing sessions
  */
 public abstract class MultiSessionTestBase {
 
@@ -55,6 +55,9 @@ public abstract class MultiSessionTestBase {
 
     protected abstract void sendEventsToLoggers();
 
+    /**
+     * Base test setup
+     */
     @Before
     public void testSetup() {
         session1 = new LttngSession(null, getDomain());
@@ -62,6 +65,9 @@ public abstract class MultiSessionTestBase {
         session3 = new LttngSession(null, getDomain());
     }
 
+    /**
+     * Base test teardown
+     */
     @After
     public void testTeardown() {
         session1.close();

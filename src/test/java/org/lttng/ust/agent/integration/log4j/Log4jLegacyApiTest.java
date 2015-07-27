@@ -40,6 +40,10 @@ import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 import org.lttng.ust.agent.utils.MiscTestUtils;
 
+/**
+ * Enabled events test for the LTTng-UST Log4j log handler, using the legacy
+ * API.
+ */
 @SuppressWarnings("deprecation")
 public class Log4jLegacyApiTest {
 
@@ -53,6 +57,9 @@ public class Log4jLegacyApiTest {
     private Logger loggerA;
     private Logger loggerB;
 
+    /**
+     * Class setup
+     */
     @BeforeClass
     public static void classSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
@@ -62,11 +69,17 @@ public class Log4jLegacyApiTest {
         LttngSession.destroyAllSessions();
     }
 
+    /**
+     * Class cleanup
+     */
     @AfterClass
     public static void classCleanup() {
         LttngSession.deleteAllTracee();
     }
 
+    /**
+     * Test setup
+     */
     @Before
     public void setup() {
         loggerA = Logger.getLogger(EVENT_NAME_A);
@@ -79,6 +92,9 @@ public class Log4jLegacyApiTest {
         session = new LttngSession(null, DOMAIN);
     }
 
+    /**
+     * Test cleanup
+     */
     @After
     public void tearDown() {
         session.close();
@@ -89,6 +105,9 @@ public class Log4jLegacyApiTest {
         loggerB = null;
     }
 
+    /**
+     * Test tracing with no events enabled in the tracing session.
+     */
     @Test
     public void testNoEvents() {
         assertTrue(session.start());
@@ -106,6 +125,9 @@ public class Log4jLegacyApiTest {
         assertEquals(0, handler.getEventCount());
     }
 
+    /**
+     * Test tracing with all events enabled (-l -a) in the tracing session.
+     */
     @Test
     public void testAllEvents() {
         assertTrue(session.enableAllEvents());
@@ -124,6 +146,9 @@ public class Log4jLegacyApiTest {
         assertEquals(20, handler.getEventCount());
     }
 
+    /**
+     * Test tracing with a subset of events enabled in the tracing session.
+     */
     @Test
     public void testSomeEvents() {
         assertTrue(session.enableEvents(EVENT_NAME_A));

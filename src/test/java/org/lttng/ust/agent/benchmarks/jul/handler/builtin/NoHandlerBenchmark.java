@@ -20,7 +20,11 @@ package org.lttng.ust.agent.benchmarks.jul.handler.builtin;
 
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 
+/**
+ * Benchmark that will attach no {@link java.util.logging.Handler} to the
+ * {@link java.util.logging.Logger} object.
+ */
 public class NoHandlerBenchmark extends JulHandlerBenchmarkBase {
 
-    /* Do not setup any handler */
+	/* Do not setup any handler */
 }

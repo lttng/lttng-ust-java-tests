@@ -21,6 +21,9 @@ package org.lttng.ust.agent.integration.jul;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Utility methods for JUL tests
+ */
 final class JulTestUtils {
 
     JulTestUtils() {

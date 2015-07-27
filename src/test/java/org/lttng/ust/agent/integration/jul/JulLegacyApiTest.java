@@ -40,6 +40,9 @@ import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 import org.lttng.ust.agent.utils.MiscTestUtils;
 
+/**
+ * Enabled events test for the LTTng-UST JUL log handler, using the legacy API.
+ */
 @SuppressWarnings("deprecation")
 public class JulLegacyApiTest {
 
@@ -53,6 +56,9 @@ public class JulLegacyApiTest {
     private Logger loggerA;
     private Logger loggerB;
 
+    /**
+     * Class setup
+     */
     @BeforeClass
     public static void julClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
@@ -62,11 +68,17 @@ public class JulLegacyApiTest {
         LttngSession.destroyAllSessions();
     }
 
+    /**
+     * Class cleanup
+     */
     @AfterClass
     public static void julClassCleanup() {
         LttngSession.deleteAllTracee();
     }
 
+    /**
+     * Test setup
+     */
     @Before
     public void setup() {
         loggerA = Logger.getLogger(EVENT_NAME_A);
@@ -79,6 +91,9 @@ public class JulLegacyApiTest {
         session = new LttngSession(null, DOMAIN);
     }
 
+    /**
+     * Test cleanup
+     */
     @After
     public void tearDown() {
         session.close();
@@ -89,6 +104,9 @@ public class JulLegacyApiTest {
         loggerB = null;
     }
 
+    /**
+     * Test tracing with no events enabled in the tracing session.
+     */
     @Test
     public void testNoEvents() {
         assertTrue(session.start());
@@ -106,6 +124,9 @@ public class JulLegacyApiTest {
         assertEquals(0, handler.getEventCount());
     }
 
+    /**
+     * Test tracing with all events enabled (-j -a) in the tracing session.
+     */
     @Test
     public void testAllEvents() {
         assertTrue(session.enableAllEvents());
@@ -124,6 +145,9 @@ public class JulLegacyApiTest {
         assertEquals(20, handler.getEventCount());
     }
 
+    /**
+     * Test tracing with a subset of events enabled in the tracing session.
+     */
     @Test
     public void testSomeEvents() {
         assertTrue(session.enableEvents(EVENT_NAME_A));

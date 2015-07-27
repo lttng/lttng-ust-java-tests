@@ -28,6 +28,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Base abstract class for JUL benchmarks. Sub-classes can setup parameters to
+ * test different types of log handlers.
+ */
 public abstract class JulHandlerBenchmarkBase {
 
     // ------------------------------------------------------------------------
@@ -54,6 +58,9 @@ public abstract class JulHandlerBenchmarkBase {
     // Maintenance methods
     // ------------------------------------------------------------------------
 
+    /**
+     * Base test setup
+     */
     @Before
     public void setup() {
         /* Set up the logger */
@@ -64,6 +71,9 @@ public abstract class JulHandlerBenchmarkBase {
         /* Sub-classes' @Before will setup the Handler */
     }
 
+    /**
+     * Base test teardown
+     */
     @After
     public void teardown() {
         if (handler != null) {
@@ -78,6 +88,9 @@ public abstract class JulHandlerBenchmarkBase {
     // Test methods
     // ------------------------------------------------------------------------
 
+    /**
+     * Main test class for running the benchmark
+     */
     @Test
     public void runBenchmark() {
         if (handler != null) {

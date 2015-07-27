@@ -35,6 +35,9 @@ import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 import org.lttng.ust.agent.utils.MiscTestUtils;
 
+/**
+ * Enabled events test for the LTTng-UST JUL log handler.
+ */
 public class JulEnabledEventsTest extends EnabledEventsTestBase {
 
     private static final Domain DOMAIN = Domain.JUL;
@@ -44,6 +47,9 @@ public class JulEnabledEventsTest extends EnabledEventsTestBase {
     private Logger loggerC;
     private Logger loggerD;
 
+    /**
+     * Class setup
+     */
     @BeforeClass
     public static void julClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
@@ -53,11 +59,20 @@ public class JulEnabledEventsTest extends EnabledEventsTestBase {
         LttngSession.destroyAllSessions();
     }
 
+    /**
+     * Class cleanup
+     */
     @AfterClass
     public static void julClassCleanup() {
         LttngSession.deleteAllTracee();
     }
 
+    /**
+     * Test setup
+     *
+     * @throws SecurityException
+     * @throws IOException
+     */
     @Before
     public void julSetup() throws SecurityException, IOException {
         loggerA = Logger.getLogger(EVENT_NAME_A);
@@ -79,6 +94,9 @@ public class JulEnabledEventsTest extends EnabledEventsTestBase {
         loggerC.addHandler((Handler) handlerC);
     }
 
+    /**
+     * Test teardown
+     */
     @After
     public void julTeardown() {
         loggerA.removeHandler((Handler) handlerA);

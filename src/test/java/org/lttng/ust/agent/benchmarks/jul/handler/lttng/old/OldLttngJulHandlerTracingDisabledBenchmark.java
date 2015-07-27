@@ -27,11 +27,18 @@ import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 
+/**
+ * Benchmark for the LTTng-UST handler, using the legacy API. Tracing is
+ * disabled in the tracing session.
+ */
 @SuppressWarnings("deprecation")
 public class OldLttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchmarkBase {
 
     private LttngSession session;
 
+    /**
+     * Test setup
+     */
     @Before
     public void testSetup() {
         LTTngAgent.getLTTngAgent();
@@ -41,6 +48,9 @@ public class OldLttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchm
         assertTrue(session.start());
     }
 
+    /**
+     * Test cleanup
+     */
     @After
     public void testTeardown() {
         assertTrue(session.stop());

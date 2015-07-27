@@ -35,6 +35,9 @@ import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 import org.lttng.ust.agent.utils.MiscTestUtils;
 
+/**
+ * JUL tests for multiple concurrent tracing sessions
+ */
 public class JulMultiSessionTest extends MultiSessionTestBase {
 
     private static final Domain DOMAIN = Domain.JUL;
@@ -44,6 +47,9 @@ public class JulMultiSessionTest extends MultiSessionTestBase {
     private Logger loggerC;
     private Logger loggerD;
 
+    /**
+     * Class setup
+     */
     @BeforeClass
     public static void julClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
@@ -53,11 +59,20 @@ public class JulMultiSessionTest extends MultiSessionTestBase {
         LttngSession.destroyAllSessions();
     }
 
+    /**
+     * Class cleanup
+     */
     @AfterClass
     public static void julClassCleanup() {
         LttngSession.deleteAllTracee();
     }
 
+    /**
+     * Test setup
+     *
+     * @throws SecurityException
+     * @throws IOException
+     */
     @Before
     public void julSetup() throws SecurityException, IOException {
         loggerA = Logger.getLogger(EVENT_NAME_A);
@@ -81,6 +96,9 @@ public class JulMultiSessionTest extends MultiSessionTestBase {
         loggerD.addHandler((Handler) handlerD);
     }
 
+    /**
+     * Test teardown
+     */
     @After
     public void julTeardown() {
         loggerA.removeHandler((Handler) handlerA);

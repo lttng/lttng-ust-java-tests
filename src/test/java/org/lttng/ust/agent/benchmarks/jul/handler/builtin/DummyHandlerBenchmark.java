@@ -24,8 +24,15 @@ import java.util.logging.LogRecord;
 import org.junit.Before;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 
+/**
+ * Test suite of using a "dummy" handler, which means a handler that does
+ * exactly nothing.
+ */
 public class DummyHandlerBenchmark extends JulHandlerBenchmarkBase {
 
+	/**
+	 * Test setup
+	 */
 	@Before
 	public void testSetup() {
 		handler = new DummyHandler();

@@ -91,6 +91,12 @@ public final class MiscTestUtils {
         }
     }
 
+    /**
+     * Check if there is a user session daemon currently running on the system.
+     * It needs to be of the same user as the application running this program.
+     *
+     * @return If there is a user session daemon currently running
+     */
     public static boolean checkForUserSessiond() {
         String userName = System.getProperty("user.name");
 
@@ -104,6 +110,12 @@ public final class MiscTestUtils {
                 .anyMatch(s -> s.startsWith(shortUserName));
     }
 
+    /**
+     * Check if there is a root user session daemon daemon currently running on
+     * the system.
+     *
+     * @return If there is a root session daemon currently running
+     */
     public static boolean checkForRootSessiond() {
         List<String> command = Arrays.asList("ps", "-e", "u");
         List<String> output = getOutputFromCommand(false, command);

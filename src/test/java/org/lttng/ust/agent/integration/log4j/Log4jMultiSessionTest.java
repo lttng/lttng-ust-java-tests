@@ -35,6 +35,9 @@ import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 import org.lttng.ust.agent.utils.MiscTestUtils;
 
+/**
+ * Log4j tests for multiple concurrent tracing sessions
+ */
 public class Log4jMultiSessionTest extends MultiSessionTestBase {
 
     private static final Domain DOMAIN = Domain.LOG4J;
@@ -44,6 +47,9 @@ public class Log4jMultiSessionTest extends MultiSessionTestBase {
     private Logger loggerC;
     private Logger loggerD;
 
+    /**
+     * Class setup
+     */
     @BeforeClass
     public static void log4jClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
@@ -53,11 +59,20 @@ public class Log4jMultiSessionTest extends MultiSessionTestBase {
         LttngSession.destroyAllSessions();
     }
 
+    /**
+     * Class teardown
+     */
     @AfterClass
     public static void log4jClassCleanup() {
         LttngSession.deleteAllTracee();
     }
 
+	/**
+	 * Test setup
+	 *
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
     @Before
     public void log4jSetup() throws SecurityException, IOException {
         // TODO Wipe all existing LTTng sessions?
@@ -83,6 +98,9 @@ public class Log4jMultiSessionTest extends MultiSessionTestBase {
         loggerD.addAppender((Appender) handlerD);
     }
 
+    /**
+     * Test teardown
+     */
     @After
     public void log4jTeardown() {
         loggerA.removeAppender((Appender) handlerA);

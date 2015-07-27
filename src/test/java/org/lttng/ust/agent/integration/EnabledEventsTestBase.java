@@ -31,6 +31,10 @@ import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 
+/**
+ * Base abstract class to implement all sorts of integration tests verifying the
+ * presence of enabled events in resulting traces.
+ */
 public abstract class EnabledEventsTestBase {
 
     protected static final String EVENT_NAME_A = "EventA";
@@ -49,11 +53,17 @@ public abstract class EnabledEventsTestBase {
 
     protected abstract void sendEventsToLoggers();
 
+    /**
+     * Base test setup
+     */
     @Before
     public void testSetup() {
         session = new LttngSession(null, getDomain());
     }
 
+    /**
+     * Base test teardown
+     */
     @After
     public void testTeardown() {
         session.close();

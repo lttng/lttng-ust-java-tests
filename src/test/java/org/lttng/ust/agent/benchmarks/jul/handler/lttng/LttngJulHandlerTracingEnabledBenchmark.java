@@ -29,10 +29,18 @@ import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 
+/**
+ * Test the LTTng-JUL handler, with it actually sending events to the tracer.
+ */
 public class LttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchmarkBase {
 
     private LttngSession session;
 
+    /**
+     * Test setup
+     *
+     * @throws IOException
+     */
     @Before
     public void testSetup() throws IOException {
         handler = new LttngLogHandler();
@@ -42,6 +50,9 @@ public class LttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchmarkB
         assertTrue(session.start());
     }
 
+    /**
+     * Test cleanup
+     */
     @After
     public void testTeardown() {
         assertTrue(session.stop());

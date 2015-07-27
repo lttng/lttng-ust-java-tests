@@ -35,6 +35,9 @@ import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 import org.lttng.ust.agent.utils.MiscTestUtils;
 
+/**
+ * Enabled events test for the LTTng-UST Log4j log handler.
+ */
 public class Log4jEnabledEventsTest extends EnabledEventsTestBase {
 
     private static final Domain DOMAIN = Domain.LOG4J;
@@ -44,6 +47,9 @@ public class Log4jEnabledEventsTest extends EnabledEventsTestBase {
     private Logger loggerC;
     private Logger loggerD;
 
+    /**
+     * Class setup
+     */
     @BeforeClass
     public static void log4jClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
@@ -53,11 +59,20 @@ public class Log4jEnabledEventsTest extends EnabledEventsTestBase {
         LttngSession.destroyAllSessions();
     }
 
+    /**
+     * Class teardown
+     */
     @AfterClass
     public static void log4jClassCleanup() {
         LttngSession.deleteAllTracee();
     }
 
+    /**
+     * Test setup
+     *
+     * @throws SecurityException
+     * @throws IOException
+     */
     @Before
     public void log4jSetup() throws SecurityException, IOException {
         loggerA = Logger.getLogger(EVENT_NAME_A);
@@ -79,6 +94,9 @@ public class Log4jEnabledEventsTest extends EnabledEventsTestBase {
         loggerC.addAppender((Appender) handlerC);
     }
 
+    /**
+     * Test teardown
+     */
     @After
     public void log4jTeardown() {
         loggerA.removeAppender((Appender) handlerA);

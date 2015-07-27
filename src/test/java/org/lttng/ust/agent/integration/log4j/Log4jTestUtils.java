@@ -23,6 +23,9 @@ import java.io.IOException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+/**
+ * Utility methods for log4j tests
+ */
 final class Log4jTestUtils {
 
     private Log4jTestUtils() {

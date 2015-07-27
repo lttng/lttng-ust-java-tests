@@ -31,10 +31,21 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Java representation of a LTTng tracing session. It uses the command-line
+ * "lttng" tool to manipulate the session. Creating an instance will run
+ * "lttng create", close()'ing it will run "lttng destroy".
+ *
+ * @author Alexandre Montplaisir
+ */
 public class LttngSession implements AutoCloseable {
 
+    /**
+     * Tracing domains as they are defined by lttng-tools
+     */
     public enum Domain {
-        JUL("-j"),
+        /** The JUL (java.util.logging) domain */
+        JUL("-j"), /** The log4j (org.apache.log4j) domain */
         LOG4J("-l");
 
         private final String flag;
@@ -43,6 +54,10 @@ public class LttngSession implements AutoCloseable {
             this.flag = flag;
         }
 
+        /**
+         * @return The corresponding command-line flag to pass to options like
+         *         "lttng enable-event"
+         */
         public String flag() {
             return flag;
         }
@@ -53,6 +68,15 @@ public class LttngSession implements AutoCloseable {
 
     private volatile boolean channelCreated = false;
 
+    /**
+     * Constructor to create a new LTTng tracing session.
+     *
+     * @param sessionName
+     *            The name of the session to use. It can be null, in which case
+     *            we will provide a unique random name.
+     * @param domain
+     *            The tracing domain of this session
+     */
     public LttngSession(String sessionName, Domain domain) {
         if (sessionName != null) {
             this.sessionName = sessionName;
@@ -123,6 +147,11 @@ public class LttngSession implements AutoCloseable {
                 "-s", sessionName));
     }
 
+    /**
+     * Start tracing
+     *
+     * @return If the command executed successfully (return code = 0).
+     */
     public boolean start() {
         /*
          * We have to enable a channel for 'lttng start' to work. However, we
@@ -203,7 +232,11 @@ public class LttngSession implements AutoCloseable {
     }
 
     /**
-     * Just to test the environment / stdout are working correctly
+     * Simple command to test that the environment / stdout are working
+     * correctly.
+     *
+     * @param args
+     *            Command-line arguments
      */
     public static void main(String[] args) {
         List<String> command = Arrays.asList("ls", "-l");
