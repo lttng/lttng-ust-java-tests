@@ -27,14 +27,17 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
+import org.lttng.ust.agent.utils.TestPrintRunner;
 
 /**
  * Base abstract class to implement all sorts of integration tests verifying the
  * presence of enabled events in resulting traces.
  */
+@RunWith(TestPrintRunner.class)
 public abstract class EnabledEventsTestBase {
 
     protected static final String EVENT_NAME_A = "EventA";

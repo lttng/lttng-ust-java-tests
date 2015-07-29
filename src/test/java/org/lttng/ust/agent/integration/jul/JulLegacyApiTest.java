@@ -34,15 +34,18 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.LTTngAgent;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
 import org.lttng.ust.agent.utils.MiscTestUtils;
+import org.lttng.ust.agent.utils.TestPrintRunner;
 
 /**
  * Enabled events test for the LTTng-UST JUL log handler, using the legacy API.
  */
+@RunWith(TestPrintRunner.class)
 @SuppressWarnings("deprecation")
 public class JulLegacyApiTest {
 

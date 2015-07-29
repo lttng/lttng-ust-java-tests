@@ -27,13 +27,16 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.utils.LttngSession;
 import org.lttng.ust.agent.utils.LttngSession.Domain;
+import org.lttng.ust.agent.utils.TestPrintRunner;
 
 /**
  * Base abstract class for tests with multiple concurrent tracing sessions
  */
+@RunWith(TestPrintRunner.class)
 public abstract class MultiSessionTestBase {
 
     protected static final String EVENT_NAME_A = "EventA";
