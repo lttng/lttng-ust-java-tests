@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
@@ -131,6 +132,11 @@ public final class MiscTestUtils {
 
     static List<String> getOutputFromCommand(boolean print, List<String> command) {
         try {
+            /* "echo" the command to stdout */
+            StringJoiner sj = new StringJoiner(" ", "$ ", "");
+            command.stream().forEach(sj::add);
+            System.out.println(sj.toString());
+
             Path tempFile = Files.createTempFile("test-output", null);
 
             ProcessBuilder builder = new ProcessBuilder(command);
@@ -145,9 +151,12 @@ public final class MiscTestUtils {
 
             if (print) {
                 /* Also print the output to the console */
-                lines.stream().forEach(s -> System.out.println(s));
+                lines.stream().forEach(System.out::println);
+            } else {
+                System.out.println("(output silenced)");
             }
 
+            System.out.println("(returned from command)");
             return lines;
 
         } catch (IOException | InterruptedException e) {

@@ -28,6 +28,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -245,12 +246,20 @@ public class LttngSession implements AutoCloseable {
 
     private static boolean executeCommand(List<String> command) {
         try {
+            /* "echo" the command to stdout */
+            StringJoiner sj = new StringJoiner(" ", "$ ", "");
+            command.stream().forEach(sj::add);
+            System.out.println(sj.toString());
+
             ProcessBuilder builder = new ProcessBuilder(command);
             builder.redirectErrorStream(true);
             builder.redirectOutput(Redirect.INHERIT);
 
             Process p = builder.start();
             int ret = p.waitFor();
+
+            System.out.println("(returned from command)");
+
             return (ret == 0);
 
         } catch (IOException | InterruptedException e) {
