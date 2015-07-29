@@ -19,12 +19,8 @@
 package org.lttng.ust.agent.utils;
 
 import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
@@ -105,7 +101,7 @@ public final class MiscTestUtils {
         String shortUserName = userName.substring(0, Math.min(userName.length(), 7));
 
         List<String> command = Arrays.asList("ps", "-e", "u");
-        List<String> output = getOutputFromCommand(false, command);
+        List<String> output = ShellUtils.getOutputFromCommand(false, command);
         return output.stream()
                 .filter(s -> s.contains("lttng-sessiond"))
                 .anyMatch(s -> s.startsWith(shortUserName));
@@ -119,48 +115,10 @@ public final class MiscTestUtils {
      */
     public static boolean checkForRootSessiond() {
         List<String> command = Arrays.asList("ps", "-e", "u");
-        List<String> output = getOutputFromCommand(false, command);
+        List<String> output = ShellUtils.getOutputFromCommand(false, command);
         return output.stream()
                 .filter(s -> s.contains("lttng-sessiond"))
                 .anyMatch(s -> s.startsWith("root"));
     }
 
-
-    static List<String> getOutputFromCommand(List<String> command) {
-        return MiscTestUtils.getOutputFromCommand(true, command);
-    }
-
-    static List<String> getOutputFromCommand(boolean print, List<String> command) {
-        try {
-            /* "echo" the command to stdout */
-            StringJoiner sj = new StringJoiner(" ", "$ ", "");
-            command.stream().forEach(sj::add);
-            System.out.println(sj.toString());
-
-            Path tempFile = Files.createTempFile("test-output", null);
-
-            ProcessBuilder builder = new ProcessBuilder(command);
-            builder.redirectErrorStream(true);
-            builder.redirectOutput(Redirect.to(tempFile.toFile()));
-
-            Process p = builder.start();
-            p.waitFor();
-
-            List<String> lines = Files.readAllLines(tempFile);
-            Files.delete(tempFile);
-
-            if (print) {
-                /* Also print the output to the console */
-                lines.stream().forEach(System.out::println);
-            } else {
-                System.out.println("(output silenced)");
-            }
-
-            System.out.println("(returned from command)");
-            return lines;
-
-        } catch (IOException | InterruptedException e) {
-            return null;
-        }
-    }
 }

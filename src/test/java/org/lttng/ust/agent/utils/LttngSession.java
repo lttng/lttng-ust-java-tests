@@ -18,8 +18,9 @@
 
 package org.lttng.ust.agent.utils;
 
+import static org.lttng.ust.agent.utils.ShellUtils.executeCommand;
+
 import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,7 +29,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -182,7 +182,7 @@ public class LttngSession implements AutoCloseable {
      * @return The output of Babeltrace on the session's current trace
      */
     public List<String> view() {
-        return MiscTestUtils.getOutputFromCommand(Arrays.asList("lttng", "view", sessionName));
+        return ShellUtils.getOutputFromCommand(true, Arrays.asList("lttng", "view", sessionName));
     }
 
     /**
@@ -232,38 +232,4 @@ public class LttngSession implements AutoCloseable {
         return true;
     }
 
-    /**
-     * Simple command to test that the environment / stdout are working
-     * correctly.
-     *
-     * @param args
-     *            Command-line arguments
-     */
-    public static void main(String[] args) {
-        List<String> command = Arrays.asList("ls", "-l");
-        executeCommand(command);
-    }
-
-    private static boolean executeCommand(List<String> command) {
-        try {
-            /* "echo" the command to stdout */
-            StringJoiner sj = new StringJoiner(" ", "$ ", "");
-            command.stream().forEach(sj::add);
-            System.out.println(sj.toString());
-
-            ProcessBuilder builder = new ProcessBuilder(command);
-            builder.redirectErrorStream(true);
-            builder.redirectOutput(Redirect.INHERIT);
-
-            Process p = builder.start();
-            int ret = p.waitFor();
-
-            System.out.println("(returned from command)");
-
-            return (ret == 0);
-
-        } catch (IOException | InterruptedException e) {
-            return false;
-        }
-    }
 }
