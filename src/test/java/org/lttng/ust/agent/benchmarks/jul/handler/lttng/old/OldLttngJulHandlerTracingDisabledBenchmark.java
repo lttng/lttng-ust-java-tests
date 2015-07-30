@@ -22,10 +22,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
+import org.lttng.tools.ILttngSession;
+import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.LTTngAgent;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
-import org.lttng.ust.agent.utils.LttngSession;
-import org.lttng.ust.agent.utils.LttngSession.Domain;
 
 /**
  * Benchmark for the LTTng-UST handler, using the legacy API. Tracing is
@@ -34,7 +34,7 @@ import org.lttng.ust.agent.utils.LttngSession.Domain;
 @SuppressWarnings("deprecation")
 public class OldLttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchmarkBase {
 
-    private LttngSession session;
+    private ILttngSession session;
 
     /**
      * Test setup
@@ -43,7 +43,7 @@ public class OldLttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchm
     public void testSetup() {
         LTTngAgent.getLTTngAgent();
 
-        session = new LttngSession(null, Domain.JUL);
+        session = ILttngSession.newCommandLineSession(null, Domain.JUL);
         assertTrue(session.enableEvents("non-event"));
         assertTrue(session.start());
     }

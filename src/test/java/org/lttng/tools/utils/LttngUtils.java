@@ -16,22 +16,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package org.lttng.ust.agent.utils;
+package org.lttng.tools.utils;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.lttng.tools.ILttngSession;
+import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
-import org.lttng.ust.agent.utils.LttngSession.Domain;
 
 /**
- * Utility methods to help with UST-Java tests
+ * Utility methods to test the presence of certain LTTng tools or libraries in
+ * the runtime environment.
  */
-public final class MiscTestUtils {
+public final class LttngUtils {
 
-    private MiscTestUtils() {}
+    private LttngUtils() {}
 
     /**
      * Check the the JUL native library is available, effectively allowing LTTng
@@ -76,7 +78,7 @@ public final class MiscTestUtils {
      *         was an error
      */
     public static boolean checkForLttngTools(Domain domain) {
-        try (LttngSession session = new LttngSession(null, domain)) {
+        try (ILttngSession session = ILttngSession.newCommandLineSession(null, domain)) {
             boolean ret1 = session.enableAllEvents();
             boolean ret2 = session.start();
             boolean ret3 = session.stop();

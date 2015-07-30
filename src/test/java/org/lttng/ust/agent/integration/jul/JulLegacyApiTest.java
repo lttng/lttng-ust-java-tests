@@ -35,11 +35,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lttng.tools.ILttngSession;
+import org.lttng.tools.ILttngSession.Domain;
+import org.lttng.tools.LttngToolsHelper;
+import org.lttng.tools.utils.LttngUtils;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.LTTngAgent;
-import org.lttng.ust.agent.utils.LttngSession;
-import org.lttng.ust.agent.utils.LttngSession.Domain;
-import org.lttng.ust.agent.utils.MiscTestUtils;
 import org.lttng.ust.agent.utils.TestPrintRunner;
 
 /**
@@ -54,7 +55,7 @@ public class JulLegacyApiTest {
     private static final String EVENT_NAME_A = "EventA";
     private static final String EVENT_NAME_B = "EventB";
 
-    private LttngSession session;
+    private ILttngSession session;
 
     private Logger loggerA;
     private Logger loggerB;
@@ -65,10 +66,10 @@ public class JulLegacyApiTest {
     @BeforeClass
     public static void julClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(MiscTestUtils.checkForJulLibrary());
-        assumeTrue(MiscTestUtils.checkForLttngTools(Domain.JUL));
+        assumeTrue(LttngUtils.checkForJulLibrary());
+        assumeTrue(LttngUtils.checkForLttngTools(Domain.JUL));
 
-        LttngSession.destroyAllSessions();
+        LttngToolsHelper.destroyAllSessions();
     }
 
     /**
@@ -76,7 +77,7 @@ public class JulLegacyApiTest {
      */
     @AfterClass
     public static void julClassCleanup() {
-        LttngSession.deleteAllTracee();
+        LttngToolsHelper.deleteAllTraces();
     }
 
     /**
@@ -91,7 +92,7 @@ public class JulLegacyApiTest {
         loggerA.setLevel(Level.ALL);
         loggerB.setLevel(Level.ALL);
 
-        session = new LttngSession(null, DOMAIN);
+        session = ILttngSession.newCommandLineSession(null, DOMAIN);
     }
 
     /**

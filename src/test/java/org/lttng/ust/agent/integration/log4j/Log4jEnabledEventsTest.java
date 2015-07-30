@@ -29,11 +29,11 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.lttng.tools.ILttngSession.Domain;
+import org.lttng.tools.LttngToolsHelper;
+import org.lttng.tools.utils.LttngUtils;
 import org.lttng.ust.agent.integration.EnabledEventsTestBase;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
-import org.lttng.ust.agent.utils.LttngSession;
-import org.lttng.ust.agent.utils.LttngSession.Domain;
-import org.lttng.ust.agent.utils.MiscTestUtils;
 
 /**
  * Enabled events test for the LTTng-UST Log4j log handler.
@@ -53,10 +53,10 @@ public class Log4jEnabledEventsTest extends EnabledEventsTestBase {
     @BeforeClass
     public static void log4jClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(MiscTestUtils.checkForLog4jLibrary());
-        assumeTrue(MiscTestUtils.checkForLttngTools(Domain.LOG4J));
+        assumeTrue(LttngUtils.checkForLog4jLibrary());
+        assumeTrue(LttngUtils.checkForLttngTools(Domain.LOG4J));
 
-        LttngSession.destroyAllSessions();
+        LttngToolsHelper.destroyAllSessions();
     }
 
     /**
@@ -64,7 +64,7 @@ public class Log4jEnabledEventsTest extends EnabledEventsTestBase {
      */
     @AfterClass
     public static void log4jClassCleanup() {
-        LttngSession.deleteAllTracee();
+        LttngToolsHelper.deleteAllTraces();
     }
 
     /**

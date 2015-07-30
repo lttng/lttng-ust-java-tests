@@ -28,9 +28,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lttng.tools.ILttngSession;
+import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.ILttngHandler;
-import org.lttng.ust.agent.utils.LttngSession;
-import org.lttng.ust.agent.utils.LttngSession.Domain;
 import org.lttng.ust.agent.utils.TestPrintRunner;
 
 /**
@@ -44,9 +44,9 @@ public abstract class MultiSessionTestBase {
     protected static final String EVENT_NAME_C = "EventABC";
     protected static final String EVENT_NAME_D = "EventABCD";
 
-    private LttngSession session1;
-    private LttngSession session2;
-    private LttngSession session3;
+    private ILttngSession session1;
+    private ILttngSession session2;
+    private ILttngSession session3;
 
     /* Fields defined by the sub-class */
     protected ILttngHandler handlerA;
@@ -63,9 +63,9 @@ public abstract class MultiSessionTestBase {
      */
     @Before
     public void testSetup() {
-        session1 = new LttngSession(null, getDomain());
-        session2 = new LttngSession(null, getDomain());
-        session3 = new LttngSession(null, getDomain());
+        session1 = ILttngSession.newCommandLineSession(null, getDomain());
+        session2 = ILttngSession.newCommandLineSession(null, getDomain());
+        session3 = ILttngSession.newCommandLineSession(null, getDomain());
     }
 
     /**

@@ -29,11 +29,11 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.lttng.tools.ILttngSession.Domain;
+import org.lttng.tools.LttngToolsHelper;
+import org.lttng.tools.utils.LttngUtils;
 import org.lttng.ust.agent.integration.EnabledEventsTestBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
-import org.lttng.ust.agent.utils.LttngSession;
-import org.lttng.ust.agent.utils.LttngSession.Domain;
-import org.lttng.ust.agent.utils.MiscTestUtils;
 
 /**
  * Enabled events test for the LTTng-UST JUL log handler.
@@ -53,10 +53,10 @@ public class JulEnabledEventsTest extends EnabledEventsTestBase {
     @BeforeClass
     public static void julClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(MiscTestUtils.checkForJulLibrary());
-        assumeTrue(MiscTestUtils.checkForLttngTools(Domain.JUL));
+        assumeTrue(LttngUtils.checkForJulLibrary());
+        assumeTrue(LttngUtils.checkForLttngTools(Domain.JUL));
 
-        LttngSession.destroyAllSessions();
+        LttngToolsHelper.destroyAllSessions();
     }
 
     /**
@@ -64,7 +64,7 @@ public class JulEnabledEventsTest extends EnabledEventsTestBase {
      */
     @AfterClass
     public static void julClassCleanup() {
-        LttngSession.deleteAllTracee();
+        LttngToolsHelper.deleteAllTraces();
     }
 
     /**

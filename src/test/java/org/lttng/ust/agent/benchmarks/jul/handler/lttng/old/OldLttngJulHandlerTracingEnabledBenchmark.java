@@ -25,11 +25,11 @@ import java.lang.reflect.Field;
 
 import org.junit.After;
 import org.junit.Before;
+import org.lttng.tools.ILttngSession;
+import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.LTTngAgent;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
-import org.lttng.ust.agent.utils.LttngSession;
-import org.lttng.ust.agent.utils.LttngSession.Domain;
 
 /**
  * Benchmark for the LTTng-UST handler, using the legacy API. Tracing is
@@ -38,7 +38,7 @@ import org.lttng.ust.agent.utils.LttngSession.Domain;
 @SuppressWarnings("deprecation")
 public class OldLttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchmarkBase {
 
-    private LttngSession session;
+    private ILttngSession session;
     private LttngLogHandler agentHandler;
 
 
@@ -69,7 +69,7 @@ public class OldLttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchma
             fail();
         }
 
-        session = new LttngSession(null, Domain.JUL);
+        session = ILttngSession.newCommandLineSession(null, Domain.JUL);
         assertTrue(session.enableAllEvents());
         assertTrue(session.start());
     }

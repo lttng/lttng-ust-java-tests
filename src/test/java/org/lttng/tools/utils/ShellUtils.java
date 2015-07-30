@@ -16,7 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package org.lttng.ust.agent.utils;
+package org.lttng.tools.utils;
 
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;

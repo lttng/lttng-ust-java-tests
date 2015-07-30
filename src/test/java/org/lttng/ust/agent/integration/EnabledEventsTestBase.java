@@ -28,9 +28,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lttng.tools.ILttngSession;
+import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.ILttngHandler;
-import org.lttng.ust.agent.utils.LttngSession;
-import org.lttng.ust.agent.utils.LttngSession.Domain;
 import org.lttng.ust.agent.utils.TestPrintRunner;
 
 /**
@@ -45,7 +45,7 @@ public abstract class EnabledEventsTestBase {
     protected static final String EVENT_NAME_C = "EventABC";
     protected static final String EVENT_NAME_D = "EventABCD";
 
-    private LttngSession session;
+    private ILttngSession session;
 
     /* Fields defined by the sub-class */
     protected ILttngHandler handlerA;
@@ -61,7 +61,7 @@ public abstract class EnabledEventsTestBase {
      */
     @Before
     public void testSetup() {
-        session = new LttngSession(null, getDomain());
+        session = ILttngSession.newCommandLineSession(null, getDomain());
     }
 
     /**

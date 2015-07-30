@@ -24,17 +24,17 @@ import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.lttng.tools.ILttngSession;
+import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
-import org.lttng.ust.agent.utils.LttngSession;
-import org.lttng.ust.agent.utils.LttngSession.Domain;
 
 /**
  * Test the LTTng-JUL handler, with it actually sending events to the tracer.
  */
 public class LttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchmarkBase {
 
-    private LttngSession session;
+    private ILttngSession session;
 
     /**
      * Test setup
@@ -45,7 +45,7 @@ public class LttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchmarkB
     public void testSetup() throws IOException {
         handler = new LttngLogHandler();
 
-        session = new LttngSession(null, Domain.JUL);
+        session = ILttngSession.newCommandLineSession(null, Domain.JUL);
         assertTrue(session.enableAllEvents());
         assertTrue(session.start());
     }
