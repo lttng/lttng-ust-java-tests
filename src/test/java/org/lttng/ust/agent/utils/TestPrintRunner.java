@@ -46,8 +46,11 @@ public class TestPrintRunner extends BlockJUnit4ClassRunner {
 
     @Override
     public void run(RunNotifier notifier) {
-        notifier.addListener(new TestPrintListener());
+        RunListener listener = new TestPrintListener();
+
+        notifier.addListener(listener);
         super.run(notifier);
+        notifier.removeListener(listener);
     }
 
     /**
