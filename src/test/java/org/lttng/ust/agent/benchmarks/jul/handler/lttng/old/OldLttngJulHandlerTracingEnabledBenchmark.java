@@ -69,7 +69,7 @@ public class OldLttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchma
             fail();
         }
 
-        session = ILttngSession.newCommandLineSession(null, Domain.JUL);
+        session = ILttngSession.createSession(null, Domain.JUL);
         assertTrue(session.enableAllEvents());
         assertTrue(session.start());
     }

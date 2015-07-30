@@ -63,9 +63,9 @@ public abstract class MultiSessionTestBase {
      */
     @Before
     public void testSetup() {
-        session1 = ILttngSession.newCommandLineSession(null, getDomain());
-        session2 = ILttngSession.newCommandLineSession(null, getDomain());
-        session3 = ILttngSession.newCommandLineSession(null, getDomain());
+        session1 = ILttngSession.createSession(null, getDomain());
+        session2 = ILttngSession.createSession(null, getDomain());
+        session3 = ILttngSession.createSession(null, getDomain());
     }
 
     /**

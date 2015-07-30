@@ -43,7 +43,7 @@ public class OldLttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchm
     public void testSetup() {
         LTTngAgent.getLTTngAgent();
 
-        session = ILttngSession.newCommandLineSession(null, Domain.JUL);
+        session = ILttngSession.createSession(null, Domain.JUL);
         assertTrue(session.enableEvents("non-event"));
         assertTrue(session.start());
     }

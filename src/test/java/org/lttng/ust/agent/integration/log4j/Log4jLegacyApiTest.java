@@ -93,7 +93,7 @@ public class Log4jLegacyApiTest {
         loggerA.setLevel(Level.ALL);
         loggerB.setLevel(Level.ALL);
 
-        session = ILttngSession.newCommandLineSession(null, DOMAIN);
+        session = ILttngSession.createSession(null, DOMAIN);
     }
 
     /**

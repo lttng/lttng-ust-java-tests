@@ -78,7 +78,7 @@ public final class LttngUtils {
      *         was an error
      */
     public static boolean checkForLttngTools(Domain domain) {
-        try (ILttngSession session = ILttngSession.newCommandLineSession(null, domain)) {
+        try (ILttngSession session = ILttngSession.createSession(null, domain)) {
             boolean ret1 = session.enableAllEvents();
             boolean ret2 = session.start();
             boolean ret3 = session.stop();

@@ -46,7 +46,7 @@ public class LttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchmark
     public void testSetup() throws IOException {
         handler = new LttngLogHandler();
 
-        session = ILttngSession.newCommandLineSession(null, Domain.JUL);
+        session = ILttngSession.createSession(null, Domain.JUL);
         assertTrue(session.enableEvents("non-event"));
         assertTrue(session.start());
     }

@@ -61,7 +61,7 @@ public abstract class EnabledEventsTestBase {
      */
     @Before
     public void testSetup() {
-        session = ILttngSession.newCommandLineSession(null, getDomain());
+        session = ILttngSession.createSession(null, getDomain());
     }
 
     /**

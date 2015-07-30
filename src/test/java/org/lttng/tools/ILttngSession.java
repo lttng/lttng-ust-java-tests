@@ -55,8 +55,7 @@ public interface ILttngSession extends AutoCloseable {
     // ------------------------------------------------------------------------
 
     /**
-     * Constructor to create a new LTTng tracing session, which will use the
-     * command-line "lttng" utility.
+     * Create a new LTTng tracing session using the default backend.
      *
      * @param sessionName
      *            The name of the session to use. It can be null, in which case
@@ -65,7 +64,22 @@ public interface ILttngSession extends AutoCloseable {
      *            The tracing domain of this session
      * @return The new session object
      */
-    static ILttngSession newCommandLineSession(String sessionName, Domain domain) {
+    static ILttngSession createSession(String sessionName, Domain domain) {
+        return createCommandLineSession(sessionName, domain);
+    }
+
+    /**
+     * Create a new LTTng tracing session, which will use the command-line
+     * "lttng" utility.
+     *
+     * @param sessionName
+     *            The name of the session to use. It can be null, in which case
+     *            we will provide a unique random name.
+     * @param domain
+     *            The tracing domain of this session
+     * @return The new session object
+     */
+    static ILttngSession createCommandLineSession(String sessionName, Domain domain) {
         return new LttngCommandLineSession(sessionName, domain);
     }
 
