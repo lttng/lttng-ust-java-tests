@@ -31,9 +31,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.tools.LttngToolsHelper;
-import org.lttng.tools.utils.LttngUtils;
 import org.lttng.ust.agent.integration.EnabledEventsTestBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
+import org.lttng.ust.agent.utils.LttngUtils;
 
 /**
  * Enabled events test for the LTTng-UST JUL log handler.

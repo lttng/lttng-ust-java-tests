@@ -16,7 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package org.lttng.tools.utils;
+package org.lttng.ust.agent.utils;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
+import org.lttng.tools.utils.ShellUtils;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 

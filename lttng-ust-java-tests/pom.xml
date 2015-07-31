@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (C) 2015, EfficiOS Inc., Alexandre Montplaisir <alexmonthy@efficios.com>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.lttng.ust</groupId>
+    <artifactId>lttng-ust-java-parent</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <artifactId>lttng-ust-java-tests</artifactId>
+  <packaging>jar</packaging>
+
+  <name>LTTng-UST Java Agent Integration Tests</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Paths that come from UST's default "make install".
+         Override to specify other locations. -->
+    <common-jar-location>/usr/local/share/java/lttng-ust-agent-common-1.0.0.jar</common-jar-location>
+    <jul-jar-location>/usr/local/share/java/lttng-ust-agent-jul-1.0.0.jar</jul-jar-location>
+    <log4j-jar-location>/usr/local/share/java/lttng-ust-agent-log4j-1.0.0.jar</log4j-jar-location>
+    <argLine>-Djava.library.path=/usr/local/lib</argLine>
+  </properties>
+  
+  <dependencies>
+    <!-- System dependencies, should have been installed by UST -->
+    <dependency>
+      <groupId>org.lttng.ust.agent</groupId>
+      <artifactId>lttng-ust-agent-common</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${common-jar-location}</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>org.lttng.ust.agent</groupId>
+      <artifactId>lttng-ust-agent-jul</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${jul-jar-location}</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>org.lttng.ust.agent</groupId>
+      <artifactId>lttng-ust-agent-log4j</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${log4j-jar-location}</systemPath>
+    </dependency>
+
+    <!-- "Real" Maven dependencies -->
+    <dependency>
+      <groupId>org.lttng.tools</groupId>
+      <artifactId>lttng-tools-java</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>benchmark</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.18.1</version>
+            <configuration>
+              <includes>
+                <include>**/*Benchmark.java</include>
+              </includes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

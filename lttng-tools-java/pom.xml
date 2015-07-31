@@ -22,39 +22,16 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <prerequisites>
-    <maven>3.0</maven>
-  </prerequisites>
+  <parent>
+    <groupId>org.lttng.ust</groupId>
+    <artifactId>lttng-ust-java-parent</artifactId>
+    <version>1.0.0</version>
+  </parent>
 
-  <groupId>org.lttng.ust</groupId>
-  <artifactId>lttng-ust-java-parent</artifactId>
-  <version>1.0.0</version>
-  <packaging>pom</packaging>
+  <groupId>org.lttng.tools</groupId>
+  <artifactId>lttng-tools-java</artifactId>
+  <packaging>jar</packaging>
 
-  <name>LTTng-UST Java Agent</name>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  
-  
-  <modules>
-    <module>lttng-ust-java-tests</module>
-    <module>lttng-tools-java</module>
-  </modules>
+  <name>LTTng-Tools Java Utilities</name>
 
 </project>

@@ -16,7 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package org.lttng.ust.agent.integration.jul;
+package org.lttng.ust.agent.integration.log4j;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,9 +26,9 @@ import static org.junit.Assume.assumeTrue;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -38,19 +38,20 @@ import org.junit.runner.RunWith;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.tools.LttngToolsHelper;
-import org.lttng.tools.utils.LttngUtils;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.LTTngAgent;
+import org.lttng.ust.agent.utils.LttngUtils;
 import org.lttng.ust.agent.utils.TestPrintRunner;
 
 /**
- * Enabled events test for the LTTng-UST JUL log handler, using the legacy API.
+ * Enabled events test for the LTTng-UST Log4j log handler, using the legacy
+ * API.
  */
 @RunWith(TestPrintRunner.class)
 @SuppressWarnings("deprecation")
-public class JulLegacyApiTest {
+public class Log4jLegacyApiTest {
 
-    private static final Domain DOMAIN = Domain.JUL;
+    private static final Domain DOMAIN = Domain.LOG4J;
 
     private static final String EVENT_NAME_A = "EventA";
     private static final String EVENT_NAME_B = "EventB";
@@ -64,10 +65,10 @@ public class JulLegacyApiTest {
      * Class setup
      */
     @BeforeClass
-    public static void julClassSetup() {
+    public static void classSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(LttngUtils.checkForJulLibrary());
-        assumeTrue(LttngUtils.checkForLttngTools(Domain.JUL));
+        assumeTrue(LttngUtils.checkForLog4jLibrary());
+        assumeTrue(LttngUtils.checkForLttngTools(Domain.LOG4J));
 
         LttngToolsHelper.destroyAllSessions();
     }
@@ -76,7 +77,7 @@ public class JulLegacyApiTest {
      * Class cleanup
      */
     @AfterClass
-    public static void julClassCleanup() {
+    public static void classCleanup() {
         LttngToolsHelper.deleteAllTraces();
     }
 
@@ -115,8 +116,8 @@ public class JulLegacyApiTest {
     public void testNoEvents() {
         assertTrue(session.start());
 
-        JulTestUtils.send10EventsTo(loggerA);
-        JulTestUtils.send10EventsTo(loggerB);
+        Log4jTestUtils.send10Events(loggerA);
+        Log4jTestUtils.send10Events(loggerB);
 
         assertTrue(session.stop());
 
@@ -129,15 +130,15 @@ public class JulLegacyApiTest {
     }
 
     /**
-     * Test tracing with all events enabled (-j -a) in the tracing session.
+     * Test tracing with all events enabled (-l -a) in the tracing session.
      */
     @Test
     public void testAllEvents() {
         assertTrue(session.enableAllEvents());
         assertTrue(session.start());
 
-        JulTestUtils.send10EventsTo(loggerA);
-        JulTestUtils.send10EventsTo(loggerB);
+        Log4jTestUtils.send10Events(loggerA);
+        Log4jTestUtils.send10Events(loggerB);
 
         assertTrue(session.stop());
 
@@ -157,8 +158,8 @@ public class JulLegacyApiTest {
         assertTrue(session.enableEvents(EVENT_NAME_A));
         assertTrue(session.start());
 
-        JulTestUtils.send10EventsTo(loggerA);
-        JulTestUtils.send10EventsTo(loggerB);
+        Log4jTestUtils.send10Events(loggerA);
+        Log4jTestUtils.send10Events(loggerB);
 
         assertTrue(session.stop());
 
@@ -171,16 +172,16 @@ public class JulLegacyApiTest {
     }
 
     /**
-     * Get the singleton JUL Handler currently managed by the LTTngAgent. It is
-     * not public, so we need reflection to access it.
+     * Get the singleton Log4j Handler currently managed by the LTTngAgent. It
+     * is not public, so we need reflection to access it.
      *
-     * @return The agent's JUL handler
+     * @return The agent's Log4j handler
      */
     private static ILttngHandler getAgentHandler() {
         try {
-            Field julHandlerField = LTTngAgent.class.getDeclaredField("julHandler");
-            julHandlerField.setAccessible(true);
-            return (ILttngHandler) julHandlerField.get(LTTngAgent.getLTTngAgent());
+            Field log4jAppenderField = LTTngAgent.class.getDeclaredField("log4jAppender");
+            log4jAppenderField.setAccessible(true);
+            return (ILttngHandler) log4jAppenderField.get(LTTngAgent.getLTTngAgent());
         } catch (ReflectiveOperationException | SecurityException e) {
             fail();
             return null;
