@@ -54,8 +54,8 @@ so make sure the output mentions succesful tests and not skipped ones.
 Please make sure you have no `lttng` session active prior to or during the
 tests, or it might interfere with the test runs!
 
-Detailed JUnit test reports will be available as usual under
-`target/surefire-reports/`
+Detailed JUnit test reports will be available under
+`lttng-ust-java-tests/target/failsafe-reports/`
 
 
 Running the benchmarks

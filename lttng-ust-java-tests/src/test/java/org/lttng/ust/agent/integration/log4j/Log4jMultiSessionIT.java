@@ -16,31 +16,31 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package org.lttng.ust.agent.integration.jul;
+package org.lttng.ust.agent.integration.log4j;
 
 import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Appender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.tools.LttngToolsHelper;
-import org.lttng.ust.agent.integration.MultiSessionTestBase;
-import org.lttng.ust.agent.jul.LttngLogHandler;
+import org.lttng.ust.agent.integration.MultiSessionITBase;
+import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.LttngUtils;
 
 /**
- * JUL tests for multiple concurrent tracing sessions
+ * Log4j tests for multiple concurrent tracing sessions
  */
-public class JulMultiSessionTest extends MultiSessionTestBase {
+public class Log4jMultiSessionIT extends MultiSessionITBase {
 
-    private static final Domain DOMAIN = Domain.JUL;
+    private static final Domain DOMAIN = Domain.LOG4J;
 
     private Logger loggerA;
     private Logger loggerB;
@@ -51,30 +51,32 @@ public class JulMultiSessionTest extends MultiSessionTestBase {
      * Class setup
      */
     @BeforeClass
-    public static void julClassSetup() {
+    public static void log4jClassSetup() {
         /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(LttngUtils.checkForJulLibrary());
-        assumeTrue(LttngUtils.checkForLttngTools(Domain.JUL));
+        assumeTrue(LttngUtils.checkForLog4jLibrary());
+        assumeTrue(LttngUtils.checkForLttngTools(Domain.LOG4J));
 
         LttngToolsHelper.destroyAllSessions();
     }
 
     /**
-     * Class cleanup
+     * Class teardown
      */
     @AfterClass
-    public static void julClassCleanup() {
+    public static void log4jClassCleanup() {
         LttngToolsHelper.deleteAllTraces();
     }
 
-    /**
-     * Test setup
-     *
-     * @throws SecurityException
-     * @throws IOException
-     */
+	/**
+	 * Test setup
+	 *
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
     @Before
-    public void julSetup() throws SecurityException, IOException {
+    public void log4jSetup() throws SecurityException, IOException {
+        // TODO Wipe all existing LTTng sessions?
+
         loggerA = Logger.getLogger(EVENT_NAME_A);
         loggerB = Logger.getLogger(EVENT_NAME_B);
         loggerC = Logger.getLogger(EVENT_NAME_C);
@@ -85,26 +87,26 @@ public class JulMultiSessionTest extends MultiSessionTestBase {
         loggerC.setLevel(Level.ALL);
         loggerD.setLevel(Level.ALL);
 
-        handlerA = new LttngLogHandler();
-        handlerB = new LttngLogHandler();
-        handlerC = new LttngLogHandler();
-        handlerD = new LttngLogHandler();
+        handlerA = new LttngLogAppender();
+        handlerB = new LttngLogAppender();
+        handlerC = new LttngLogAppender();
+        handlerD = new LttngLogAppender();
 
-        loggerA.addHandler((Handler) handlerA);
-        loggerB.addHandler((Handler) handlerB);
-        loggerC.addHandler((Handler) handlerC);
-        loggerD.addHandler((Handler) handlerD);
+        loggerA.addAppender((Appender) handlerA);
+        loggerB.addAppender((Appender) handlerB);
+        loggerC.addAppender((Appender) handlerC);
+        loggerD.addAppender((Appender) handlerD);
     }
 
     /**
      * Test teardown
      */
     @After
-    public void julTeardown() {
-        loggerA.removeHandler((Handler) handlerA);
-        loggerB.removeHandler((Handler) handlerB);
-        loggerC.removeHandler((Handler) handlerC);
-        loggerD.removeHandler((Handler) handlerD);
+    public void log4jTeardown() {
+        loggerA.removeAppender((Appender) handlerA);
+        loggerB.removeAppender((Appender) handlerB);
+        loggerC.removeAppender((Appender) handlerC);
+        loggerD.removeAppender((Appender) handlerD);
 
         loggerA = null;
         loggerB = null;
@@ -119,9 +121,9 @@ public class JulMultiSessionTest extends MultiSessionTestBase {
 
     @Override
     protected void sendEventsToLoggers() {
-        JulTestUtils.send10EventsTo(loggerA);
-        JulTestUtils.send10EventsTo(loggerB);
-        JulTestUtils.send10EventsTo(loggerC);
-        JulTestUtils.send10EventsTo(loggerD);
+        Log4jTestUtils.send10Events(loggerA);
+        Log4jTestUtils.send10Events(loggerB);
+        Log4jTestUtils.send10Events(loggerC);
+        Log4jTestUtils.send10Events(loggerD);
     }
 }

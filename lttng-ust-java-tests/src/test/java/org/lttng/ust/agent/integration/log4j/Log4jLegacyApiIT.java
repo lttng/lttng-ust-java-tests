@@ -49,7 +49,7 @@ import org.lttng.ust.agent.utils.TestPrintRunner;
  */
 @RunWith(TestPrintRunner.class)
 @SuppressWarnings("deprecation")
-public class Log4jLegacyApiTest {
+public class Log4jLegacyApiIT {
 
     private static final Domain DOMAIN = Domain.LOG4J;
 

@@ -31,14 +31,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.tools.LttngToolsHelper;
-import org.lttng.ust.agent.integration.EnabledEventsTestBase;
+import org.lttng.ust.agent.integration.EnabledEventsITBase;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.LttngUtils;
 
 /**
  * Enabled events test for the LTTng-UST Log4j log handler.
  */
-public class Log4jEnabledEventsTest extends EnabledEventsTestBase {
+public class Log4jEnabledEventsIT extends EnabledEventsITBase {
 
     private static final Domain DOMAIN = Domain.LOG4J;
 

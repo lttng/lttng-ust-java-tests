@@ -31,14 +31,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.tools.LttngToolsHelper;
-import org.lttng.ust.agent.integration.EnabledEventsTestBase;
+import org.lttng.ust.agent.integration.MultiSessionITBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.LttngUtils;
 
 /**
- * Enabled events test for the LTTng-UST JUL log handler.
+ * JUL tests for multiple concurrent tracing sessions
  */
-public class JulEnabledEventsTest extends EnabledEventsTestBase {
+public class JulMultiSessionIT extends MultiSessionITBase {
 
     private static final Domain DOMAIN = Domain.JUL;
 
@@ -88,10 +88,12 @@ public class JulEnabledEventsTest extends EnabledEventsTestBase {
         handlerA = new LttngLogHandler();
         handlerB = new LttngLogHandler();
         handlerC = new LttngLogHandler();
+        handlerD = new LttngLogHandler();
 
         loggerA.addHandler((Handler) handlerA);
         loggerB.addHandler((Handler) handlerB);
         loggerC.addHandler((Handler) handlerC);
+        loggerD.addHandler((Handler) handlerD);
     }
 
     /**
@@ -102,6 +104,7 @@ public class JulEnabledEventsTest extends EnabledEventsTestBase {
         loggerA.removeHandler((Handler) handlerA);
         loggerB.removeHandler((Handler) handlerB);
         loggerC.removeHandler((Handler) handlerC);
+        loggerD.removeHandler((Handler) handlerD);
 
         loggerA = null;
         loggerB = null;

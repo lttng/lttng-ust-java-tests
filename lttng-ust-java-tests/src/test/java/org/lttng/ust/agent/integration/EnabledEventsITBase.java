@@ -38,7 +38,7 @@ import org.lttng.ust.agent.utils.TestPrintRunner;
  * presence of enabled events in resulting traces.
  */
 @RunWith(TestPrintRunner.class)
-public abstract class EnabledEventsTestBase {
+public abstract class EnabledEventsITBase {
 
     protected static final String EVENT_NAME_A = "EventA";
     protected static final String EVENT_NAME_B = "EventAB";
