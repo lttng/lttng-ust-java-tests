@@ -98,14 +98,25 @@ public interface ILttngSession extends AutoCloseable {
     // ------------------------------------------------------------------------
 
     /**
-     * Enable all events in the session (as with "enable-event -a").
+     * Enable an individual event, specifying a loglevel and filter string.
      *
-     * @return If the command executed successfully (return code = 0).
+     * @param eventName
+     *            The name of the event to enable
+     * @param loglevel
+     *            The loglevel, will be passed as-is to lttng. May be null to
+     *            not specify it.
+     * @param loglevelOnly
+     *            True to use this log level only (--loglevel-only), or false to
+     *            include all more severe levels (--loglevel). Ignored if
+     *            "loglevel" is null.
+     * @param filter
+     *            The filter string, may be null to not specify one.
+     * @return If the command executed successfully (return code = 0)
      */
-    boolean enableAllEvents();
+    boolean enableEvent(String eventName, String loglevel, boolean loglevelOnly, String filter);
 
     /**
-     * Enable individual event(s).
+     * Enable individual event(s) with no loglevel/filter specified.
      *
      * @param enabledEvents
      *            The list of events to enable. Should not be null or empty
@@ -114,7 +125,14 @@ public interface ILttngSession extends AutoCloseable {
     boolean enableEvents(String... enabledEvents);
 
     /**
-     * Send a disable-event command. Used to disable events that were previously
+     * Enable all events in the session (as with "enable-event -a").
+     *
+     * @return If the command executed successfully (return code = 0).
+     */
+    boolean enableAllEvents();
+
+    /**
+     * Send a disable-event command. Used to disable event(s) that were previously
      * enabled.
      *
      * @param disabledEvents
@@ -122,6 +140,14 @@ public interface ILttngSession extends AutoCloseable {
      * @return If the command executed successfully (return code = 0).
      */
     boolean disableEvents(String... disabledEvents);
+
+    /**
+     * Disable all events currently enabled in the session
+     * ("lttng disable-event -a").
+     *
+     * @return If the command executed successfully (return code = 0)
+     */
+    boolean disableAllEvents();
 
     /**
      * Start tracing

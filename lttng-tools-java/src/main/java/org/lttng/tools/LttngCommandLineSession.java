@@ -20,6 +20,7 @@ package org.lttng.tools;
 
 import static org.lttng.tools.utils.ShellUtils.executeCommand;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -70,6 +71,36 @@ class LttngCommandLineSession implements ILttngSession {
     }
 
     @Override
+    public boolean enableEvent(String eventName, String loglevel, boolean loglevelOnly, String filter) {
+        channelCreated = true;
+
+        List<String> command = new ArrayList<>();
+        command.add("lttng");
+        command.add("enable-event");
+        command.add(domain.flag());
+        command.add(eventName);
+
+        if (loglevel != null) {
+            if (loglevelOnly) {
+                command.add("--loglevel-only");
+            } else {
+                command.add("--loglevel");
+            }
+            command.add(loglevel);
+        }
+
+        if (filter != null) {
+            command.add("--filter");
+            command.add(filter);
+        }
+
+        command.add("-s");
+        command.add(sessionName);
+
+        return executeCommand(command);
+    }
+
+    @Override
     public boolean enableAllEvents() {
         channelCreated = true;
         return executeCommand(Arrays.asList(
@@ -97,6 +128,12 @@ class LttngCommandLineSession implements ILttngSession {
                 "lttng", "disable-event", domain.flag(),
                 Arrays.stream(disabledEvents).collect(Collectors.joining(",")),
                 "-s", sessionName));
+    }
+
+    @Override
+    public boolean disableAllEvents() {
+        return executeCommand(Arrays.asList(
+                "lttng", "disable-event", domain.flag(), "-a", "-s", sessionName));
     }
 
     @Override
