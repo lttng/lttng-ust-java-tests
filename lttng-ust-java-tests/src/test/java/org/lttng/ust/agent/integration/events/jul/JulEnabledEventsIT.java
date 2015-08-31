@@ -16,7 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package org.lttng.ust.agent.integration.jul;
+package org.lttng.ust.agent.integration.events.jul;
 
 import static org.junit.Assume.assumeTrue;
 
@@ -31,7 +31,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.tools.LttngToolsHelper;
-import org.lttng.ust.agent.integration.EnabledEventsITBase;
+import org.lttng.ust.agent.integration.events.EnabledEventsITBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.LttngUtils;
 

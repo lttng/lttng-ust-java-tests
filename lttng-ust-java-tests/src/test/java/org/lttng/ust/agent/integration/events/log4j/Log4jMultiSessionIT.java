@@ -16,7 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package org.lttng.ust.agent.integration.log4j;
+package org.lttng.ust.agent.integration.events.log4j;
 
 import static org.junit.Assume.assumeTrue;
 
@@ -31,14 +31,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.tools.LttngToolsHelper;
-import org.lttng.ust.agent.integration.EnabledEventsITBase;
+import org.lttng.ust.agent.integration.events.MultiSessionITBase;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.LttngUtils;
 
 /**
- * Enabled events test for the LTTng-UST Log4j log handler.
+ * Log4j tests for multiple concurrent tracing sessions
  */
-public class Log4jEnabledEventsIT extends EnabledEventsITBase {
+public class Log4jMultiSessionIT extends MultiSessionITBase {
 
     private static final Domain DOMAIN = Domain.LOG4J;
 
@@ -67,14 +67,16 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
         LttngToolsHelper.deleteAllTraces();
     }
 
-    /**
-     * Test setup
-     *
-     * @throws SecurityException
-     * @throws IOException
-     */
+	/**
+	 * Test setup
+	 *
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
     @Before
     public void log4jSetup() throws SecurityException, IOException {
+        // TODO Wipe all existing LTTng sessions?
+
         loggerA = Logger.getLogger(EVENT_NAME_A);
         loggerB = Logger.getLogger(EVENT_NAME_B);
         loggerC = Logger.getLogger(EVENT_NAME_C);
@@ -88,10 +90,12 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
         handlerA = new LttngLogAppender();
         handlerB = new LttngLogAppender();
         handlerC = new LttngLogAppender();
+        handlerD = new LttngLogAppender();
 
         loggerA.addAppender((Appender) handlerA);
         loggerB.addAppender((Appender) handlerB);
         loggerC.addAppender((Appender) handlerC);
+        loggerD.addAppender((Appender) handlerD);
     }
 
     /**
@@ -102,6 +106,7 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
         loggerA.removeAppender((Appender) handlerA);
         loggerB.removeAppender((Appender) handlerB);
         loggerC.removeAppender((Appender) handlerC);
+        loggerD.removeAppender((Appender) handlerD);
 
         loggerA = null;
         loggerB = null;
