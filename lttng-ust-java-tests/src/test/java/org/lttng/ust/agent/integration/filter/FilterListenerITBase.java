@@ -234,6 +234,99 @@ public abstract class FilterListenerITBase {
     }
 
     /**
+     * Test sending some notifications then detaching a listener. Subsequent
+     * notifications should not be sent.
+     */
+    @Test
+    public void testDetachingListener() {
+        Set<EventRule> rules = Stream.of(
+                        new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
+                        new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null))
+                .collect(Collectors.toSet());
+
+        listener.setParameters(2, rules);
+
+        session.enableEvent(EVENT_NAME_A, null, false, null);
+        session.enableEvent(EVENT_NAME_B, null, false, null);
+        FilterNotificationManager.getInstance().unregisterListener(listener);
+        session.enableEvent(EVENT_NAME_C, null, false, null);
+
+        assertTrue(listener.waitForAllNotifications());
+        assertTrue(listener.checkRules());
+    }
+
+    /**
+     * Run a test with multiple listeners attached to the manager. All listeners
+     * should receive all the data.
+     */
+    @Test
+    public void testMultipleListeners() {
+        FilterNotificationManager fnm = FilterNotificationManager.getInstance();
+        TestFilterListener listener2 = new TestFilterListener();
+        TestFilterListener listener3 = new TestFilterListener();
+        fnm.registerListener(listener2);
+        fnm.registerListener(listener3);
+
+        Set<EventRule> rules = Stream.of(
+                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
+                new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null))
+            .collect(Collectors.toSet());
+
+        listener.setParameters(4, rules);
+        listener2.setParameters(4, rules);
+        listener3.setParameters(4, rules);
+
+        session.enableEvent(EVENT_NAME_A, null, false, null);
+        session.enableEvent(EVENT_NAME_B, null, false, null);
+        session.enableEvent(EVENT_NAME_C, null, false, null);
+        session.disableEvents(EVENT_NAME_C);
+
+        assertTrue(listener.waitForAllNotifications());
+        assertTrue(listener2.waitForAllNotifications());
+        assertTrue(listener3.waitForAllNotifications());
+        assertTrue(listener.checkRules());
+        assertTrue(listener2.checkRules());
+        assertTrue(listener3.checkRules());
+
+        fnm.unregisterListener(listener2);
+        fnm.unregisterListener(listener3);
+    }
+
+    /**
+     * Test with both attached and unattached listeners. The unattached ones
+     * should not receive anything, but should not interfere with the other
+     * ones.
+     */
+    @Test
+    public void testUnattachedListeners() {
+        FilterNotificationManager fnm = FilterNotificationManager.getInstance();
+        TestFilterListener listener2 = new TestFilterListener();
+        TestFilterListener listener3 = new TestFilterListener();
+        /* We attach then detach listener2. We never attach listener3 */
+        fnm.registerListener(listener2);
+        fnm.unregisterListener(listener2);
+
+        Set<EventRule> rules = Stream.of(
+                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
+                new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null))
+            .collect(Collectors.toSet());
+
+        listener.setParameters(2, rules);
+        listener2.setParameters(0, Collections.EMPTY_SET);
+        listener3.setParameters(0, Collections.EMPTY_SET);
+
+        session.enableEvent(EVENT_NAME_A, null, false, null);
+        session.enableEvent(EVENT_NAME_B, null, false, null);
+
+        assertTrue(listener.waitForAllNotifications());
+        assertTrue(listener2.waitForAllNotifications());
+        assertTrue(listener3.waitForAllNotifications());
+        assertTrue(listener.checkRules());
+        assertTrue(listener2.checkRules());
+        assertTrue(listener3.checkRules());
+    }
+
+    /**
      * The filter listener used for tests.
      *
      * <p>
