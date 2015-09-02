@@ -18,14 +18,12 @@
 
 package org.lttng.ust.agent.integration.filter;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -95,12 +93,8 @@ public abstract class FilterListenerITBase {
      */
     @Test
     public void testNoRules() {
-        Set<EventRule> rules = Collections.EMPTY_SET;
-        listener.setParameters(0, rules);
-        /* Don't enable any events */
-
-        assertTrue(listener.waitForAllNotifications());
-        assertTrue(listener.checkRules());
+        assertEquals(0, listener.getNbNotifications());
+        assertEquals(Collections.EMPTY_SET, listener.getCurrentRules());
     }
 
     /**
@@ -111,12 +105,10 @@ public abstract class FilterListenerITBase {
         Set<EventRule> rules = Collections.singleton(
                 new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null));
 
-        listener.setParameters(1, rules);
-
         session.enableEvent(EVENT_NAME_A, null, false, null);
 
-        assertTrue(listener.waitForAllNotifications());
-        assertTrue(listener.checkRules());
+        assertEquals(1, listener.getNbNotifications());
+        assertEquals(rules, listener.getCurrentRules());
     }
 
     /**
@@ -130,14 +122,12 @@ public abstract class FilterListenerITBase {
                         new EventRule(EVENT_NAME_C, LOG_LEVEL_UNSPECIFIED, null))
                 .collect(Collectors.toSet());
 
-        listener.setParameters(3, rules);
-
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, null);
         session.enableEvent(EVENT_NAME_C, null, false, null);
 
-        assertTrue(listener.waitForAllNotifications());
-        assertTrue(listener.checkRules());
+        assertEquals(3, listener.getNbNotifications());
+        assertEquals(rules, listener.getCurrentRules());
     }
 
     /**
@@ -148,16 +138,14 @@ public abstract class FilterListenerITBase {
         Set<EventRule> rules = Collections.singleton(
                 new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null));
 
-        listener.setParameters(4, rules);
-
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, null);
         session.enableEvent(EVENT_NAME_C, null, false, null);
         session.disableEvents(EVENT_NAME_B);
         session.disableEvents(EVENT_NAME_C);
 
-        assertTrue(listener.waitForAllNotifications());
-        assertTrue(listener.checkRules());
+        assertEquals(5, listener.getNbNotifications());
+        assertEquals(rules, listener.getCurrentRules());
     }
 
     /**
@@ -167,19 +155,17 @@ public abstract class FilterListenerITBase {
     public void testManyRulesDisableAll() {
         Set<EventRule> rules = Collections.EMPTY_SET;
 
-        /*
-         * We should receive 6 notifications, because a "disable-event -a" sends
-         * one for each event that was enabled.
-         */
-        listener.setParameters(6, rules);
-
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, null);
         session.enableEvent(EVENT_NAME_C, null, false, null);
         session.disableAllEvents();
 
-        assertTrue(listener.waitForAllNotifications());
-        assertTrue(listener.checkRules());
+        /*
+         * We should receive 6 notifications, because a "disable-event -a" sends
+         * one for each event that was enabled.
+         */
+        assertEquals(6, listener.getNbNotifications());
+        assertEquals(rules, listener.getCurrentRules());
     }
 
     /**
@@ -198,14 +184,12 @@ public abstract class FilterListenerITBase {
                     new EventRule(EVENT_NAME_A, llf3, null))
                 .collect(Collectors.toSet());
 
-        listener.setParameters(3, rules);
-
         session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), false, null);
         session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), true, null);
         session.enableEvent(EVENT_NAME_A, getLogLevelStrings().infoName(), false, null);
 
-        assertTrue(listener.waitForAllNotifications());
-        assertTrue(listener.checkRules());
+        assertEquals(3, listener.getNbNotifications());
+        assertEquals(rules, listener.getCurrentRules());
     }
 
     /**
@@ -223,14 +207,12 @@ public abstract class FilterListenerITBase {
                     new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, filterB))
                 .collect(Collectors.toSet());
 
-        listener.setParameters(3, rules);
-
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, filterA);
         session.enableEvent(EVENT_NAME_C, null, false, filterB);
 
-        assertTrue(listener.waitForAllNotifications());
-        assertTrue(listener.checkRules());
+        assertEquals(3, listener.getNbNotifications());
+        assertEquals(rules, listener.getCurrentRules());
     }
 
     /**
@@ -244,15 +226,13 @@ public abstract class FilterListenerITBase {
                         new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null))
                 .collect(Collectors.toSet());
 
-        listener.setParameters(2, rules);
-
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, null);
         FilterNotificationManager.getInstance().unregisterListener(listener);
         session.enableEvent(EVENT_NAME_C, null, false, null);
 
-        assertTrue(listener.waitForAllNotifications());
-        assertTrue(listener.checkRules());
+        assertEquals(2, listener.getNbNotifications());
+        assertEquals(rules, listener.getCurrentRules());
     }
 
     /**
@@ -272,21 +252,19 @@ public abstract class FilterListenerITBase {
                 new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null))
             .collect(Collectors.toSet());
 
-        listener.setParameters(4, rules);
-        listener2.setParameters(4, rules);
-        listener3.setParameters(4, rules);
-
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, null);
         session.enableEvent(EVENT_NAME_C, null, false, null);
         session.disableEvents(EVENT_NAME_C);
 
-        assertTrue(listener.waitForAllNotifications());
-        assertTrue(listener2.waitForAllNotifications());
-        assertTrue(listener3.waitForAllNotifications());
-        assertTrue(listener.checkRules());
-        assertTrue(listener2.checkRules());
-        assertTrue(listener3.checkRules());
+        assertEquals(4, listener.getNbNotifications());
+        assertEquals(rules, listener.getCurrentRules());
+
+        assertEquals(4, listener2.getNbNotifications());
+        assertEquals(rules, listener2.getCurrentRules());
+
+        assertEquals(4, listener3.getNbNotifications());
+        assertEquals(rules, listener3.getCurrentRules());
 
         fnm.unregisterListener(listener2);
         fnm.unregisterListener(listener3);
@@ -311,19 +289,53 @@ public abstract class FilterListenerITBase {
                 new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null))
             .collect(Collectors.toSet());
 
-        listener.setParameters(2, rules);
-        listener2.setParameters(0, Collections.EMPTY_SET);
-        listener3.setParameters(0, Collections.EMPTY_SET);
-
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, null);
 
-        assertTrue(listener.waitForAllNotifications());
-        assertTrue(listener2.waitForAllNotifications());
-        assertTrue(listener3.waitForAllNotifications());
-        assertTrue(listener.checkRules());
-        assertTrue(listener2.checkRules());
-        assertTrue(listener3.checkRules());
+        assertEquals(2, listener.getNbNotifications());
+        assertEquals(rules, listener.getCurrentRules());
+
+        assertEquals(0, listener2.getNbNotifications());
+        assertEquals(Collections.EMPTY_SET, listener2.getCurrentRules());
+
+        assertEquals(0, listener3.getNbNotifications());
+        assertEquals(Collections.EMPTY_SET, listener3.getCurrentRules());
+    }
+
+    /**
+     * Test that a newly-registered listener correctly receives the "statedump",
+     * which means all the rules currently active, upon registration.
+     */
+    @Test
+    public void testStatedump() {
+        FilterNotificationManager fnm = FilterNotificationManager.getInstance();
+        TestFilterListener listener2 = new TestFilterListener();
+
+        Set<EventRule> rules1 = Stream.of(
+                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
+                new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null))
+            .collect(Collectors.toSet());
+        Set<EventRule> rules2 = Stream.of(
+                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
+                new EventRule(EVENT_NAME_C, LOG_LEVEL_UNSPECIFIED, null))
+            .collect(Collectors.toSet());
+
+        session.enableEvent(EVENT_NAME_A, null, false, null);
+        session.enableEvent(EVENT_NAME_B, null, false, null);
+        fnm.registerListener(listener2);
+
+        /* We should have received the "statedump" when registering */
+        assertEquals(2, listener2.getNbNotifications());
+        assertEquals(rules1, listener2.getCurrentRules());
+
+        session.enableEvent(EVENT_NAME_C, null, false, null);
+        session.disableEvents(EVENT_NAME_B);
+
+        /* Subsequent changes should also be received */
+        assertEquals(4, listener2.getNbNotifications());
+        assertEquals(rules2, listener2.getCurrentRules());
+
+        fnm.unregisterListener(listener2);
     }
 
     /**
@@ -344,39 +356,28 @@ public abstract class FilterListenerITBase {
     private static class TestFilterListener implements IFilterChangeListener {
 
         private final Set<EventRule> currentRules = new HashSet<>();
-        private CountDownLatch remainingExpectedNotifs;
-        private Set<EventRule> expectedRules;
+        private volatile int currentNotifications = 0;
 
         public TestFilterListener() {}
 
         @Override
         public void eventRuleAdded(EventRule rule) {
             currentRules.add(rule);
-            remainingExpectedNotifs.countDown();
+            currentNotifications++;
         }
 
         @Override
         public void eventRuleRemoved(EventRule rule) {
             currentRules.remove(rule);
-            remainingExpectedNotifs.countDown();
+            currentNotifications++;
         }
 
-        public void setParameters(int expectedNotifications, Set<EventRule> expectedRulesAtEnd) {
-            this.remainingExpectedNotifs = new CountDownLatch(expectedNotifications);
-            this.expectedRules = expectedRulesAtEnd;
+        public int getNbNotifications() {
+            return currentNotifications;
         }
 
-        public boolean waitForAllNotifications() {
-            System.out.println("Waiting for all notifications to arrive...");
-            try {
-                return remainingExpectedNotifs.await(10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                return false;
-            }
-        }
-
-        public boolean checkRules() {
-            return ((remainingExpectedNotifs.getCount() == 0) && currentRules.equals(expectedRules));
+        public Set<EventRule> getCurrentRules() {
+            return currentRules;
         }
     }
 
