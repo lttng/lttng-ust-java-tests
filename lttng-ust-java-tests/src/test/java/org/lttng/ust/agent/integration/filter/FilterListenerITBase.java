@@ -34,11 +34,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lttng.tools.ILttngSession;
 import org.lttng.ust.agent.ILttngHandler;
-import org.lttng.ust.agent.filter.FilterNotificationManager;
+import org.lttng.ust.agent.filter.FilterChangeNotifier;
 import org.lttng.ust.agent.filter.IFilterChangeListener;
 import org.lttng.ust.agent.session.EventRule;
-import org.lttng.ust.agent.session.LogLevelFilter;
-import org.lttng.ust.agent.session.LogLevelFilter.LogLevelType;
+import org.lttng.ust.agent.session.LogLevelSelector;
+import org.lttng.ust.agent.session.LogLevelSelector.LogLevelType;
 import org.lttng.ust.agent.utils.ILogLevelStrings;
 import org.lttng.ust.agent.utils.TestPrintRunner;
 
@@ -50,7 +50,7 @@ import org.lttng.ust.agent.utils.TestPrintRunner;
 @RunWith(TestPrintRunner.class)
 public abstract class FilterListenerITBase {
 
-    protected static final LogLevelFilter LOG_LEVEL_UNSPECIFIED = new LogLevelFilter(Integer.MIN_VALUE, 0);
+    protected static final LogLevelSelector LOG_LEVEL_UNSPECIFIED = new LogLevelSelector(Integer.MIN_VALUE, 0);
 
     private static final String EVENT_NAME_A = "eventA";
     private static final String EVENT_NAME_B = "eventB";
@@ -74,7 +74,7 @@ public abstract class FilterListenerITBase {
     public void setup() throws SecurityException, IOException {
         handler = getLogHandler();
         listener = new TestFilterListener();
-        FilterNotificationManager.getInstance().registerListener(listener);
+        FilterChangeNotifier.getInstance().registerListener(listener);
         session = ILttngSession.createSession(null, getSessionDomain());
     }
 
@@ -84,7 +84,7 @@ public abstract class FilterListenerITBase {
     @After
     public void teardown() {
         session.close();
-        FilterNotificationManager.getInstance().unregisterListener(listener);
+        FilterChangeNotifier.getInstance().unregisterListener(listener);
         handler.close();
     }
 
@@ -174,14 +174,14 @@ public abstract class FilterListenerITBase {
     @Ignore("Does not work as expected atm, see http://bugs.lttng.org/issues/913")
     @Test
     public void testSameEventsDiffLogLevels() {
-        LogLevelFilter llf1 = new LogLevelFilter(getLogLevelStrings().warningInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_RANGE);
-        LogLevelFilter llf2 = new LogLevelFilter(getLogLevelStrings().warningInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_SINGLE);
-        LogLevelFilter llf3 = new LogLevelFilter(getLogLevelStrings().infoInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_RANGE);
+        LogLevelSelector lls1 = new LogLevelSelector(getLogLevelStrings().warningInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_RANGE);
+        LogLevelSelector lls2 = new LogLevelSelector(getLogLevelStrings().warningInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_SINGLE);
+        LogLevelSelector lls3 = new LogLevelSelector(getLogLevelStrings().infoInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_RANGE);
 
         Set<EventRule> rules = Stream.of(
-                    new EventRule(EVENT_NAME_A, llf1, null),
-                    new EventRule(EVENT_NAME_A, llf2, null),
-                    new EventRule(EVENT_NAME_A, llf3, null))
+                    new EventRule(EVENT_NAME_A, lls1, null),
+                    new EventRule(EVENT_NAME_A, lls2, null),
+                    new EventRule(EVENT_NAME_A, lls3, null))
                 .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), false, null);
@@ -228,7 +228,7 @@ public abstract class FilterListenerITBase {
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, null);
-        FilterNotificationManager.getInstance().unregisterListener(listener);
+        FilterChangeNotifier.getInstance().unregisterListener(listener);
         session.enableEvent(EVENT_NAME_C, null, false, null);
 
         assertEquals(2, listener.getNbNotifications());
@@ -241,11 +241,11 @@ public abstract class FilterListenerITBase {
      */
     @Test
     public void testMultipleListeners() {
-        FilterNotificationManager fnm = FilterNotificationManager.getInstance();
+        FilterChangeNotifier fcn = FilterChangeNotifier.getInstance();
         TestFilterListener listener2 = new TestFilterListener();
         TestFilterListener listener3 = new TestFilterListener();
-        fnm.registerListener(listener2);
-        fnm.registerListener(listener3);
+        fcn.registerListener(listener2);
+        fcn.registerListener(listener3);
 
         Set<EventRule> rules = Stream.of(
                 new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
@@ -266,8 +266,8 @@ public abstract class FilterListenerITBase {
         assertEquals(4, listener3.getNbNotifications());
         assertEquals(rules, listener3.getCurrentRules());
 
-        fnm.unregisterListener(listener2);
-        fnm.unregisterListener(listener3);
+        fcn.unregisterListener(listener2);
+        fcn.unregisterListener(listener3);
     }
 
     /**
@@ -277,12 +277,12 @@ public abstract class FilterListenerITBase {
      */
     @Test
     public void testUnattachedListeners() {
-        FilterNotificationManager fnm = FilterNotificationManager.getInstance();
+        FilterChangeNotifier fcn = FilterChangeNotifier.getInstance();
         TestFilterListener listener2 = new TestFilterListener();
         TestFilterListener listener3 = new TestFilterListener();
         /* We attach then detach listener2. We never attach listener3 */
-        fnm.registerListener(listener2);
-        fnm.unregisterListener(listener2);
+        fcn.registerListener(listener2);
+        fcn.unregisterListener(listener2);
 
         Set<EventRule> rules = Stream.of(
                 new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
@@ -308,7 +308,7 @@ public abstract class FilterListenerITBase {
      */
     @Test
     public void testStatedump() {
-        FilterNotificationManager fnm = FilterNotificationManager.getInstance();
+        FilterChangeNotifier fcn = FilterChangeNotifier.getInstance();
         TestFilterListener listener2 = new TestFilterListener();
 
         Set<EventRule> rules1 = Stream.of(
@@ -322,7 +322,7 @@ public abstract class FilterListenerITBase {
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, null);
-        fnm.registerListener(listener2);
+        fcn.registerListener(listener2);
 
         /* We should have received the "statedump" when registering */
         assertEquals(2, listener2.getNbNotifications());
@@ -335,7 +335,7 @@ public abstract class FilterListenerITBase {
         assertEquals(4, listener2.getNbNotifications());
         assertEquals(rules2, listener2.getCurrentRules());
 
-        fnm.unregisterListener(listener2);
+        fcn.unregisterListener(listener2);
     }
 
     /**
