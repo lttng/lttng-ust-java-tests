@@ -23,6 +23,7 @@ import static org.lttng.tools.utils.ShellUtils.executeCommand;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -134,6 +135,16 @@ class LttngCommandLineSession implements ILttngSession {
     public boolean disableAllEvents() {
         return executeCommand(Arrays.asList(
                 "lttng", "disable-event", domain.flag(), "-a", "-s", sessionName));
+    }
+
+    @Override
+    public Set<String> listEvents() {
+        List<String> output = ShellUtils.getOutputFromCommand(true, Arrays.asList("lttng", "list", domain.flag()));
+        return output.stream()
+                .map(e -> e.trim())
+                .filter(e -> e.startsWith("- "))
+                .map(e -> e.substring(2))
+                .collect(Collectors.toSet());
     }
 
     @Override

@@ -19,6 +19,7 @@
 package org.lttng.tools;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Java representation of a LTTng tracing session.
@@ -148,6 +149,14 @@ public interface ILttngSession extends AutoCloseable {
      * @return If the command executed successfully (return code = 0)
      */
     boolean disableAllEvents();
+
+    /**
+     * Get a list of events currently available (exposed by applications) in the
+     * session's domain.
+     *
+     * @return The list of available events
+     */
+    Set<String> listEvents();
 
     /**
      * Start tracing
