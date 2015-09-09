@@ -52,7 +52,7 @@ public class TcpClientDebugListener implements ILttngTcpClientListener {
      * Not yet implemented
      */
     @Override
-    public Iterable<String> listEnabledEvents() {
+    public List<String> listAvailableEvents() {
         // TODO NYI
         return Collections.EMPTY_LIST;
     }
