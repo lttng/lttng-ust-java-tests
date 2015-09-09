@@ -35,7 +35,7 @@ import org.junit.runners.model.InitializationError;
 public class TestPrintRunner extends BlockJUnit4ClassRunner {
 
     /**
-     * Consructor
+     * Constructor
      *
      * @param klass
      * @throws InitializationError
