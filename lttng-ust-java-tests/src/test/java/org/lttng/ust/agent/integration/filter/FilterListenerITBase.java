@@ -29,7 +29,6 @@ import java.util.stream.Stream;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lttng.tools.ILttngSession;
@@ -39,6 +38,7 @@ import org.lttng.ust.agent.filter.IFilterChangeListener;
 import org.lttng.ust.agent.session.EventRule;
 import org.lttng.ust.agent.session.LogLevelSelector;
 import org.lttng.ust.agent.session.LogLevelSelector.LogLevelType;
+import org.lttng.ust.agent.utils.EventRuleFactory;
 import org.lttng.ust.agent.utils.ILogLevelStrings;
 import org.lttng.ust.agent.utils.TestPrintRunner;
 
@@ -49,8 +49,6 @@ import org.lttng.ust.agent.utils.TestPrintRunner;
  */
 @RunWith(TestPrintRunner.class)
 public abstract class FilterListenerITBase {
-
-    protected static final LogLevelSelector LOG_LEVEL_UNSPECIFIED = new LogLevelSelector(Integer.MIN_VALUE, 0);
 
     private static final String EVENT_NAME_A = "eventA";
     private static final String EVENT_NAME_B = "eventB";
@@ -103,7 +101,7 @@ public abstract class FilterListenerITBase {
     @Test
     public void testOneRule() {
         Set<EventRule> rules = Collections.singleton(
-                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null));
+                EventRuleFactory.createRule(EVENT_NAME_A));
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
 
@@ -116,10 +114,10 @@ public abstract class FilterListenerITBase {
      */
     @Test
     public void testManyRules() {
-        Set<EventRule> rules = Stream
-                .of(new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
-                        new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null),
-                        new EventRule(EVENT_NAME_C, LOG_LEVEL_UNSPECIFIED, null))
+        Set<EventRule> rules = Stream.of(
+                    EventRuleFactory.createRule(EVENT_NAME_A),
+                    EventRuleFactory.createRule(EVENT_NAME_B),
+                    EventRuleFactory.createRule(EVENT_NAME_C))
                 .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
@@ -136,7 +134,7 @@ public abstract class FilterListenerITBase {
     @Test
     public void testManyRulesDisableSome() {
         Set<EventRule> rules = Collections.singleton(
-                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null));
+                EventRuleFactory.createRule(EVENT_NAME_A));
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, null);
@@ -171,7 +169,6 @@ public abstract class FilterListenerITBase {
     /**
      * Test enabling the same event name with various values of loglevels.
      */
-    @Ignore("Does not work as expected atm, see http://bugs.lttng.org/issues/913")
     @Test
     public void testSameEventsDiffLogLevels() {
         LogLevelSelector lls1 = new LogLevelSelector(getLogLevelStrings().warningInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_RANGE);
@@ -179,9 +176,9 @@ public abstract class FilterListenerITBase {
         LogLevelSelector lls3 = new LogLevelSelector(getLogLevelStrings().infoInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_RANGE);
 
         Set<EventRule> rules = Stream.of(
-                    new EventRule(EVENT_NAME_A, lls1, null),
-                    new EventRule(EVENT_NAME_A, lls2, null),
-                    new EventRule(EVENT_NAME_A, lls3, null))
+                    EventRuleFactory.createRule(EVENT_NAME_A, lls1),
+                    EventRuleFactory.createRule(EVENT_NAME_A, lls2),
+                    EventRuleFactory.createRule(EVENT_NAME_A, lls3))
                 .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), false, null);
@@ -195,16 +192,15 @@ public abstract class FilterListenerITBase {
     /**
      * Test enabling the same event name with various filters.
      */
-    @Ignore("Filters are not tracked yet")
     @Test
     public void testSameEventsDiffFilters() {
         String filterA = "filterA";
         String filterB = "filterB";
 
         Set<EventRule> rules = Stream.of(
-                    new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
-                    new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, filterA),
-                    new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, filterB))
+                    EventRuleFactory.createRule(EVENT_NAME_A),
+                    EventRuleFactory.createRule(EVENT_NAME_B, EventRuleFactory.LOG_LEVEL_UNSPECIFIED, filterA),
+                    EventRuleFactory.createRule(EVENT_NAME_C, EventRuleFactory.LOG_LEVEL_UNSPECIFIED, filterB))
                 .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
@@ -222,8 +218,8 @@ public abstract class FilterListenerITBase {
     @Test
     public void testDetachingListener() {
         Set<EventRule> rules = Stream.of(
-                        new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
-                        new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null))
+                        EventRuleFactory.createRule(EVENT_NAME_A),
+                        EventRuleFactory.createRule(EVENT_NAME_B))
                 .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
@@ -248,8 +244,8 @@ public abstract class FilterListenerITBase {
         fcn.registerListener(listener3);
 
         Set<EventRule> rules = Stream.of(
-                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
-                new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null))
+                EventRuleFactory.createRule(EVENT_NAME_A),
+                EventRuleFactory.createRule(EVENT_NAME_B))
             .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
@@ -285,8 +281,8 @@ public abstract class FilterListenerITBase {
         fcn.unregisterListener(listener2);
 
         Set<EventRule> rules = Stream.of(
-                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
-                new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null))
+                EventRuleFactory.createRule(EVENT_NAME_A),
+                EventRuleFactory.createRule(EVENT_NAME_B))
             .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
@@ -312,12 +308,12 @@ public abstract class FilterListenerITBase {
         TestFilterListener listener2 = new TestFilterListener();
 
         Set<EventRule> rules1 = Stream.of(
-                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
-                new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null))
+                EventRuleFactory.createRule(EVENT_NAME_A),
+                EventRuleFactory.createRule(EVENT_NAME_B))
             .collect(Collectors.toSet());
         Set<EventRule> rules2 = Stream.of(
-                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
-                new EventRule(EVENT_NAME_C, LOG_LEVEL_UNSPECIFIED, null))
+                EventRuleFactory.createRule(EVENT_NAME_A),
+                EventRuleFactory.createRule(EVENT_NAME_C))
             .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
@@ -340,18 +336,6 @@ public abstract class FilterListenerITBase {
 
     /**
      * The filter listener used for tests.
-     *
-     * <p>
-     * Usage:
-     * <ul>
-     * <li>Specify the expected number of notifications and end rules with
-     * {@link #setParameters}.</li>
-     * <li>Send the commands to LTTng (using {@link ILttngSession} for example.
-     * </li>
-     * <li>Call {@link #waitForAllNotifications()}.</li>
-     * <li>Verify that {@link #checkRules()} returns true.</li>
-     * </ul>
-     * </p>
      */
     private static class TestFilterListener implements IFilterChangeListener {
 

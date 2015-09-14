@@ -31,8 +31,8 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.LttngToolsHelper;
 import org.lttng.ust.agent.ILttngAgent;
@@ -40,7 +40,9 @@ import org.lttng.ust.agent.client.LttngTcpSessiondClient;
 import org.lttng.ust.agent.session.EventRule;
 import org.lttng.ust.agent.session.LogLevelSelector;
 import org.lttng.ust.agent.session.LogLevelSelector.LogLevelType;
+import org.lttng.ust.agent.utils.EventRuleFactory;
 import org.lttng.ust.agent.utils.ILogLevelStrings;
+import org.lttng.ust.agent.utils.TestPrintRunner;
 
 /**
  * Tests for the TCP client only, without using an agent.
@@ -51,18 +53,16 @@ import org.lttng.ust.agent.utils.ILogLevelStrings;
  *
  * @author Alexandre Montplaisir
  */
+@RunWith(TestPrintRunner.class)
 public class TcpClientIT {
 
     // ------------------------------------------------------------------------
     // Attributes
     // ------------------------------------------------------------------------
 
-    private static final LogLevelSelector LOG_LEVEL_UNSPECIFIED = new LogLevelSelector(Integer.MIN_VALUE, 0);
-
     private static final String EVENT_NAME_A = "eventA";
     private static final String EVENT_NAME_B = "eventB";
     private static final String EVENT_NAME_C = "eventC";
-    private static final String EVENT_NAME_ALL = "*";
 
     /* Test configuration */
     private static final int DOMAIN_VALUE = ILttngAgent.Domain.JUL.value();
@@ -158,7 +158,7 @@ public class TcpClientIT {
         session.enableEvent(EVENT_NAME_A, null, false, null);
 
         List<EventRule> expectedCommands = Collections.singletonList(
-                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null));
+                EventRuleFactory.createRule(EVENT_NAME_A));
 
         List<EventRule> actualCommands = clientListener.getEnabledEventCommands();
         assertEquals(expectedCommands, actualCommands);
@@ -172,7 +172,7 @@ public class TcpClientIT {
         session.enableAllEvents();
 
         List<EventRule> expectedCommands = Collections.singletonList(
-                new EventRule(EVENT_NAME_ALL, LOG_LEVEL_UNSPECIFIED, null));
+                EventRuleFactory.createRuleAllEvents());
         List<EventRule> actualCommands = clientListener.getEnabledEventCommands();
 
         assertEquals(expectedCommands, actualCommands);
@@ -187,7 +187,7 @@ public class TcpClientIT {
         session.disableEvents(EVENT_NAME_A);
 
         List<EventRule> expectedEnableCommands = Collections.singletonList(
-                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null));
+                EventRuleFactory.createRule(EVENT_NAME_A));
         List<String> expectedDisableCommands = Collections.singletonList(EVENT_NAME_A);
 
         assertEquals(expectedEnableCommands, clientListener.getEnabledEventCommands());
@@ -205,9 +205,9 @@ public class TcpClientIT {
         session.disableAllEvents();
 
         List<EventRule> expectedEnableCommands = Arrays.asList(
-                new EventRule(EVENT_NAME_A, LOG_LEVEL_UNSPECIFIED, null),
-                new EventRule(EVENT_NAME_B, LOG_LEVEL_UNSPECIFIED, null),
-                new EventRule(EVENT_NAME_C, LOG_LEVEL_UNSPECIFIED, null));
+                EventRuleFactory.createRule(EVENT_NAME_A),
+                EventRuleFactory.createRule(EVENT_NAME_B),
+                EventRuleFactory.createRule(EVENT_NAME_C));
         /*
          * A "disable-event -a" will send one command for each enabled event.
          * The order may be different though.
@@ -227,10 +227,8 @@ public class TcpClientIT {
         session.enableAllEvents();
         session.disableAllEvents();
 
-        List<EventRule> expectedEnableCommands = Arrays.asList(
-                new EventRule(EVENT_NAME_ALL, LOG_LEVEL_UNSPECIFIED, null));
-        List<String> expectedDisableCommands = Arrays.asList(
-                EVENT_NAME_ALL);
+        List<EventRule> expectedEnableCommands = Arrays.asList(EventRuleFactory.createRuleAllEvents());
+        List<String> expectedDisableCommands = Arrays.asList(EventRuleFactory.EVENT_NAME_ALL);
 
         assertEquals(expectedEnableCommands, clientListener.getEnabledEventCommands());
         assertTrue(containSameElements(expectedDisableCommands, clientListener.getDisabledEventCommands()));
@@ -246,7 +244,7 @@ public class TcpClientIT {
         session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), false, null);
 
         List<EventRule> expectedCommands = Collections.singletonList(
-                new EventRule(EVENT_NAME_A, lls, null));
+                EventRuleFactory.createRule(EVENT_NAME_A, lls));
         List<EventRule> actualCommands = clientListener.getEnabledEventCommands();
 
         assertEquals(expectedCommands, actualCommands);
@@ -262,7 +260,7 @@ public class TcpClientIT {
         session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), true, null);
 
         List<EventRule> expectedCommands = Collections.singletonList(
-                new EventRule(EVENT_NAME_A, lls, null));
+                EventRuleFactory.createRule(EVENT_NAME_A, lls));
         List<EventRule> actualCommands = clientListener.getEnabledEventCommands();
 
         assertEquals(expectedCommands, actualCommands);
@@ -271,7 +269,6 @@ public class TcpClientIT {
     /**
      * Test enabling an event twice, for the same loglevel, with --loglevel followed by --loglevel-only.
      */
-    @Ignore("See http://bugs.lttng.org/issues/913")
     @Test
     public void testEnableEventsLogLevelRangeAndSingle() {
         LogLevelSelector lls1 = new LogLevelSelector(getLogLevelStrings().warningInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_RANGE);
@@ -281,8 +278,8 @@ public class TcpClientIT {
         session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), true, null);
 
         List<EventRule> expectedCommands = Arrays.asList(
-                new EventRule(EVENT_NAME_A, lls1, null),
-                new EventRule(EVENT_NAME_A, lls2, null)
+                EventRuleFactory.createRule(EVENT_NAME_A, lls1),
+                EventRuleFactory.createRule(EVENT_NAME_A, lls2)
                 );
         List<EventRule> actualCommands = clientListener.getEnabledEventCommands();
 
@@ -290,9 +287,8 @@ public class TcpClientIT {
     }
 
     /**
-     * Test enabling an event twice, for the same loglevel, with --loglevel--only followed by --loglevel.
+     * Test enabling an event twice, for the same loglevel, with --loglevel-only followed by --loglevel.
      */
-    @Ignore("See http://bugs.lttng.org/issues/913")
     @Test
     public void testEnableEventsLogLevelSingleAndRange() {
         LogLevelSelector lls1 = new LogLevelSelector(getLogLevelStrings().warningInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_SINGLE);
@@ -302,8 +298,8 @@ public class TcpClientIT {
         session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), false, null);
 
         List<EventRule> expectedCommands = Arrays.asList(
-                new EventRule(EVENT_NAME_A, lls1, null),
-                new EventRule(EVENT_NAME_A, lls2, null)
+                EventRuleFactory.createRule(EVENT_NAME_A, lls1),
+                EventRuleFactory.createRule(EVENT_NAME_A, lls2)
                 );
         List<EventRule> actualCommands = clientListener.getEnabledEventCommands();
 
@@ -324,11 +320,57 @@ public class TcpClientIT {
             session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), false, null);
             session2.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), true, null);
 
-            List<EventRule> expectedCommands = Arrays.asList(new EventRule(EVENT_NAME_A, lls1, null),
-                    new EventRule(EVENT_NAME_A, lls2, null));
+            List<EventRule> expectedCommands = Arrays.asList(
+                    EventRuleFactory.createRule(EVENT_NAME_A, lls1),
+                    EventRuleFactory.createRule(EVENT_NAME_A, lls2));
             List<EventRule> actualCommands = clientListener.getEnabledEventCommands();
 
             assertEquals(expectedCommands, actualCommands);
         }
+    }
+
+    /**
+     * Enable the same event multiple times with different filter strings.
+     */
+    @Test
+    public void testEnableEventsDiffFilters() {
+        final String filter1 = "filter1";
+        final String filter2 = "filter2";
+
+        session.enableEvent(EVENT_NAME_A, null, false, null);
+        session.enableEvent(EVENT_NAME_A, null, false, filter1);
+        session.enableEvent(EVENT_NAME_A, null, false, filter2);
+
+        List<EventRule> expectedCommands = Arrays.asList(
+                EventRuleFactory.createRule(EVENT_NAME_A),
+                EventRuleFactory.createRule(EVENT_NAME_A, EventRuleFactory.LOG_LEVEL_UNSPECIFIED, filter1),
+                EventRuleFactory.createRule(EVENT_NAME_A, EventRuleFactory.LOG_LEVEL_UNSPECIFIED, filter2));
+        List<EventRule> actualCommands = clientListener.getEnabledEventCommands();
+
+        assertEquals(expectedCommands, actualCommands);
+    }
+
+    /**
+     * Enable the same event multiple times with different log levels and
+     * filters.
+     */
+    @Test
+    public void testEnableEventsLogLevelAndFilters() {
+        final LogLevelSelector lls = new LogLevelSelector(getLogLevelStrings().warningInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_RANGE);
+        final String filter = "filter1";
+
+        session.enableEvent(EVENT_NAME_A, null, false, null);
+        session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), false, null);
+        session.enableEvent(EVENT_NAME_A, null, false, filter);
+        session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), false, filter);
+
+        List<EventRule> expectedCommands = Arrays.asList(
+                EventRuleFactory.createRule(EVENT_NAME_A),
+                EventRuleFactory.createRule(EVENT_NAME_A, lls),
+                EventRuleFactory.createRule(EVENT_NAME_A, EventRuleFactory.LOG_LEVEL_UNSPECIFIED, filter),
+                EventRuleFactory.createRule(EVENT_NAME_A, lls, filter));
+        List<EventRule> actualCommands = clientListener.getEnabledEventCommands();
+
+        assertEquals(expectedCommands, actualCommands);
     }
 }
