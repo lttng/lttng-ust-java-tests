@@ -55,7 +55,7 @@ Please make sure you have no `lttng` session active prior to or during the
 tests, or it might interfere with the test runs!
 
 Detailed JUnit test reports will be available under
-`lttng-ust-java-tests/target/failsafe-reports/`
+`lttng-ust-java-tests-{jul|log4j}/target/failsafe-reports/`
 
 
 Running the benchmarks
