@@ -148,6 +148,14 @@ class LttngCommandLineSession implements ILttngSession {
     }
 
     @Override
+    public boolean enableAppContext(String retrieverName, String contextName) {
+        return executeCommand(Arrays.asList(
+                "lttng", "add-context", domain.flag(),
+                "-t", "$app." + retrieverName + ':' + contextName,
+                "-s", sessionName));
+    }
+
+    @Override
     public boolean start() {
         /*
          * We have to enable a channel for 'lttng start' to work. However, we

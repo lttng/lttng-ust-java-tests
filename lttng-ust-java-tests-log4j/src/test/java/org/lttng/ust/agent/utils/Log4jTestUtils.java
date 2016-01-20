@@ -43,6 +43,7 @@ public final class Log4jTestUtils {
             LttngLogAppender testAppender = new LttngLogAppender();
             testAppender.close();
         } catch (SecurityException | IOException e) {
+            e.printStackTrace();
             return false;
         }
         return true;

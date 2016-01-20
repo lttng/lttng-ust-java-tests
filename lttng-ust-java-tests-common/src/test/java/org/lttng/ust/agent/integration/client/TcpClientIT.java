@@ -64,6 +64,11 @@ public class TcpClientIT {
     private static final String EVENT_NAME_B = "eventB";
     private static final String EVENT_NAME_C = "eventC";
 
+    private static final String CONTEXT_RETRIEVER_NAME_A = "retrieverA";
+    private static final String CONTEXT_RETRIEVER_NAME_B = "retrieverB";
+    private static final String CONTEXT_NAME_A = "contextA";
+    private static final String CONTEXT_NAME_B = "contextB";
+
     /* Test configuration */
     private static final int DOMAIN_VALUE = ILttngAgent.Domain.JUL.value();
     private static final ILttngSession.Domain SESSION_DOMAIN = ILttngSession.Domain.JUL;
@@ -147,7 +152,7 @@ public class TcpClientIT {
     }
 
     // ------------------------------------------------------------------------
-    // Test cases
+    // Event enabling/disabling test cases
     // ------------------------------------------------------------------------
 
     /**
@@ -391,5 +396,134 @@ public class TcpClientIT {
         List<EventRule> actualCommands = clientListener.getEnabledEventCommands();
 
         assertEquals(expectedCommands, actualCommands);
+    }
+
+    // ------------------------------------------------------------------------
+    // Application context enabling/disabling test cases
+    // ------------------------------------------------------------------------
+
+    /**
+     * Test enabling one application context.
+     */
+    @Test
+    public void testEnableAppContext() {
+        session.enableAppContext(CONTEXT_RETRIEVER_NAME_A, CONTEXT_NAME_A);
+
+        List<String> expectedCommands = Collections.singletonList(
+                CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A);
+
+        List<String> actualCommands = clientListener.getEnabledAppContextCommands();
+        assertEquals(expectedCommands, actualCommands);
+    }
+
+    /**
+     * Test enabling two application contexts sharing the same retriever name.
+     */
+    @Test
+    public void testEnableAppContextsSameRetriever() {
+        session.enableAppContext(CONTEXT_RETRIEVER_NAME_A, CONTEXT_NAME_A);
+        session.enableAppContext(CONTEXT_RETRIEVER_NAME_A, CONTEXT_NAME_B);
+
+        List<String> expectedCommands = Arrays.asList(
+                CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A,
+                CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_B);
+
+        List<String> actualCommands = clientListener.getEnabledAppContextCommands();
+        assertEquals(expectedCommands, actualCommands);
+    }
+
+    /**
+     * Test enabling two application contexts sharing the same context name, but
+     * with different retrievers. Unusual, but they should still be recognized
+     * separately.
+     */
+    @Test
+    public void testEnableAppContextsSameContext() {
+        session.enableAppContext(CONTEXT_RETRIEVER_NAME_A, CONTEXT_NAME_A);
+        session.enableAppContext(CONTEXT_RETRIEVER_NAME_B, CONTEXT_NAME_A);
+
+        List<String> expectedCommands = Arrays.asList(
+                CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A,
+                CONTEXT_RETRIEVER_NAME_B + ':' + CONTEXT_NAME_A);
+
+        List<String> actualCommands = clientListener.getEnabledAppContextCommands();
+        assertEquals(expectedCommands, actualCommands);
+    }
+
+    /**
+     * Test enabling one application context, then destroying the session. We
+     * should receive the corresponding "context removed" message.
+     */
+    @Test
+    @SuppressWarnings("static-method")
+    public void testEnableAppContextThenDestroy() {
+        try (ILttngSession session2 = ILttngSession.createSession(null, SESSION_DOMAIN);) {
+            session2.enableAppContext(CONTEXT_RETRIEVER_NAME_A, CONTEXT_NAME_A);
+        } // close(), aka destroy the session, sending "disable context" messages
+
+        List<String> expectedEnabledCommands = Collections.singletonList(CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A);
+        List<String> expectedDisabledCommands = Collections.singletonList(CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A);
+        List<String> actualEnabledCommands = clientListener.getEnabledAppContextCommands();
+        List<String> actualDisabledCommands = clientListener.getDisabledAppContextCommands();
+
+        assertEquals(expectedEnabledCommands, actualEnabledCommands);
+        assertEquals(expectedDisabledCommands, actualDisabledCommands);
+    }
+
+    /**
+     * Test enabling the same application context in two different sessions.
+     * Upon destroying one, we should only receive one "destroyed" message.
+     */
+    @Test
+    public void testEnableSameAppContextTwoSessions() {
+        List<String> expectedEnabledCommands = Arrays.asList(
+                CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A,
+                CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A);
+        List<String> actualEnabledCommands;
+
+        try (ILttngSession session2 = ILttngSession.createSession(null, SESSION_DOMAIN);) {
+            session.enableAppContext(CONTEXT_RETRIEVER_NAME_A, CONTEXT_NAME_A);
+            session2.enableAppContext(CONTEXT_RETRIEVER_NAME_A, CONTEXT_NAME_A);
+
+            actualEnabledCommands = clientListener.getEnabledAppContextCommands();
+            assertEquals(expectedEnabledCommands, actualEnabledCommands);
+        } // close/destroy session2
+
+        actualEnabledCommands = clientListener.getEnabledAppContextCommands();
+        assertEquals(expectedEnabledCommands, actualEnabledCommands);
+
+        List<String> expectedDisabledCommands = Collections.singletonList(CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A);
+        List<String> actualDisabledCommands = clientListener.getDisabledAppContextCommands();
+
+        assertEquals(expectedDisabledCommands, actualDisabledCommands);
+    }
+
+    /**
+     * Test enabling two different application context in two different
+     * sessions. Upon destroying one, we should receive the correct "destroyed"
+     * message.
+     */
+    @Test
+    public void testEnableDiffAppContextTwoSessions() {
+        List<String> expectedEnabledCommands = Arrays.asList(
+                CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A,
+                CONTEXT_RETRIEVER_NAME_B + ':' + CONTEXT_NAME_B);
+        List<String> actualEnabledCommands;
+
+        try (ILttngSession session2 = ILttngSession.createSession(null, SESSION_DOMAIN);) {
+            session.enableAppContext(CONTEXT_RETRIEVER_NAME_A, CONTEXT_NAME_A);
+            session2.enableAppContext(CONTEXT_RETRIEVER_NAME_B, CONTEXT_NAME_B);
+
+            actualEnabledCommands = clientListener.getEnabledAppContextCommands();
+            assertEquals(expectedEnabledCommands, actualEnabledCommands);
+        } // close/destroy session2
+
+        actualEnabledCommands = clientListener.getEnabledAppContextCommands();
+        assertEquals(expectedEnabledCommands, actualEnabledCommands);
+
+        List<String> expectedDisabledCommands = Collections.singletonList(CONTEXT_RETRIEVER_NAME_B + ':' + CONTEXT_NAME_B);
+        List<String> actualDisabledCommands = clientListener.getDisabledAppContextCommands();
+
+        assertEquals(expectedDisabledCommands, actualDisabledCommands);
     }
 }

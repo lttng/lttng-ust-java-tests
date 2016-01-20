@@ -159,6 +159,20 @@ public interface ILttngSession extends AutoCloseable {
     Set<String> listEvents();
 
     /**
+     * Enable an application context with the provided retriever/context names.
+     *
+     * There is currently no direct command to remove an existing context, the
+     * session has to be destroyed and re-created to do so.
+     *
+     * @param retrieverName
+     *            The name of the retriever (or "namespace" of the context)
+     * @param contextName
+     *            The name of the context
+     * @return If the command executed successfully (return code = 0)
+     */
+    boolean enableAppContext(String retrieverName, String contextName);
+
+    /**
      * Start tracing
      *
      * @return If the command executed successfully (return code = 0).

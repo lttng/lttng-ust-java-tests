@@ -36,6 +36,9 @@ public class TcpClientDebugListener implements ILttngTcpClientListener {
     private final List<EventRule> enabledEventCommands = Collections.synchronizedList(new ArrayList<>());
     private final List<String> disabledEventCommands = Collections.synchronizedList(new ArrayList<>());
 
+    private final List<String> enabledAppContextCommands = Collections.synchronizedList(new ArrayList<>());
+    private final List<String> disabledAppContextCommands = Collections.synchronizedList(new ArrayList<>());
+
     @Override
     public boolean eventEnabled(EventRule rule) {
         enabledEventCommands.add(rule);
@@ -49,15 +52,15 @@ public class TcpClientDebugListener implements ILttngTcpClientListener {
     }
 
     @Override
-    public boolean appContextDisabled(String contextRetrieverName, String contextName) {
-        // TODO NYI
-        return false;
+    public boolean appContextEnabled(String contextRetrieverName, String contextName) {
+        enabledAppContextCommands.add(contextRetrieverName + ':' + contextName);
+        return true;
     }
 
     @Override
-    public boolean appContextEnabled(String contextRetrieverName, String contextName) {
-        // TODO NYI
-        return false;
+    public boolean appContextDisabled(String contextRetrieverName, String contextName) {
+        disabledAppContextCommands.add(contextRetrieverName + ':' + contextName);
+        return true;
     }
 
     /**
@@ -90,11 +93,38 @@ public class TcpClientDebugListener implements ILttngTcpClientListener {
     }
 
     /**
+     * @return The "add-context" commands that were received since instantiation
+     *         or the last {@link #clearAllCommands}.
+     */
+    public List<String> getEnabledAppContextCommands() {
+        synchronized (enabledAppContextCommands) {
+            return new ArrayList<>(enabledAppContextCommands);
+        }
+    }
+
+    /**
+     * Return the number of "context disabled" commands received.
+     *
+     * There is no equivalent command in the lttng CLI, but the sessiond will
+     * send such messages through the agent socket when a session is destroyed
+     * and had contexts enabled.
+     *
+     * @return The number of "context disabled" commands received.
+     */
+    public List<String> getDisabledAppContextCommands() {
+        synchronized (disabledAppContextCommands) {
+            return new ArrayList<>(disabledAppContextCommands);
+        }
+    }
+
+    /**
      * Clear all tracked data.
      */
     public void clearAllCommands() {
         enabledEventCommands.clear();
         disabledEventCommands.clear();
+        enabledAppContextCommands.clear();
+        disabledAppContextCommands.clear();
     }
 
 }
