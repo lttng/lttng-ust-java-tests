@@ -48,6 +48,18 @@ public class TcpClientDebugListener implements ILttngTcpClientListener {
         return true;
     }
 
+    @Override
+    public boolean appContextDisabled(String contextRetrieverName, String contextName) {
+        // TODO NYI
+        return false;
+    }
+
+    @Override
+    public boolean appContextEnabled(String contextRetrieverName, String contextName) {
+        // TODO NYI
+        return false;
+    }
+
     /**
      * Not yet implemented
      */
