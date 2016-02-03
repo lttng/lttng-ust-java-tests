@@ -31,7 +31,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.tools.LttngToolsHelper;
-import org.lttng.ust.agent.integration.events.EnabledEventsITBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.JulTestUtils;
 import org.lttng.ust.agent.utils.LttngUtils;
@@ -121,5 +120,10 @@ public class JulEnabledEventsIT extends EnabledEventsITBase {
         JulTestUtils.send10EventsTo(loggerB);
         JulTestUtils.send10EventsTo(loggerC);
         JulTestUtils.send10EventsTo(loggerD);
+    }
+
+    @Override
+    protected void sendLocalizedEvent(String rawString, Object[] params) {
+        loggerA.log(Level.SEVERE, rawString, params);
     }
 }

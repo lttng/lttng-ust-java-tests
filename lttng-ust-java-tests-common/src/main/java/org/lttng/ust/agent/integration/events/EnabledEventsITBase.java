@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
@@ -55,6 +56,11 @@ public abstract class EnabledEventsITBase {
     protected abstract Domain getDomain();
 
     protected abstract void sendEventsToLoggers();
+
+    /**
+     * Send one event using a localized API to logger/handler A.
+     */
+    protected abstract void sendLocalizedEvent(String rawString, Object[] params);
 
     /**
      * Base test setup
@@ -260,5 +266,29 @@ public abstract class EnabledEventsITBase {
         assertEquals(10, handlerA.getEventCount());
         assertEquals(10, handlerB.getEventCount());
         assertEquals(10, handlerC.getEventCount());
+    }
+
+    /**
+     * Test sending a localized message.
+     */
+    @Test
+    public void testLocalizedMessage() {
+        Integer value1 = Integer.valueOf(10);
+        List<Integer> value2 = Arrays.asList(Integer.valueOf(1000), Integer.valueOf(1001), Integer.valueOf(1002));
+
+        assertTrue(session.enableAllEvents());
+        assertTrue(session.start());
+
+        sendLocalizedEvent("Message with a localized value: {0} and some others: {1}",
+                new Object[] { value1, value2 });
+
+        assertTrue(session.stop());
+        assertEquals(1, handlerA.getEventCount());
+
+        List<String> output = session.view();
+
+        assertNotNull(output);
+        assertEquals(1, output.size());
+        assertTrue(output.get(0).contains("msg = \"Message with a localized value: 10 and some others: [1000, 1001, 1002]\""));
     }
 }

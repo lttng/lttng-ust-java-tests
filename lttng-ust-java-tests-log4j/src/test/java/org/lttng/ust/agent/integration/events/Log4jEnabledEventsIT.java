@@ -29,9 +29,9 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.tools.LttngToolsHelper;
-import org.lttng.ust.agent.integration.events.EnabledEventsITBase;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
 import org.lttng.ust.agent.utils.LttngUtils;
@@ -121,5 +121,16 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
         Log4jTestUtils.send10Events(loggerB);
         Log4jTestUtils.send10Events(loggerC);
         Log4jTestUtils.send10Events(loggerD);
+    }
+
+    @Override
+    protected void sendLocalizedEvent(String rawString, Object[] params) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    @Test
+    public void testLocalizedMessage() {
+        /* Does not apply to log4j 1.2.x */
     }
 }
