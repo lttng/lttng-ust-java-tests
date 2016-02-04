@@ -235,6 +235,25 @@ public class TcpClientIT {
     }
 
     /**
+     * Test enabling then destroying the session (should send corresponding
+     * disable event messages).
+     */
+    @SuppressWarnings("static-method")
+    @Test
+    public void testEnableEventThenDestroy() {
+        try (ILttngSession session2 = ILttngSession.createSession(null, SESSION_DOMAIN);) {
+            session2.enableEvent(EVENT_NAME_A, null, false, null);
+            session2.enableEvent(EVENT_NAME_B, null, false, null);
+        } // close(), aka destroy the session, sending "disable event" messages
+
+        List<EventRule> expectedEnabledCommands = Arrays.asList(EventRuleFactory.createRule(EVENT_NAME_A), EventRuleFactory.createRule(EVENT_NAME_B));
+        List<String> expectedDisabledCommands = Arrays.asList(EVENT_NAME_A, EVENT_NAME_B);
+
+        assertEquals(expectedEnabledCommands, clientListener.getEnabledEventCommands());
+        assertEquals(expectedDisabledCommands, clientListener.getDisabledEventCommands());
+    }
+
+    /**
      * Test specifying an event with a --loglevel option.
      */
     @Test
