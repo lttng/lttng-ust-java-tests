@@ -491,7 +491,7 @@ public abstract class AppContextITBase {
         assertTrue(cim.registerContextInfoRetriever(RETRIEVER_NAME_1, ContextInfoRetrieverStubs.STRING_RETRIEVER));
 
         assertTrue(session.enableEvent(EVENT_NAME, null, false,
-                "$app." + RETRIEVER_NAME_1 + '.' + CONTEXT_NAME + "==\"" + ContextInfoRetrieverStubs.STRING_VALUE + '\"'));
+                "$app." + RETRIEVER_NAME_1 + ':' + CONTEXT_NAME + "==\"" + ContextInfoRetrieverStubs.STRING_VALUE + '\"'));
 
         assertTrue(session.start());
         sendEventsToLoggers();
@@ -516,7 +516,7 @@ public abstract class AppContextITBase {
         assertTrue(cim.registerContextInfoRetriever(RETRIEVER_NAME_1, ContextInfoRetrieverStubs.STRING_RETRIEVER));
 
         assertTrue(session.enableEvent(EVENT_NAME, null, false,
-                "$app." + RETRIEVER_NAME_1 + '.' + CONTEXT_NAME + "!=\"" + ContextInfoRetrieverStubs.STRING_VALUE + '\"'));
+                "$app." + RETRIEVER_NAME_1 + ':' + CONTEXT_NAME + "!=\"" + ContextInfoRetrieverStubs.STRING_VALUE + '\"'));
 
         assertTrue(session.enableAppContext(RETRIEVER_NAME_1, CONTEXT_NAME));
         assertTrue(session.start());
@@ -540,7 +540,7 @@ public abstract class AppContextITBase {
         assertTrue(cim.registerContextInfoRetriever(RETRIEVER_NAME_1, ContextInfoRetrieverStubs.STRING_RETRIEVER));
 
         assertTrue(session.enableEvent(EVENT_NAME, null, false,
-                "$app." + RETRIEVER_NAME_1 + '.' + CONTEXT_NAME + "==\"" + ContextInfoRetrieverStubs.STRING_VALUE + '\"'));
+                "$app." + RETRIEVER_NAME_1 + ':' + CONTEXT_NAME + "==\"" + ContextInfoRetrieverStubs.STRING_VALUE + '\"'));
 
         assertTrue(session.enableAppContext(RETRIEVER_NAME_1, CONTEXT_NAME));
         assertTrue(session.start());

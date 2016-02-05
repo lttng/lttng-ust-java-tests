@@ -255,7 +255,7 @@ public class TcpClientIT {
         List<String> expectedDisabledCommands = Arrays.asList(EVENT_NAME_A, EVENT_NAME_B);
 
         assertEquals(expectedEnabledCommands, clientListener.getEnabledEventCommands());
-        assertEquals(expectedDisabledCommands, clientListener.getDisabledEventCommands());
+        assertTrue(clientListener.getDisabledEventCommands().containsAll(expectedDisabledCommands));
     }
 
     /**
@@ -542,7 +542,7 @@ public class TcpClientIT {
     @Test
     public void testContextInFilterString() {
         try (ILttngSession session2 = ILttngSession.createSession(null, SESSION_DOMAIN);) {
-            session2.enableEvent(EVENT_NAME_A, null, false, "$app." + CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A + "=\"bozo\"");
+            session2.enableEvent(EVENT_NAME_A, null, false, "$app." + CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A + "==\"bozo\"");
 
             List<String> expectedEnabledCommands = Collections.singletonList(CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A);
             assertEquals(expectedEnabledCommands, clientListener.getEnabledAppContextCommands());
@@ -561,7 +561,7 @@ public class TcpClientIT {
     @Test
     public void testContextEnabledAndInFilterString() {
         try (ILttngSession session2 = ILttngSession.createSession(null, SESSION_DOMAIN);) {
-            session2.enableEvent(EVENT_NAME_A, null, false, "$app." + CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A + "=\"bozo\"");
+            session2.enableEvent(EVENT_NAME_A, null, false, "$app." + CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A + "==\"bozo\"");
             session2.enableAppContext(CONTEXT_RETRIEVER_NAME_A, CONTEXT_NAME_A);
 
             List<String> expectedEnabledCommands = Collections.nCopies(2, CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A);
