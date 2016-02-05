@@ -526,4 +526,49 @@ public class TcpClientIT {
 
         assertEquals(expectedDisabledCommands, actualDisabledCommands);
     }
+
+    // ------------------------------------------------------------------------
+    // Application context filtering
+    // ------------------------------------------------------------------------
+
+    /**
+     * Test that enabling an event with a filter string referring to a context
+     * should send an agent message about this context now being "enabled".
+     *
+     * This is because we will pass the context information to UST for the
+     * filtering step, even if the actual context won't be present in the trace.
+     */
+    @SuppressWarnings("static-method")
+    @Test
+    public void testContextInFilterString() {
+        try (ILttngSession session2 = ILttngSession.createSession(null, SESSION_DOMAIN);) {
+            session2.enableEvent(EVENT_NAME_A, null, false, "$app." + CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A + "=\"bozo\"");
+
+            List<String> expectedEnabledCommands = Collections.singletonList(CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A);
+            assertEquals(expectedEnabledCommands, clientListener.getEnabledAppContextCommands());
+        } // close(), aka destroy the session, sending "disable context" messages
+
+        List<String> expectedDisabledCommands = Collections.singletonList(CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A);
+        assertEquals(expectedDisabledCommands, clientListener.getDisabledAppContextCommands());
+    }
+
+    /**
+     * Test that if we the context is both referred to by a filter string *and*
+     * enabled directly, we receive *2* messages about this context being
+     * enabled (and disabled on session teardown).
+     */
+    @SuppressWarnings("static-method")
+    @Test
+    public void testContextEnabledAndInFilterString() {
+        try (ILttngSession session2 = ILttngSession.createSession(null, SESSION_DOMAIN);) {
+            session2.enableEvent(EVENT_NAME_A, null, false, "$app." + CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A + "=\"bozo\"");
+            session2.enableAppContext(CONTEXT_RETRIEVER_NAME_A, CONTEXT_NAME_A);
+
+            List<String> expectedEnabledCommands = Collections.nCopies(2, CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A);
+            assertEquals(expectedEnabledCommands, clientListener.getEnabledAppContextCommands());
+        } // close(), aka destroy the session, sending "disable context" messages
+
+        List<String> expectedDisabledCommands = Collections.nCopies(2, CONTEXT_RETRIEVER_NAME_A + ':' + CONTEXT_NAME_A);
+        assertEquals(expectedDisabledCommands, clientListener.getDisabledAppContextCommands());
+    }
 }

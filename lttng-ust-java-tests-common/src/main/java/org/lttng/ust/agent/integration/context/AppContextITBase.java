@@ -474,4 +474,86 @@ public abstract class AppContextITBase {
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
+
+    // ------------------------------------------------------------------------
+    // Tests related to filtering
+    // ------------------------------------------------------------------------
+
+    /**
+     * Test with a filter expression using a context, but not having the actual
+     * context enabled.
+     *
+     * The JNI should still send the context so UST can use it for filtering,
+     * but it should not be present in the resulting trace.
+     */
+    @Test
+    public void testContextFilterExpressionNotEnabled() {
+        assertTrue(cim.registerContextInfoRetriever(RETRIEVER_NAME_1, ContextInfoRetrieverStubs.STRING_RETRIEVER));
+
+        assertTrue(session.enableEvent(EVENT_NAME, null, false,
+                "$app." + RETRIEVER_NAME_1 + '.' + CONTEXT_NAME + "==\"" + ContextInfoRetrieverStubs.STRING_VALUE + '\"'));
+
+        assertTrue(session.start());
+        sendEventsToLoggers();
+        assertTrue(session.stop());
+
+        List<String> output = session.view();
+        assertNotNull(output);
+        assertFalse(output.isEmpty());
+
+        testContextNotPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME);
+
+        assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
+    }
+
+    /**
+     * Test with a filter expression and an enabled context. The filter however
+     * should *exclude* the events, so no events should be present in the
+     * resulting trace.
+     */
+    @Test
+    public void testContextFilterExpressionEnabledNotMatching() {
+        assertTrue(cim.registerContextInfoRetriever(RETRIEVER_NAME_1, ContextInfoRetrieverStubs.STRING_RETRIEVER));
+
+        assertTrue(session.enableEvent(EVENT_NAME, null, false,
+                "$app." + RETRIEVER_NAME_1 + '.' + CONTEXT_NAME + "!=\"" + ContextInfoRetrieverStubs.STRING_VALUE + '\"'));
+
+        assertTrue(session.enableAppContext(RETRIEVER_NAME_1, CONTEXT_NAME));
+        assertTrue(session.start());
+        sendEventsToLoggers();
+        assertTrue(session.stop());
+
+        List<String> output = session.view();
+        assertNotNull(output);
+        assertTrue(output.isEmpty());
+
+        assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
+    }
+
+    /**
+     * Test with a filter expression and an enabled context. The filter however
+     * should match the events, so events with the context info should be
+     * present in the resulting trace.
+     */
+    @Test
+    public void testContextFilterExpressionEnabledMatching() {
+        assertTrue(cim.registerContextInfoRetriever(RETRIEVER_NAME_1, ContextInfoRetrieverStubs.STRING_RETRIEVER));
+
+        assertTrue(session.enableEvent(EVENT_NAME, null, false,
+                "$app." + RETRIEVER_NAME_1 + '.' + CONTEXT_NAME + "==\"" + ContextInfoRetrieverStubs.STRING_VALUE + '\"'));
+
+        assertTrue(session.enableAppContext(RETRIEVER_NAME_1, CONTEXT_NAME));
+        assertTrue(session.start());
+        sendEventsToLoggers();
+        assertTrue(session.stop());
+
+        List<String> output = session.view();
+        assertNotNull(output);
+        assertFalse(output.isEmpty());
+
+        testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
+                "{ string = \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" } }");
+
+        assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
+    }
 }
