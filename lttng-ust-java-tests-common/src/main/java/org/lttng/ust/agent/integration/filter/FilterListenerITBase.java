@@ -74,6 +74,8 @@ public abstract class FilterListenerITBase {
         listener = new TestFilterListener();
         FilterChangeNotifier.getInstance().registerListener(listener);
         session = ILttngSession.createSession(null, getSessionDomain());
+
+        assertEquals(0, listener.getNbNotifications());
     }
 
     /**
@@ -83,6 +85,7 @@ public abstract class FilterListenerITBase {
     public void teardown() {
         session.close();
         FilterChangeNotifier.getInstance().unregisterListener(listener);
+        listener = null;
         handler.close();
     }
 
@@ -337,7 +340,7 @@ public abstract class FilterListenerITBase {
     /**
      * The filter listener used for tests.
      */
-    private static class TestFilterListener implements IFilterChangeListener {
+    static class TestFilterListener implements IFilterChangeListener {
 
         private final Set<EventRule> currentRules = new HashSet<>();
         private volatile int currentNotifications = 0;
