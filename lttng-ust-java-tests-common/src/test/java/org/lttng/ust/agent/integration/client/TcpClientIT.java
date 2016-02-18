@@ -20,6 +20,7 @@ package org.lttng.ust.agent.integration.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,7 +72,6 @@ public class TcpClientIT {
     /* Test configuration */
     private static final int DOMAIN_VALUE = ILttngAgent.Domain.JUL.value();
     private static final ILttngSession.Domain SESSION_DOMAIN = ILttngSession.Domain.JUL;
-    private static final boolean ROOT_SESSIOND = true;
 
     private static TcpClientDebugListener clientListener;
     private static LttngTcpSessiondClient client;
@@ -91,12 +91,29 @@ public class TcpClientIT {
         LttngToolsHelper.destroyAllSessions();
 
         clientListener = new TcpClientDebugListener();
-        client = new LttngTcpSessiondClient(clientListener, DOMAIN_VALUE, ROOT_SESSIOND);
 
+        /* Try connecting to a root sessiond first */
+        client = new LttngTcpSessiondClient(clientListener, DOMAIN_VALUE, true);
         clientThread = new Thread(client);
         clientThread.start();
 
-        assertTrue("Timed out waiting for root sessiond", client.waitForConnection(5));
+        if (client.waitForConnection(5)) {
+            return;
+        }
+
+        /* Connection was not established, try a user sessiond instead */
+        client.close();
+        try {
+            clientThread.join();
+        } catch (InterruptedException e) {
+            fail(e.getMessage());
+        }
+
+        client = new LttngTcpSessiondClient(clientListener, DOMAIN_VALUE, false);
+        clientThread = new Thread(client);
+        clientThread.start();
+
+        assertTrue("Timed out waiting for a sessiond", client.waitForConnection(5));
     }
 
     /**
