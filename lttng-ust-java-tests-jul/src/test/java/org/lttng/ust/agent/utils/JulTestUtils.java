@@ -18,10 +18,15 @@
 
 package org.lttng.ust.agent.utils;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.lttng.tools.LttngToolsHelper;
+import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 
 /**
@@ -33,19 +38,34 @@ public final class JulTestUtils {
     }
 
     /**
+     * Setup method common to most JUL tests. To be called in a @BeforeClass.
+     */
+    public static void testClassSetup() {
+        /* Make sure we can find the JNI library and lttng-tools */
+        checkForJulLibrary();
+        assertTrue("lttng-tools is not working properly.", LttngUtils.checkForLttngTools(Domain.JUL));
+
+        LttngToolsHelper.destroyAllSessions();
+    }
+
+    /**
+     * Teardown method common to most JUL tests. To be called in a @AfterClass.
+     */
+    public static void testClassCleanup() {
+        LttngToolsHelper.deleteAllTraces();
+    }
+
+    /**
      * Check the the JUL native library is available, effectively allowing LTTng
      * JUL handlers to be used.
-     *
-     * @return True if JUL works fine, false if it does not.
      */
-    public static boolean checkForJulLibrary() {
+    private static void checkForJulLibrary() {
         try {
             LttngLogHandler testHandler = new LttngLogHandler();
             testHandler.close();
         } catch (SecurityException | IOException e) {
-            return false;
+            fail(e.getMessage());
         }
-        return true;
     }
 
     /**

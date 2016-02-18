@@ -18,22 +18,17 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.tools.ILttngSession;
-import org.lttng.tools.LttngToolsHelper;
-import org.lttng.ust.agent.integration.events.ListEventsITBase;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
-import org.lttng.ust.agent.utils.LttngUtils;
 
 /**
  * Test suite for the list events command for the log4j domain
@@ -44,15 +39,19 @@ public class Log4jListEventsIT extends ListEventsITBase {
     private Appender[] appenders;
 
     /**
-     * Test class setup
+     * Class setup
      */
     @BeforeClass
-    public static void testClassSetup() {
-        /* Make sure we can find the JNI library and lttng-tools */
-        assertTrue(Log4jTestUtils.checkForLog4jLibrary());
-        assertTrue(LttngUtils.checkForLttngTools(Domain.LOG4J));
+    public static void log4jClassSetup() {
+        Log4jTestUtils.testClassSetup();
+    }
 
-        LttngToolsHelper.destroyAllSessions();
+    /**
+     * Class cleanup
+     */
+    @AfterClass
+    public static void log4jClassCleanup() {
+        Log4jTestUtils.testClassCleanup();
     }
 
     /**

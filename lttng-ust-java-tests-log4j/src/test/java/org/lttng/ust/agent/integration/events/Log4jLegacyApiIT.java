@@ -36,11 +36,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
-import org.lttng.tools.LttngToolsHelper;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.LTTngAgent;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
-import org.lttng.ust.agent.utils.LttngUtils;
 import org.lttng.ust.agent.utils.TestPrintRunner;
 
 /**
@@ -65,20 +63,16 @@ public class Log4jLegacyApiIT {
      * Class setup
      */
     @BeforeClass
-    public static void classSetup() {
-        /* Make sure we can find the JNI library and lttng-tools */
-        assertTrue(Log4jTestUtils.checkForLog4jLibrary());
-        assertTrue(LttngUtils.checkForLttngTools(Domain.LOG4J));
-
-        LttngToolsHelper.destroyAllSessions();
+    public static void log4jClassSetup() {
+        Log4jTestUtils.testClassSetup();
     }
 
     /**
      * Class cleanup
      */
     @AfterClass
-    public static void classCleanup() {
-        LttngToolsHelper.deleteAllTraces();
+    public static void log4jClassCleanup() {
+        Log4jTestUtils.testClassCleanup();
     }
 
     /**

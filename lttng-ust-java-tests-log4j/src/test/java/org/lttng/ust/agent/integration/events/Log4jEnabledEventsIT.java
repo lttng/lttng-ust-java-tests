@@ -18,8 +18,6 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 
 import org.apache.log4j.Appender;
@@ -31,10 +29,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.lttng.tools.ILttngSession.Domain;
-import org.lttng.tools.LttngToolsHelper;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
-import org.lttng.ust.agent.utils.LttngUtils;
 
 /**
  * Enabled events test for the LTTng-UST Log4j log handler.
@@ -53,19 +49,15 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
      */
     @BeforeClass
     public static void log4jClassSetup() {
-        /* Make sure we can find the JNI library and lttng-tools */
-        assertTrue(Log4jTestUtils.checkForLog4jLibrary());
-        assertTrue(LttngUtils.checkForLttngTools(Domain.LOG4J));
-
-        LttngToolsHelper.destroyAllSessions();
+        Log4jTestUtils.testClassSetup();
     }
 
     /**
-     * Class teardown
+     * Class cleanup
      */
     @AfterClass
     public static void log4jClassCleanup() {
-        LttngToolsHelper.deleteAllTraces();
+        Log4jTestUtils.testClassCleanup();
     }
 
     /**

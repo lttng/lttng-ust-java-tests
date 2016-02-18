@@ -18,10 +18,15 @@
 
 package org.lttng.ust.agent.utils;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.lttng.tools.LttngToolsHelper;
+import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 
 /**
@@ -33,20 +38,34 @@ public final class Log4jTestUtils {
     }
 
     /**
+     * Setup method common to most log4j tests. To be called in a @BeforeClass.
+     */
+    public static void testClassSetup() {
+        /* Make sure we can find the JNI library and lttng-tools */
+        checkForLog4jLibrary();
+        assertTrue("lttng-tools is not working properly.", LttngUtils.checkForLttngTools(Domain.LOG4J));
+
+        LttngToolsHelper.destroyAllSessions();
+    }
+
+    /**
+     * Teardown method common to most log4j tests. To be called in a @AfterClass.
+     */
+    public static void testClassCleanup() {
+        LttngToolsHelper.deleteAllTraces();
+    }
+
+    /**
      * Check the the Log4j native library is available, effectively allowing
      * LTTng Log4j appenders to be used.
-     *
-     * @return True if Log4j works fine, false if it does not.
      */
-    public static boolean checkForLog4jLibrary() {
+    private static void checkForLog4jLibrary() {
         try {
             LttngLogAppender testAppender = new LttngLogAppender();
             testAppender.close();
         } catch (SecurityException | IOException e) {
-            e.printStackTrace();
-            return false;
+            fail(e.getMessage());
         }
-        return true;
     }
 
     /**

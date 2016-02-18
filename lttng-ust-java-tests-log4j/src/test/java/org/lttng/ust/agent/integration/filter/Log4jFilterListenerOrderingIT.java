@@ -18,7 +18,6 @@
 
 package org.lttng.ust.agent.integration.filter;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -26,12 +25,11 @@ import java.io.IOException;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.lttng.tools.ILttngSession.Domain;
-import org.lttng.tools.LttngToolsHelper;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
-import org.lttng.ust.agent.utils.LttngUtils;
 
 /**
  * Implementation of {@link FilterListenerOrderingITBase} for the log4j API.
@@ -45,12 +43,16 @@ public class Log4jFilterListenerOrderingIT extends FilterListenerOrderingITBase 
      * Class setup
      */
     @BeforeClass
-    public static void julClassSetup() {
-        /* Make sure we can find the JNI library and lttng-tools */
-        assertTrue(Log4jTestUtils.checkForLog4jLibrary());
-        assertTrue(LttngUtils.checkForLttngTools(Domain.LOG4J));
+    public static void log4jClassSetup() {
+        Log4jTestUtils.testClassSetup();
+    }
 
-        LttngToolsHelper.destroyAllSessions();
+    /**
+     * Class cleanup
+     */
+    @AfterClass
+    public static void log4jClassCleanup() {
+        Log4jTestUtils.testClassCleanup();
     }
 
     @Override

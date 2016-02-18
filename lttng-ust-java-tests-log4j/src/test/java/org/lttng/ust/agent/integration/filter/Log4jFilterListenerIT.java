@@ -18,18 +18,15 @@
 
 package org.lttng.ust.agent.integration.filter;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.lttng.tools.ILttngSession;
-import org.lttng.tools.LttngToolsHelper;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.ILogLevelStrings;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
-import org.lttng.ust.agent.utils.LttngUtils;
 
 /**
  * Filter notifications tests using the log4j logging API.
@@ -43,10 +40,15 @@ public class Log4jFilterListenerIT extends FilterListenerITBase {
      */
     @BeforeClass
     public static void log4jClassSetup() {
-        /* Make sure we can find the JNI library and lttng-tools */
-        assertTrue(Log4jTestUtils.checkForLog4jLibrary());
-        assertTrue(LttngUtils.checkForLttngTools(ILttngSession.Domain.LOG4J));
-        LttngToolsHelper.destroyAllSessions();
+        Log4jTestUtils.testClassSetup();
+    }
+
+    /**
+     * Class cleanup
+     */
+    @AfterClass
+    public static void log4jClassCleanup() {
+        Log4jTestUtils.testClassCleanup();
     }
 
     @Override

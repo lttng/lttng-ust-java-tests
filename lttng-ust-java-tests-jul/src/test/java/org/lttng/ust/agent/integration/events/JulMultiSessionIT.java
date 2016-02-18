@@ -18,8 +18,6 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -30,11 +28,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.tools.ILttngSession.Domain;
-import org.lttng.tools.LttngToolsHelper;
-import org.lttng.ust.agent.integration.events.MultiSessionITBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.JulTestUtils;
-import org.lttng.ust.agent.utils.LttngUtils;
 
 /**
  * JUL tests for multiple concurrent tracing sessions
@@ -53,11 +48,7 @@ public class JulMultiSessionIT extends MultiSessionITBase {
      */
     @BeforeClass
     public static void julClassSetup() {
-        /* Make sure we can find the JNI library and lttng-tools */
-        assertTrue(JulTestUtils.checkForJulLibrary());
-        assertTrue(LttngUtils.checkForLttngTools(Domain.JUL));
-
-        LttngToolsHelper.destroyAllSessions();
+        JulTestUtils.testClassSetup();
     }
 
     /**
@@ -65,7 +56,7 @@ public class JulMultiSessionIT extends MultiSessionITBase {
      */
     @AfterClass
     public static void julClassCleanup() {
-        LttngToolsHelper.deleteAllTraces();
+        JulTestUtils.testClassCleanup();
     }
 
     /**

@@ -36,11 +36,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
-import org.lttng.tools.LttngToolsHelper;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.LTTngAgent;
 import org.lttng.ust.agent.utils.JulTestUtils;
-import org.lttng.ust.agent.utils.LttngUtils;
 import org.lttng.ust.agent.utils.TestPrintRunner;
 
 /**
@@ -65,11 +63,7 @@ public class JulLegacyApiIT {
      */
     @BeforeClass
     public static void julClassSetup() {
-        /* Make sure we can find the JNI library and lttng-tools */
-        assertTrue(JulTestUtils.checkForJulLibrary());
-        assertTrue(LttngUtils.checkForLttngTools(Domain.JUL));
-
-        LttngToolsHelper.destroyAllSessions();
+        JulTestUtils.testClassSetup();
     }
 
     /**
@@ -77,7 +71,7 @@ public class JulLegacyApiIT {
      */
     @AfterClass
     public static void julClassCleanup() {
-        LttngToolsHelper.deleteAllTraces();
+        JulTestUtils.testClassCleanup();
     }
 
     /**

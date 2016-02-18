@@ -18,22 +18,17 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.tools.ILttngSession;
-import org.lttng.tools.LttngToolsHelper;
-import org.lttng.ust.agent.integration.events.ListEventsITBase;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.JulTestUtils;
-import org.lttng.ust.agent.utils.LttngUtils;
 
 /**
  * Test suite for the list events command for the JUL domain
@@ -44,15 +39,19 @@ public class JulListEventsIT extends ListEventsITBase {
     private Handler[] handlers;
 
     /**
-     * Test class setup
+     * Class setup
      */
     @BeforeClass
-    public static void testClassSetup() {
-        /* Make sure we can find the JNI library and lttng-tools */
-        assertTrue(JulTestUtils.checkForJulLibrary());
-        assertTrue(LttngUtils.checkForLttngTools(Domain.JUL));
+    public static void julClassSetup() {
+        JulTestUtils.testClassSetup();
+    }
 
-        LttngToolsHelper.destroyAllSessions();
+    /**
+     * Class cleanup
+     */
+    @AfterClass
+    public static void julClassCleanup() {
+        JulTestUtils.testClassCleanup();
     }
 
     /**
