@@ -58,6 +58,30 @@ Detailed JUnit test reports will be available under
 `lttng-ust-java-tests-{jul|log4j}/target/failsafe-reports/`
 
 
+Setting library paths
+---------------------
+
+By default, the tests will look for the Java and JNI libraries in the default
+locations of `make install` (`/usr/local/lib`, `/usr/local/share/java`, etc.)
+
+If for example, you installed into the `/usr` prefix instead of `/usr/local`,
+you can use the following properties to specify different locations for the
+lttng-ust-agent-java jars:
+
+    mvn clean verify
+    -Dcommon-jar-location=/usr/share/java/lttng-ust-agent-common.jar
+    -Djul-jar-location=/usr/share/java/lttng-ust-agent-jul.jar
+    -Dlog4j-jar-location=/usr/share/java/lttng-ust-agent-log4j.jar
+
+To specify a different locations for the JNI .so libraries, you can set the
+`-Djava.library.path` property on the JVM:
+
+    mvn (...) -DargLine=-Djava.library.path=/usr/lib
+
+Note: do not use `MAVEN_OPTS` to set the library path, since the `argLine`
+property defined in the build will overwrite it.
+
+
 Running the benchmarks
 ----------------------
 
