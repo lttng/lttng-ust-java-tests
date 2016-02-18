@@ -20,7 +20,6 @@ package org.lttng.ust.agent.integration.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,7 +96,7 @@ public class TcpClientIT {
         clientThread = new Thread(client);
         clientThread.start();
 
-        assumeTrue("Timed out waiting for root sessiond", client.waitForConnection(5));
+        assertTrue("Timed out waiting for root sessiond", client.waitForConnection(5));
     }
 
     /**

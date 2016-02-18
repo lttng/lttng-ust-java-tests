@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeTrue;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -66,9 +65,9 @@ public class JulLegacyApiIT {
      */
     @BeforeClass
     public static void julClassSetup() {
-        /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(JulTestUtils.checkForJulLibrary());
-        assumeTrue(LttngUtils.checkForLttngTools(Domain.JUL));
+        /* Make sure we can find the JNI library and lttng-tools */
+        assertTrue(JulTestUtils.checkForJulLibrary());
+        assertTrue(LttngUtils.checkForLttngTools(Domain.JUL));
 
         LttngToolsHelper.destroyAllSessions();
     }

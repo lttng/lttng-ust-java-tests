@@ -18,7 +18,7 @@
 
 package org.lttng.ust.agent.integration.filter;
 
-import static org.junit.Assume.assumeTrue;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
@@ -43,9 +43,9 @@ public class JulFilterListenerIT extends FilterListenerITBase {
      */
     @BeforeClass
     public static void julClassSetup() {
-        /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(JulTestUtils.checkForJulLibrary());
-        assumeTrue(LttngUtils.checkForLttngTools(ILttngSession.Domain.JUL));
+        /* Make sure we can find the JNI library and lttng-tools */
+        assertTrue(JulTestUtils.checkForJulLibrary());
+        assertTrue(LttngUtils.checkForLttngTools(ILttngSession.Domain.JUL));
         LttngToolsHelper.destroyAllSessions();
     }
 

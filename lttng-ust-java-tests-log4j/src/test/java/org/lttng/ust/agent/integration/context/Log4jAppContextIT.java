@@ -18,7 +18,7 @@
 
 package org.lttng.ust.agent.integration.context;
 
-import static org.junit.Assume.assumeTrue;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
@@ -49,9 +49,9 @@ public class Log4jAppContextIT extends AppContextITBase {
      */
     @BeforeClass
     public static void julClassSetup() {
-        /* Skip tests if we can't find the log4j library or lttng-tools */
-        assumeTrue(Log4jTestUtils.checkForLog4jLibrary());
-        assumeTrue(LttngUtils.checkForLttngTools(Domain.LOG4J));
+        /* Make sure we can find the JNI library and lttng-tools */
+        assertTrue(Log4jTestUtils.checkForLog4jLibrary());
+        assertTrue(LttngUtils.checkForLttngTools(Domain.LOG4J));
 
         LttngToolsHelper.destroyAllSessions();
     }

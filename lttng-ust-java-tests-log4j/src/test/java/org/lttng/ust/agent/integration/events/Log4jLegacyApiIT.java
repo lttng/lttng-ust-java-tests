@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeTrue;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -67,9 +66,9 @@ public class Log4jLegacyApiIT {
      */
     @BeforeClass
     public static void classSetup() {
-        /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(Log4jTestUtils.checkForLog4jLibrary());
-        assumeTrue(LttngUtils.checkForLttngTools(Domain.LOG4J));
+        /* Make sure we can find the JNI library and lttng-tools */
+        assertTrue(Log4jTestUtils.checkForLog4jLibrary());
+        assertTrue(LttngUtils.checkForLttngTools(Domain.LOG4J));
 
         LttngToolsHelper.destroyAllSessions();
     }

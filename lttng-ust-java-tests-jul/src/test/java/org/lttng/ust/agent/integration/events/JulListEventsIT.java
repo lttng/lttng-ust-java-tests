@@ -18,7 +18,7 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assume.assumeTrue;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.logging.Handler;
@@ -48,9 +48,9 @@ public class JulListEventsIT extends ListEventsITBase {
      */
     @BeforeClass
     public static void testClassSetup() {
-        /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(JulTestUtils.checkForJulLibrary());
-        assumeTrue(LttngUtils.checkForLttngTools(Domain.JUL));
+        /* Make sure we can find the JNI library and lttng-tools */
+        assertTrue(JulTestUtils.checkForJulLibrary());
+        assertTrue(LttngUtils.checkForLttngTools(Domain.JUL));
 
         LttngToolsHelper.destroyAllSessions();
     }

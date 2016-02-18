@@ -18,7 +18,7 @@
 
 package org.lttng.ust.agent.integration.filter;
 
-import static org.junit.Assume.assumeTrue;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
@@ -43,9 +43,9 @@ public class Log4jFilterListenerIT extends FilterListenerITBase {
      */
     @BeforeClass
     public static void log4jClassSetup() {
-        /* Skip tests if we can't find the JNI library or lttng-tools */
-        assumeTrue(Log4jTestUtils.checkForLog4jLibrary());
-        assumeTrue(LttngUtils.checkForLttngTools(ILttngSession.Domain.LOG4J));
+        /* Make sure we can find the JNI library and lttng-tools */
+        assertTrue(Log4jTestUtils.checkForLog4jLibrary());
+        assertTrue(LttngUtils.checkForLttngTools(ILttngSession.Domain.LOG4J));
         LttngToolsHelper.destroyAllSessions();
     }
 
