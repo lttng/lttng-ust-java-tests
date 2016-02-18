@@ -66,7 +66,7 @@ public class Log4jFilterListenerOrderingIT extends FilterListenerOrderingITBase 
         try {
             appender = new LttngLogAppender();
         } catch (SecurityException | IOException e) {
-            fail();
+            fail(e.getMessage());
         }
         logger.addAppender(appender);
     }

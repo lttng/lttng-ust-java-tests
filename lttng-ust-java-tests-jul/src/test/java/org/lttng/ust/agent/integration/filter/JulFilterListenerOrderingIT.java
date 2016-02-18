@@ -66,7 +66,7 @@ public class JulFilterListenerOrderingIT extends FilterListenerOrderingITBase {
         try {
             handler = new LttngLogHandler();
         } catch (SecurityException | IOException e) {
-            fail();
+            fail(e.getMessage());
         }
         logger.addHandler(handler);
     }

@@ -78,7 +78,7 @@ public class JulAppContextOrderingIT extends AppContextOrderingITBase {
         try {
             logHandler = new LttngLogHandler();
         } catch (SecurityException | IOException e) {
-            fail();
+            fail(e.getMessage());
         }
         logger.addHandler((Handler) logHandler);
     }

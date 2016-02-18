@@ -46,7 +46,7 @@ public class ContextRegistrationIT {
         try {
             mgr = ContextInfoManager.getInstance();
         } catch (SecurityException | IOException e) {
-            fail();
+            fail(e.getMessage());
         }
     }
 

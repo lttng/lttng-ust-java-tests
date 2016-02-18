@@ -78,7 +78,7 @@ public class Log4jAppContextOrderingIT extends AppContextOrderingITBase {
         try {
             logHandler = new LttngLogAppender();
         } catch (SecurityException | IOException e) {
-            fail();
+            fail(e.getMessage());
         }
         logger.addAppender((Appender) logHandler);
     }

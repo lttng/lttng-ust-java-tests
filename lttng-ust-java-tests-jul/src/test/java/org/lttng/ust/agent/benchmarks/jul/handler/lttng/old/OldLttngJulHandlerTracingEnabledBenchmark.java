@@ -66,7 +66,7 @@ public class OldLttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchma
             logger.addHandler(agentHandler);
 
         } catch (ReflectiveOperationException e) {
-            fail();
+            fail(e.getMessage());
         }
 
         session = ILttngSession.createSession(null, Domain.JUL);

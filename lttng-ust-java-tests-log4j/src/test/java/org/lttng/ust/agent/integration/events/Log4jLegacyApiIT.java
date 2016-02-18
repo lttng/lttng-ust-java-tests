@@ -184,7 +184,7 @@ public class Log4jLegacyApiIT {
             log4jAppenderField.setAccessible(true);
             return (ILttngHandler) log4jAppenderField.get(LTTngAgent.getLTTngAgent());
         } catch (ReflectiveOperationException | SecurityException e) {
-            fail();
+            fail(e.getMessage());
             return null;
         }
     }

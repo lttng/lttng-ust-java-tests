@@ -183,7 +183,7 @@ public class JulLegacyApiIT {
             julHandlerField.setAccessible(true);
             return (ILttngHandler) julHandlerField.get(LTTngAgent.getLTTngAgent());
         } catch (ReflectiveOperationException | SecurityException e) {
-            fail();
+            fail(e.getMessage());
             return null;
         }
     }

@@ -69,7 +69,7 @@ public abstract class AppContextITBase {
             cim = ContextInfoManager.getInstance();
         } catch (SecurityException | IOException e) {
             /* The native library is not available! */
-            fail();
+            fail(e.getMessage());
         }
         session = ILttngSession.createSession(null, getDomain());
     }
