@@ -55,6 +55,7 @@ public class Log4jLegacyApiIT {
     private static final String EVENT_NAME_B = "EventB";
 
     private ILttngSession session;
+    private LTTngAgent agent;
 
     private Logger loggerA;
     private Logger loggerB;
@@ -81,7 +82,7 @@ public class Log4jLegacyApiIT {
     @Before
     public void setup() {
         loggerA = Logger.getLogger(EVENT_NAME_A);
-        LTTngAgent.getLTTngAgent();
+        agent = LTTngAgent.getLTTngAgent();
         loggerB = Logger.getLogger(EVENT_NAME_B);
 
         loggerA.setLevel(Level.ALL);
@@ -97,7 +98,7 @@ public class Log4jLegacyApiIT {
     public void tearDown() {
         session.close();
 
-        LTTngAgent.dispose();
+        agent.dispose();
 
         loggerA = null;
         loggerB = null;

@@ -39,6 +39,7 @@ import org.lttng.ust.agent.jul.LttngLogHandler;
 public class OldLttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchmarkBase {
 
     private ILttngSession session;
+    private LTTngAgent agent;
     private LttngLogHandler agentHandler;
 
 
@@ -47,7 +48,7 @@ public class OldLttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchma
      */
     @Before
     public void testSetup() {
-        LTTngAgent agentInstance = LTTngAgent.getLTTngAgent();
+        agent = LTTngAgent.getLTTngAgent();
 
         /*
          * The "old API" works by attaching a handler managed by the agent to
@@ -61,7 +62,7 @@ public class OldLttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchma
         try {
             Field julHandlerField = LTTngAgent.class.getDeclaredField("julHandler");
             julHandlerField.setAccessible(true);
-            agentHandler = (LttngLogHandler) julHandlerField.get(agentInstance);
+            agentHandler = (LttngLogHandler) julHandlerField.get(agent);
 
             logger.addHandler(agentHandler);
 
@@ -83,6 +84,6 @@ public class OldLttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchma
         session.close();
 
         logger.removeHandler(agentHandler);
-        LTTngAgent.dispose();
+        agent.dispose();
     }
 }

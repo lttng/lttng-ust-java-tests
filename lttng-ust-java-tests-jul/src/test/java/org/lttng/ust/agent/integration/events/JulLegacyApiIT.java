@@ -54,6 +54,7 @@ public class JulLegacyApiIT {
     private static final String EVENT_NAME_B = "EventB";
 
     private ILttngSession session;
+    private LTTngAgent agent;
 
     private Logger loggerA;
     private Logger loggerB;
@@ -80,7 +81,7 @@ public class JulLegacyApiIT {
     @Before
     public void setup() {
         loggerA = Logger.getLogger(EVENT_NAME_A);
-        LTTngAgent.getLTTngAgent();
+        agent = LTTngAgent.getLTTngAgent();
         loggerB = Logger.getLogger(EVENT_NAME_B);
 
         loggerA.setLevel(Level.ALL);
@@ -96,7 +97,7 @@ public class JulLegacyApiIT {
     public void tearDown() {
         session.close();
 
-        LTTngAgent.dispose();
+        agent.dispose();
 
         loggerA = null;
         loggerB = null;

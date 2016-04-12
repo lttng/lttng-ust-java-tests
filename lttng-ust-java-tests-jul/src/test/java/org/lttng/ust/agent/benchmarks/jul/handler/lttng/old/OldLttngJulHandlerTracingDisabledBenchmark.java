@@ -35,13 +35,14 @@ import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 public class OldLttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchmarkBase {
 
     private ILttngSession session;
+    private LTTngAgent agent;
 
     /**
      * Test setup
      */
     @Before
     public void testSetup() {
-        LTTngAgent.getLTTngAgent();
+        agent = LTTngAgent.getLTTngAgent();
 
         session = ILttngSession.createSession(null, Domain.JUL);
         assertTrue(session.enableEvents("non-event"));
@@ -56,6 +57,6 @@ public class OldLttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchm
         assertTrue(session.stop());
         session.close();
 
-        LTTngAgent.dispose();
+        agent.dispose();
     }
 }
