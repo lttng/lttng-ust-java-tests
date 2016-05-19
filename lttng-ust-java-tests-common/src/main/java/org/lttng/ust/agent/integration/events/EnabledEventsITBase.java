@@ -44,7 +44,7 @@ public abstract class EnabledEventsITBase {
     protected static final String EVENT_NAME_A = "EventA";
     protected static final String EVENT_NAME_B = "EventAB";
     protected static final String EVENT_NAME_C = "EventABC";
-    protected static final String EVENT_NAME_D = "EventABCD";
+    protected static final String EVENT_NAME_D = "EventABCDÉ";
 
     private ILttngSession session;
 

@@ -37,7 +37,7 @@ public abstract class ListEventsITBase {
 
     protected static final String LOGGER_NAME_1 = "org.lttng";
     protected static final String LOGGER_NAME_2 = "org.lttng.mycomponent";
-    protected static final String LOGGER_NAME_3 = "org.lttng.myothercomponent";
+    protected static final String LOGGER_NAME_3 = "org.lttng.myothercomponent-àéç";
 
     private ILttngSession session;
 
