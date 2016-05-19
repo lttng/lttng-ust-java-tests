@@ -19,6 +19,9 @@
 package org.lttng.ust.agent.context;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -55,14 +58,32 @@ public class ContextRegistrationIT {
      */
     @Test
     public void testRegistration() {
-        final String retrieverName = "test-retriever";
+        final String retrieverName = "test.retriever";
         final IContextInfoRetriever emptyRetriever = (key -> null);
 
-        mgr.registerContextInfoRetriever(retrieverName, emptyRetriever);
+        boolean ret = mgr.registerContextInfoRetriever(retrieverName, emptyRetriever);
+        assertTrue(ret);
 
         IContextInfoRetriever retriever2 = mgr.getContextInfoRetriever(retrieverName);
         assertEquals(emptyRetriever, retriever2);
 
         mgr.unregisterContextInfoRetriever(retrieverName);
+    }
+
+    /**
+     * Test registration of retrievers with invalid names.
+     */
+    @Test
+    public void testRegistrationInvalid() {
+        String[] invalidNames = new String[] { "test.rétriever", "with space", "1numberfirst" };
+        for (String retrieverName : invalidNames) {
+            final IContextInfoRetriever emptyRetriever = (key -> null);
+
+            boolean ret = mgr.registerContextInfoRetriever(retrieverName, emptyRetriever);
+            assertFalse(ret);
+
+            IContextInfoRetriever retriever = mgr.getContextInfoRetriever(retrieverName);
+            assertNull(retriever);
+        }
     }
 }
