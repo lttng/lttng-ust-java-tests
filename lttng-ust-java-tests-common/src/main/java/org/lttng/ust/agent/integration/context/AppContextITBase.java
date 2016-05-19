@@ -46,7 +46,7 @@ public abstract class AppContextITBase {
     protected static final String EVENT_NAME = "EventName";
 
     protected static final String RETRIEVER_NAME_1 = "Retriever1";
-    protected static final String RETRIEVER_NAME_2 = "Retriever2";
+    protected static final String RETRIEVER_NAME_2 = "some.retriever_2";
 
     private static final String CONTEXT_NAME = ContextInfoRetrieverStubs.CONTEXT_NAME;
 
@@ -98,7 +98,10 @@ public abstract class AppContextITBase {
      * trace output.
      */
     private static void testContextPresentInTrace(List<String> traceOutput, String retrieverName, String contextName, String contextValue) {
-        String fullString = "_app_" + retrieverName + "_" + contextName + " = " + contextValue;
+        String traceRetrieverName = convertToNameInTrace(retrieverName);
+        String traceContextName = convertToNameInTrace(contextName);
+
+        String fullString = "_app_" + traceRetrieverName + "_" + traceContextName + " = " + contextValue;
         traceOutput.forEach(line -> assertTrue(line.contains(fullString)));
     }
 
@@ -107,8 +110,19 @@ public abstract class AppContextITBase {
      * trace output
      */
     private static void testContextNotPresentInTrace(List<String> traceOutput, String retrieverName, String contextName) {
-        String fullString = "_app_" + retrieverName + "_" + contextName;
+        String traceRetrieverName = convertToNameInTrace(retrieverName);
+        String traceContextName = convertToNameInTrace(contextName);
+
+        String fullString = "_app_" + traceRetrieverName + "_" + traceContextName;
         traceOutput.forEach(line -> assertFalse(line.contains(fullString)));
+    }
+
+    /**
+     * LTTng accepts periods in context names, but ends up printing them as
+     * underscores in the trace, so the metadata grammar remains valid.
+     */
+    private static String convertToNameInTrace(String name) {
+        return name.replace('.', '_');
     }
 
     /**

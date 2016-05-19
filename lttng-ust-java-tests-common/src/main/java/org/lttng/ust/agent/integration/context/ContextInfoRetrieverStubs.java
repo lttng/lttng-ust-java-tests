@@ -22,7 +22,7 @@ import org.lttng.ust.agent.context.IContextInfoRetriever;
 
 interface ContextInfoRetrieverStubs {
 
-    String CONTEXT_NAME = "ContextName";
+    String CONTEXT_NAME = "some.context_name";
 
     Integer INTEGER_VALUE = Integer.valueOf(42);
     Long LONG_VALUE = Long.valueOf(9001);
