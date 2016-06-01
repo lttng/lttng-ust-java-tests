@@ -22,8 +22,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -70,7 +70,7 @@ public abstract class ListEventsITBase {
     @Test
     public void testManyLoggersNoneAttached() {
         /* Don't attach anything */
-        Set<String> actualEvents = session.listEvents();
+        List<String> actualEvents = session.listEvents();
         assertTrue(actualEvents.isEmpty());
     }
 
@@ -82,8 +82,11 @@ public abstract class ListEventsITBase {
     public void testManyLoggersSomeAttached() {
         attachHandlerToLogger(1, 1);
 
-        Set<String> expectedEvents = new HashSet<>(Arrays.asList(LOGGER_NAME_1));
-        Set<String> actualEvents = session.listEvents();
+        List<String> expectedEvents = Arrays.asList(LOGGER_NAME_1);
+        List<String> actualEvents = session.listEvents();
+
+        Collections.sort(expectedEvents);
+        Collections.sort(actualEvents);
 
         assertEquals(expectedEvents, actualEvents);
     }
@@ -98,8 +101,11 @@ public abstract class ListEventsITBase {
         attachHandlerToLogger(2, 2);
         attachHandlerToLogger(2, 3);
 
-        Set<String> expectedEvents = new HashSet<>(Arrays.asList(LOGGER_NAME_1, LOGGER_NAME_2, LOGGER_NAME_3));
-        Set<String> actualEvents = session.listEvents();
+        List<String> expectedEvents = Arrays.asList(LOGGER_NAME_1, LOGGER_NAME_2, LOGGER_NAME_3);
+        List<String> actualEvents = session.listEvents();
+
+        Collections.sort(expectedEvents);
+        Collections.sort(actualEvents);
 
         assertEquals(expectedEvents, actualEvents);
     }
@@ -116,8 +122,11 @@ public abstract class ListEventsITBase {
         detachHandlerFromLogger(2, 3);
         /* Only loggers 1 and 2 will be attached */
 
-        Set<String> expectedEvents = new HashSet<>(Arrays.asList(LOGGER_NAME_1, LOGGER_NAME_2));
-        Set<String> actualEvents = session.listEvents();
+        List<String> expectedEvents = Arrays.asList(LOGGER_NAME_1, LOGGER_NAME_2);
+        List<String> actualEvents = session.listEvents();
+
+        Collections.sort(expectedEvents);
+        Collections.sort(actualEvents);
 
         assertEquals(expectedEvents, actualEvents);
     }
@@ -134,7 +143,7 @@ public abstract class ListEventsITBase {
         detachHandlerFromLogger(2, 2);
         detachHandlerFromLogger(2, 3);
 
-        Set<String> actualEvents = session.listEvents();
+        List<String> actualEvents = session.listEvents();
         assertTrue(actualEvents.isEmpty());
     }
 }
