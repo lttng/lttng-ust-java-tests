@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -176,10 +177,16 @@ public class Log4jLegacyApiIT {
         List<String> enabledEvents = session.listEvents();
         List<String> expectedEvents = Arrays.asList(EVENT_NAME_A, EVENT_NAME_B);
 
-        Collections.sort(enabledEvents);
-        Collections.sort(expectedEvents);
-
-        assertEquals(expectedEvents, enabledEvents);
+        /*
+         * It doesn't seem possible to forcibly remove Loggers with log4j 1.2.
+         * This, coupled with the way the legacy agent works, makes it so
+         * loggers defined in other tests will always "leak" into this one when
+         * running the whole test suite.
+         *
+         * For this test, simply check that the expected names are present, and
+         * let pass the case where other loggers may the present too.
+         */
+        expectedEvents.forEach(event -> assertTrue(enabledEvents.contains(event)));
     }
 
     /**
