@@ -24,6 +24,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Level;
@@ -164,6 +166,20 @@ public class Log4jLegacyApiIT {
 
         ILttngHandler handler = getAgentHandler();
         assertEquals(10, handler.getEventCount());
+    }
+
+    /**
+     * Test that the "lttng list" commands lists the expected events.
+     */
+    @Test
+    public void testListEvents() {
+        List<String> enabledEvents = session.listEvents();
+        List<String> expectedEvents = Arrays.asList(EVENT_NAME_A, EVENT_NAME_B);
+
+        Collections.sort(enabledEvents);
+        Collections.sort(expectedEvents);
+
+        assertEquals(expectedEvents, enabledEvents);
     }
 
     /**
