@@ -20,6 +20,7 @@ package org.lttng.ust.agent.integration.events;
 
 import java.io.IOException;
 import java.util.logging.Handler;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.junit.After;
@@ -62,6 +63,10 @@ public class JulListEventsIT extends ListEventsITBase {
      */
     @Before
     public void julSetup() throws SecurityException, IOException {
+        /* Clear the JUL logger configuration */
+        LogManager.getLogManager().reset();
+        System.gc();
+
         loggers = new Logger[] {
                 Logger.getLogger(LOGGER_NAME_1),
                 Logger.getLogger(LOGGER_NAME_2),

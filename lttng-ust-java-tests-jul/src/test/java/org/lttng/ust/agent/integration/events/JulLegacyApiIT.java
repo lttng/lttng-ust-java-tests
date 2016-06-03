@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.junit.After;
@@ -82,6 +83,10 @@ public class JulLegacyApiIT {
      */
     @Before
     public void setup() {
+        /* Clear the JUL logger configuration */
+        LogManager.getLogManager().reset();
+        System.gc();
+
         loggerA = Logger.getLogger(EVENT_NAME_A);
         agent = LTTngAgent.getLTTngAgent();
         loggerB = Logger.getLogger(EVENT_NAME_B);

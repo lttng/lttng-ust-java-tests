@@ -21,6 +21,7 @@ package org.lttng.ust.agent.integration.events;
 import java.io.IOException;
 
 import org.apache.log4j.Appender;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -62,6 +63,10 @@ public class Log4jListEventsIT extends ListEventsITBase {
      */
     @Before
     public void log4jSetup() throws SecurityException, IOException {
+        /* Try clearing the log4j logger configuration */
+        LogManager.resetConfiguration();
+        System.gc();
+
         loggers = new Logger[] {
                 Logger.getLogger(LOGGER_NAME_1),
                 Logger.getLogger(LOGGER_NAME_2),
