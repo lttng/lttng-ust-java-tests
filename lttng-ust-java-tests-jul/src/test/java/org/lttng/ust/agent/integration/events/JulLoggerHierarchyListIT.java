@@ -128,6 +128,9 @@ public class JulLoggerHierarchyListIT extends LoggerHierachyListITBase {
             }
             childLogger = null;
         }
+
+        LogManager.getLogManager().reset();
+        System.gc();
     }
 
     // ------------------------------------------------------------------------
