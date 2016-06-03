@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -90,7 +91,23 @@ public class JulLoggerHierarchyListIT extends LoggerHierachyListITBase {
     }
 
     /**
-     *
+     * Test setup
+     */
+    @SuppressWarnings("static-method")
+    @Before
+    public void setup() {
+        /*
+         * Kind of hackish, but it's the only way to ensure that loggers are
+         * really removed in-between tests, since LogManager does not provide a
+         * way to forcibly remove a logger, and it doesn't seem like it will any
+         * time soon, see http://bugs.java.com/view_bug.do?bug_id=4811930
+         */
+        LogManager.getLogManager().reset();
+        System.gc();
+    }
+
+    /**
+     * Test cleanup
      */
     @After
     public void cleanup() {
@@ -111,15 +128,6 @@ public class JulLoggerHierarchyListIT extends LoggerHierachyListITBase {
             }
             childLogger = null;
         }
-
-        /*
-         * Kind of hackish, but it's the only way to ensure that loggers are
-         * really removed in-between tests, since LogManager does not provide a
-         * way to forcibly remove a logger, and it doesn't seem like it will any
-         * time soon, see http://bugs.java.com/view_bug.do?bug_id=4811930
-         */
-        LogManager.getLogManager().reset();
-        System.gc();
     }
 
     // ------------------------------------------------------------------------
