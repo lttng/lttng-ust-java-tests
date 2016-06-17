@@ -93,7 +93,7 @@ public abstract class JulHandlerBenchmarkBase {
      */
     @Test
     public void runBenchmark() {
-        if (handler != null) {
+        if (logger != null && handler != null) {
             logger.addHandler(handler);
         }
 
@@ -105,18 +105,18 @@ public abstract class JulHandlerBenchmarkBase {
     }
 
     private static void runTest(Logger log, int nbThreads) {
-        long start, end, average, total = 0;
+        long total = 0;
         for (int i = 0; i < NB_RUNS; i++) {
             Runner runner = new Runner(nbThreads, NB_ITER, log);
 
-            start = System.nanoTime();
+            long start = System.nanoTime();
             runner.run();
-            end = System.nanoTime();
+            long end = System.nanoTime();
 
             total += (end - start);
         }
-        average = total / NB_RUNS;
-        System.out.println(nbThreads + " threads, average = " + average / NB_ITER + " ns/event");
+        long average = (total / NB_RUNS);
+        System.out.println(nbThreads + " threads, average = " + average / NB_ITER + " ns/loop");
     }
 
     // ------------------------------------------------------------------------
@@ -139,17 +139,15 @@ public abstract class JulHandlerBenchmarkBase {
 
         @Override
         public void run() {
-            for (Thread curThread : workerThreads) {
-                curThread.start();
-            }
+            workerThreads.forEach(Thread::start);
 
-            for (Thread curThread : workerThreads) {
+            workerThreads.forEach(t -> {
                 try {
-                    curThread.join();
+                    t.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
+            });
         }
 
         private static class Worker implements Runnable {
@@ -157,6 +155,9 @@ public abstract class JulHandlerBenchmarkBase {
             private final Logger log;
             private final int threadId;
             private final int nbIter;
+
+            @SuppressWarnings("unused")
+            private volatile int value = 0;
 
             public Worker(int threadId, int nbIter, Logger log) {
                 this.log = log;
@@ -167,10 +168,12 @@ public abstract class JulHandlerBenchmarkBase {
             @Override
             public void run() {
                 for (int i = 0; i < nbIter; i++) {
-                    log.info("Thread " + threadId + ", iteration " + i);
+                    value = i;
+                    if (log != null) {
+                        log.info("Thread " + threadId + ", iteration " + i);
+                    }
                 }
             }
-
         }
     }
 }
