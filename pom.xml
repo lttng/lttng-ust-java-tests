@@ -28,7 +28,7 @@
 
   <groupId>org.lttng.ust</groupId>
   <artifactId>lttng-ust-java-parent</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>LTTng-UST Java Agent</name>
@@ -127,13 +127,13 @@
       <dependency>
         <groupId>org.lttng.tools</groupId>
         <artifactId>lttng-tools-java</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>org.lttng.ust</groupId>
         <artifactId>lttng-ust-java-tests-common</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Regular Maven dependencies -->
