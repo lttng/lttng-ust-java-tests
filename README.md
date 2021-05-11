@@ -146,6 +146,9 @@ You should hit the breakpoint at some point and from there use steps etc.
 If you want to debug lttng-ust, you need to insert a breakpoint at a valid point
 in time for the test and then use gdb to hook yourself to the java process.
 From there debugging is the same as any C application.
+You will need to ignore SIGSEV from java under gdb:
+    
+    handle SIGSEGV nostop noprint pass
 
 Running the benchmarks
 ----------------------
