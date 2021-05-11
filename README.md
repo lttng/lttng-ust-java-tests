@@ -106,36 +106,40 @@ The fastest and "easiest" way of putting a breakpoint is to use eclipse.
 Download eclipse (for java dev).
 Import a maven project that points to this repo:
 
-   File -> Import -> Project -> Select Maven folder -> Select Existing Maven Projects
-   Point the root directory to this repo. Select all projects. Finish
+    File -> Import -> Project -> Select Maven folder -> Select Existing Maven Projects
+    Point the root directory to this repo. Select all projects. Finish
 
 Setup the Debug Configuration:
-   Run -> Debug Configurations.
-   Select Remote Java Application.
-   Press the New Configuration button.
-   Give it the name "Remote lttng maven".
-   Select the project and select `lttng-tools-java`
-   Set the port to 5005
-   Go in the Source tab.
-   Click Add -> Java project -> Select all
-   Click Apply
-   Click Close
+
+    Run -> Debug Configurations.
+    Select Remote Java Application.
+    Press the New Configuration button.
+    Give it the name "Remote lttng maven".
+    Select the project and select `lttng-tools-java`
+    Set the port to 5005
+    Go in the Source tab.
+    Click Add -> Java project -> Select all
+    Click Apply
+    Click Close
 
 Now let's run a single test with debug:
 
-   mvn clean verify -Dit.test=JulAppContextOrderingIT -DfailIfNoTests=false -Dmaven.failsafe.debug
+    mvn clean verify -Dit.test=JulAppContextOrderingIT -DfailIfNoTests=false -Dmaven.failsafe.debug
 
 Wait for:
-   Listening for transport dt_socket at address: 5005
+
+    Listening for transport dt_socket at address: 5005
 
 Now go back to eclipse:
-   Navigate to where you want to put a break point. For example, JulAppContextOrderingIT.registerAgent.
-   Ctrl + shift + b can be used to set a tracepoint at the desired line. 
+
+    Navigate to where you want to put a break point. For example, JulAppContextOrderingIT.registerAgent.
+    Ctrl + shift + b can be used to set a tracepoint at the desired line. 
 
 Then attach to the debugger:
-   Run -> Debug Configurations.
-   Select on the right "Remote lttng maven"
-   Click Debug
+
+    Run -> Debug Configurations.
+    Select on the right "Remote lttng maven"
+    Click Debug
 
 You should hit the breakpoint at some point and from there use steps etc.
 
