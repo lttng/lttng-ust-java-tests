@@ -56,6 +56,8 @@ public abstract class MultiSessionITBase {
 
     protected abstract Domain getDomain();
 
+    protected abstract boolean closeHandlers();
+
     protected abstract void sendEventsToLoggers();
 
     /**
@@ -77,10 +79,12 @@ public abstract class MultiSessionITBase {
         session2.close();
         session3.close();
 
-        handlerA.close();
-        handlerB.close();
-        handlerC.close();
-        handlerD.close();
+        if (closeHandlers()) {
+            handlerA.close();
+            handlerB.close();
+            handlerC.close();
+            handlerD.close();
+        }
 
         handlerA = null;
         handlerB = null;

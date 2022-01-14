@@ -58,6 +58,8 @@ public abstract class AppContextITBase {
 
     protected abstract Domain getDomain();
 
+    protected abstract boolean closeHandlers();
+
     protected abstract void sendEventsToLoggers();
 
     /**
@@ -81,7 +83,9 @@ public abstract class AppContextITBase {
     public void testTeardown() {
         session.close();
 
-        logHandler.close();
+        if (closeHandlers()) {
+            logHandler.close();
+        }
         logHandler = null;
 
         /* In case some tests fail or forget to unregister their retrievers */

@@ -86,6 +86,12 @@ public class JulAppContextIT extends AppContextITBase {
     }
 
     @Override
+    protected boolean closeHandlers()
+    {
+        return true;
+    }
+
+    @Override
     protected void sendEventsToLoggers() {
         JulTestUtils.send10EventsTo(logger);
     }

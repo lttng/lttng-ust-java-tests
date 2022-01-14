@@ -68,10 +68,11 @@ If for example, you installed into the `/usr` prefix instead of `/usr/local`,
 you can use the following properties to specify different locations for the
 lttng-ust-agent-java jars:
 
-    mvn clean verify
-    -Dcommon-jar-location=/usr/share/java/lttng-ust-agent-common.jar
-    -Djul-jar-location=/usr/share/java/lttng-ust-agent-jul.jar
-    -Dlog4j-jar-location=/usr/share/java/lttng-ust-agent-log4j.jar
+    mvn clean verify \
+    -Dcommon-jar-location=/usr/share/java/lttng-ust-agent-common.jar \
+    -Djul-jar-location=/usr/share/java/lttng-ust-agent-jul.jar \
+    -Dlog4j-jar-location=/usr/share/java/lttng-ust-agent-log4j.jar \
+    -Dlog4j2-jar-location=/usr/share/java/lttng-ust-agent-log4j2.jar
 
 To specify a different locations for the JNI .so libraries, you can set the
 `-Djava.library.path` property on the JVM:

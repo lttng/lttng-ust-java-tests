@@ -107,6 +107,12 @@ public class JulEnabledEventsIT extends EnabledEventsITBase {
     }
 
     @Override
+    protected boolean closeHandlers()
+    {
+        return true;
+    }
+
+    @Override
     protected void sendEventsToLoggers() {
         JulTestUtils.send10EventsTo(loggerA);
         JulTestUtils.send10EventsTo(loggerB);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (C) 2015, EfficiOS Inc., Alexandre Montplaisir <alexmonthy@efficios.com>
+   Copyright (C) 2022, EfficiOS Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,10 +28,10 @@
     <version>1.1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>lttng-ust-java-tests-log4j</artifactId>
+  <artifactId>lttng-ust-java-tests-log4j2</artifactId>
   <packaging>jar</packaging>
 
-  <name>LTTng-UST Java Agent Log4j 1.x API Integration Tests</name>
+  <name>LTTng-UST Java Agent Log4j 2.x API Integration Tests</name>
 
   <dependencies>
     <dependency>
@@ -40,7 +40,7 @@
     </dependency>
     <dependency>
       <groupId>org.lttng.ust.agent</groupId>
-      <artifactId>lttng-ust-agent-log4j</artifactId>
+      <artifactId>lttng-ust-agent-log4j2</artifactId>
     </dependency>
     <dependency>
       <groupId>org.lttng.tools</groupId>
@@ -51,8 +51,12 @@
       <artifactId>lttng-ust-java-tests-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

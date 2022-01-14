@@ -6,12 +6,12 @@
    modify it under the terms of the GNU Lesser General Public
    License as published by the Free Software Foundation; only
    version 2.1 of the License.
-  
+
    This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
    Lesser General Public License for more details.
- 
+
    You should have received a copy of the GNU Lesser General Public
    License along with this library; if not, write to the Free Software
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
@@ -36,12 +36,13 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    
+
     <!-- Paths that come from UST's default "make install".
          Override to specify other locations. -->
     <common-jar-location>/usr/local/share/java/lttng-ust-agent-common-1.0.0.jar</common-jar-location>
     <jul-jar-location>/usr/local/share/java/lttng-ust-agent-jul-1.0.0.jar</jul-jar-location>
     <log4j-jar-location>/usr/local/share/java/lttng-ust-agent-log4j-1.0.0.jar</log4j-jar-location>
+    <log4j2-jar-location>/usr/local/share/java/lttng-ust-agent-log4j2-1.0.0.jar</log4j2-jar-location>
     <argLine>-Djava.library.path=/usr/local/lib</argLine>
   </properties>
 
@@ -98,6 +99,18 @@
       </dependency>
 
       <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>2.17.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>2.17.1</version>
+      </dependency>
+
+      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.13.2</version>
@@ -129,6 +142,14 @@
         <systemPath>${log4j-jar-location}</systemPath>
       </dependency>
 
+      <dependency>
+        <groupId>org.lttng.ust.agent</groupId>
+        <artifactId>lttng-ust-agent-log4j2</artifactId>
+        <version>1.0.0</version>
+        <scope>system</scope>
+        <systemPath>${log4j2-jar-location}</systemPath>
+      </dependency>
+
       <!-- Provided by this project -->
       <dependency>
         <groupId>org.lttng.tools</groupId>
@@ -151,6 +172,7 @@
     <module>lttng-ust-java-tests-common</module>
     <module>lttng-ust-java-tests-jul</module>
     <module>lttng-ust-java-tests-log4j</module>
+    <module>lttng-ust-java-tests-log4j2</module>
   </modules>
 
 </project>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, EfficiOS Inc., Alexandre Montplaisir <alexmonthy@efficios.com>
+ * Copyright (C) 2022, EfficiOS Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,25 +19,33 @@
 package org.lttng.ust.agent.integration.events;
 
 import java.io.IOException;
+import java.util.Map;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.lttng.tools.ILttngSession.Domain;
-import org.lttng.ust.agent.log4j.LttngLogAppender;
-import org.lttng.ust.agent.utils.Log4jTestUtils;
+import org.lttng.ust.agent.ILttngHandler;
+import org.lttng.ust.agent.log4j2.LttngLogAppender;
+import org.lttng.ust.agent.utils.Log4j2TestContext;
+import org.lttng.ust.agent.utils.Log4j2TestUtils;
 
 /**
  * Enabled events test for the LTTng-UST Log4j log handler.
  */
-public class Log4jEnabledEventsIT extends EnabledEventsITBase {
+public class Log4j2EnabledEventsIT extends EnabledEventsITBase {
+
+    private static final String APPENDER_NAME_A = "LttngA";
+    private static final String APPENDER_NAME_B = "LttngB";
+    private static final String APPENDER_NAME_C = "LttngC";
 
     private static final Domain DOMAIN = Domain.LOG4J;
+
+    private Log4j2TestContext testContext;
 
     private Logger loggerA;
     private Logger loggerB;
@@ -48,16 +56,16 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
      * Class setup
      */
     @BeforeClass
-    public static void log4jClassSetup() {
-        Log4jTestUtils.testClassSetup();
+    public static void log4j2ClassSetup() {
+        Log4j2TestUtils.testClassSetup();
     }
 
     /**
      * Class cleanup
      */
     @AfterClass
-    public static void log4jClassCleanup() {
-        Log4jTestUtils.testClassCleanup();
+    public static void log4j2ClassCleanup() {
+        Log4j2TestUtils.testClassCleanup();
     }
 
     /**
@@ -66,40 +74,35 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
      * @throws SecurityException
      * @throws IOException
      */
+    @SuppressWarnings("resource")
     @Before
-    public void log4jSetup() throws SecurityException, IOException {
-        loggerA = Logger.getLogger(EVENT_NAME_A);
-        loggerB = Logger.getLogger(EVENT_NAME_B);
-        loggerC = Logger.getLogger(EVENT_NAME_C);
-        loggerD = Logger.getLogger(EVENT_NAME_D);
+    public void log4j2Setup() throws SecurityException, IOException {
 
-        loggerA.setLevel(Level.ALL);
-        loggerB.setLevel(Level.ALL);
-        loggerC.setLevel(Level.ALL);
-        loggerD.setLevel(Level.ALL);
+        testContext = new Log4j2TestContext("log4j2.Log4j2EnabledEventsIT.xml");
 
-        handlerA = new LttngLogAppender();
-        handlerB = new LttngLogAppender();
-        handlerC = new LttngLogAppender();
+        testContext.beforeTest();
 
-        loggerA.addAppender((Appender) handlerA);
-        loggerB.addAppender((Appender) handlerB);
-        loggerC.addAppender((Appender) handlerC);
+        loggerA = testContext.getLoggerContext().getLogger(EVENT_NAME_A);
+        loggerB = testContext.getLoggerContext().getLogger(EVENT_NAME_B);
+        loggerC = testContext.getLoggerContext().getLogger(EVENT_NAME_C);
+        loggerD = testContext.getLoggerContext().getLogger(EVENT_NAME_D);
+
+        handlerA = (ILttngHandler) loggerA.getAppenders().get(APPENDER_NAME_A);
+        handlerB = (ILttngHandler) loggerB.getAppenders().get(APPENDER_NAME_B);
+        handlerC = (ILttngHandler) loggerC.getAppenders().get(APPENDER_NAME_C);
     }
 
     /**
      * Test teardown
      */
     @After
-    public void log4jTeardown() {
-        loggerA.removeAppender((Appender) handlerA);
-        loggerB.removeAppender((Appender) handlerB);
-        loggerC.removeAppender((Appender) handlerC);
-
+    public void log4j2Teardown() {
         loggerA = null;
         loggerB = null;
         loggerC = null;
         loggerD = null;
+
+        testContext.afterTest();
     }
 
     @Override
@@ -110,15 +113,15 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
     @Override
     protected boolean closeHandlers()
     {
-        return true;
+        return false;
     }
 
     @Override
     protected void sendEventsToLoggers() {
-        Log4jTestUtils.send10Events(loggerA);
-        Log4jTestUtils.send10Events(loggerB);
-        Log4jTestUtils.send10Events(loggerC);
-        Log4jTestUtils.send10Events(loggerD);
+        Log4j2TestUtils.send10Events(loggerA);
+        Log4j2TestUtils.send10Events(loggerB);
+        Log4j2TestUtils.send10Events(loggerC);
+        Log4j2TestUtils.send10Events(loggerD);
     }
 
     @Override

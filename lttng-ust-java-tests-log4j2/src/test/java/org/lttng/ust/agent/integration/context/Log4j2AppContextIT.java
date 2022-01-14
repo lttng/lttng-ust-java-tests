@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, EfficiOS Inc., Alexandre Montplaisir <alexmonthy@efficios.com>
+ * Copyright (C) 2022, EfficiOS Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,40 +20,41 @@ package org.lttng.ust.agent.integration.context;
 
 import java.io.IOException;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.core.Logger;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.lttng.tools.ILttngSession.Domain;
-import org.lttng.ust.agent.log4j.LttngLogAppender;
-import org.lttng.ust.agent.utils.Log4jTestUtils;
+import org.lttng.ust.agent.ILttngHandler;
+import org.lttng.ust.agent.utils.Log4j2TestContext;
+import org.lttng.ust.agent.utils.Log4j2TestUtils;
 
 /**
- * Enabled app contexts test for the LTTng-UST JUL log handler.
+ * Enabled app contexts test for the LTTng-UST Log4j 2.x log handler.
  */
-public class Log4jAppContextIT extends AppContextITBase {
+public class Log4j2AppContextIT extends AppContextITBase {
 
     private static final Domain DOMAIN = Domain.LOG4J;
 
+    private Log4j2TestContext testContext;
     private Logger logger;
 
     /**
      * Class setup
      */
     @BeforeClass
-    public static void log4jClassSetup() {
-        Log4jTestUtils.testClassSetup();
+    public static void log4j2ClassSetup() {
+        Log4j2TestUtils.testClassSetup();
     }
 
     /**
      * Class cleanup
      */
     @AfterClass
-    public static void log4jClassCleanup() {
-        Log4jTestUtils.testClassCleanup();
+    public static void log4j2ClassCleanup() {
+        Log4j2TestUtils.testClassCleanup();
     }
 
     /**
@@ -63,20 +64,22 @@ public class Log4jAppContextIT extends AppContextITBase {
      * @throws IOException
      */
     @Before
-    public void julSetup() throws SecurityException, IOException {
-        logger = Logger.getLogger(EVENT_NAME);
-        logger.setLevel(Level.ALL);
+    public void log4j2Setup() throws SecurityException, IOException {
+        testContext = new Log4j2TestContext("log4j2.Log4j2AppContextIT.xml");
 
-        logHandler = new LttngLogAppender();
-        logger.addAppender((Appender) logHandler);
+        testContext.beforeTest();
+
+        logger = testContext.getLoggerContext().getLogger(EVENT_NAME);
+
+        logHandler = (ILttngHandler) logger.getAppenders().get("Lttng");
     }
 
     /**
      * Test teardown
      */
     @After
-    public void julTeardown() {
-        logger.removeAppender((Appender) logHandler);
+    public void log4j2Teardown() {
+        testContext.afterTest();
         logger = null;
     }
 
@@ -88,11 +91,11 @@ public class Log4jAppContextIT extends AppContextITBase {
     @Override
     protected boolean closeHandlers()
     {
-        return true;
+        return false;
     }
 
     @Override
     protected void sendEventsToLoggers() {
-        Log4jTestUtils.send10Events(logger);
+        Log4j2TestUtils.send10Events(logger);
     }
 }

@@ -112,6 +112,12 @@ public class Log4jMultiSessionIT extends MultiSessionITBase {
     }
 
     @Override
+    protected boolean closeHandlers()
+    {
+        return true;
+    }
+
+    @Override
     protected void sendEventsToLoggers() {
         Log4jTestUtils.send10Events(loggerA);
         Log4jTestUtils.send10Events(loggerB);

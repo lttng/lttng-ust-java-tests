@@ -55,6 +55,8 @@ public abstract class EnabledEventsITBase {
 
     protected abstract Domain getDomain();
 
+    protected abstract boolean closeHandlers();
+
     protected abstract void sendEventsToLoggers();
 
     /**
@@ -77,9 +79,11 @@ public abstract class EnabledEventsITBase {
     public void testTeardown() {
         session.close();
 
-        handlerA.close();
-        handlerB.close();
-        handlerC.close();
+        if (closeHandlers()) {
+            handlerA.close();
+            handlerB.close();
+            handlerC.close();
+        }
 
         handlerA = null;
         handlerB = null;
