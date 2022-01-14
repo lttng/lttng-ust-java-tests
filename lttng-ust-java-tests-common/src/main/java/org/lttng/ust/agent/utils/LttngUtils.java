@@ -44,6 +44,7 @@ public final class LttngUtils {
      *         was an error
      */
     public static boolean checkForLttngTools(Domain domain) {
+        System.out.println("Sanity check: start");
         try (ILttngSession session = ILttngSession.createSession(null, domain)) {
             boolean ret1 = session.enableAllEvents();
             boolean ret2 = session.start();
@@ -52,6 +53,10 @@ public final class LttngUtils {
              * "lttng view" also tests that Babeltrace is installed and working
              */
             List<String> contents = session.view();
+            if (!contents.isEmpty()) {
+                System.out.print(String.join("\n", contents));
+	    }
+            System.out.println("Sanity check: end");
             return (ret1 && ret2 && ret3 && contents.isEmpty());
         }
     }

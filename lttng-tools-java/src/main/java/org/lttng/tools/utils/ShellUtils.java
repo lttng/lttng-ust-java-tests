@@ -69,7 +69,7 @@ public final class ShellUtils {
             Process p = builder.start();
             int ret = p.waitFor();
 
-            System.out.println("(returned from command)");
+            System.out.println(String.format("(returned from command: %d)", ret));
 
             return (ret == 0);
 
