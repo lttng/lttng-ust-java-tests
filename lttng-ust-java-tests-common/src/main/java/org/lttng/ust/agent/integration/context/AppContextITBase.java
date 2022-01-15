@@ -187,7 +187,7 @@ public abstract class AppContextITBase {
         assertFalse(output.isEmpty());
 
         /* Test that context name is there but value is not */
-        testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME, "{ none = { } } }");
+        testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME, "{ { } } }");
     }
 
     /**
@@ -211,7 +211,7 @@ public abstract class AppContextITBase {
 
         /* Test that context name + value are present */
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ string = \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" }");
+                "{ \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -238,7 +238,7 @@ public abstract class AppContextITBase {
 
         /* Test that only retriever-name-2 is present, with no value */
         testContextNotPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME);
-        testContextPresentInTrace(output, RETRIEVER_NAME_2, CONTEXT_NAME, "{ none = { } } }");
+        testContextPresentInTrace(output, RETRIEVER_NAME_2, CONTEXT_NAME, "{ { } } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -266,7 +266,7 @@ public abstract class AppContextITBase {
 
         /* Test that only retriever-name-1 is present, name + value */
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ string = \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" }");
+                "{ \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" }");
         testContextNotPresentInTrace(output, RETRIEVER_NAME_2, CONTEXT_NAME);
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
@@ -296,8 +296,8 @@ public abstract class AppContextITBase {
 
         /* Test that both contexts are present, but only retriever-1's has a value */
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ string = \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" }");
-        testContextPresentInTrace(output, RETRIEVER_NAME_2, CONTEXT_NAME, "{ none = { } } }");
+                "{ \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" }");
+        testContextPresentInTrace(output, RETRIEVER_NAME_2, CONTEXT_NAME, "{ { } } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -332,7 +332,7 @@ public abstract class AppContextITBase {
         assertTrue(cim.registerContextInfoRetriever(RETRIEVER_NAME_1, ContextInfoRetrieverStubs.NULL_RETRIEVER));
 
         List<String> output = enableContextAndTrace();
-        testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME, "{ none = { } } }");
+        testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME, "{ { } } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -346,7 +346,7 @@ public abstract class AppContextITBase {
 
         List<String> output = enableContextAndTrace();
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ int32 = " + ContextInfoRetrieverStubs.INTEGER_VALUE + " } }");
+                "{ " + ContextInfoRetrieverStubs.INTEGER_VALUE + " } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -360,7 +360,7 @@ public abstract class AppContextITBase {
 
         List<String> output = enableContextAndTrace();
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ int64 = " + ContextInfoRetrieverStubs.LONG_VALUE + " } }");
+                "{ " + ContextInfoRetrieverStubs.LONG_VALUE + " } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -374,7 +374,7 @@ public abstract class AppContextITBase {
 
         List<String> output = enableContextAndTrace();
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ double = " + ContextInfoRetrieverStubs.DOUBLE_VALUE + " } }");
+                "{ " + ContextInfoRetrieverStubs.DOUBLE_VALUE + " } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -388,7 +388,7 @@ public abstract class AppContextITBase {
 
         List<String> output = enableContextAndTrace();
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ string = \"" + ContextInfoRetrieverStubs.CHARACTER_VALUE + "\" } }");
+                "{ \"" + ContextInfoRetrieverStubs.CHARACTER_VALUE + "\" } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -402,7 +402,7 @@ public abstract class AppContextITBase {
 
         List<String> output = enableContextAndTrace();
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ float = " + ContextInfoRetrieverStubs.FLOAT_VALUE + " } }");
+                "{ " + ContextInfoRetrieverStubs.FLOAT_VALUE + " } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -416,7 +416,7 @@ public abstract class AppContextITBase {
 
         List<String> output = enableContextAndTrace();
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ int8 = " + ContextInfoRetrieverStubs.BYTE_VALUE + " } }");
+                "{ " + ContextInfoRetrieverStubs.BYTE_VALUE + " } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -430,7 +430,7 @@ public abstract class AppContextITBase {
 
         List<String> output = enableContextAndTrace();
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ int16 = " + ContextInfoRetrieverStubs.SHORT_VALUE + " } }");
+                "{ " + ContextInfoRetrieverStubs.SHORT_VALUE + " } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -443,7 +443,7 @@ public abstract class AppContextITBase {
         assertTrue(cim.registerContextInfoRetriever(RETRIEVER_NAME_1, ContextInfoRetrieverStubs.BOOLEAN_TRUE_RETRIEVER));
 
         List<String> output = enableContextAndTrace();
-        testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME, "{ int8 = 1 } }");
+        testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME, "{ 1 } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -456,7 +456,7 @@ public abstract class AppContextITBase {
         assertTrue(cim.registerContextInfoRetriever(RETRIEVER_NAME_1, ContextInfoRetrieverStubs.BOOLEAN_FALSE_RETRIEVER));
 
         List<String> output = enableContextAndTrace();
-        testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME, "{ int8 = 0 } }");
+        testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME, "{ 0 } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -470,7 +470,7 @@ public abstract class AppContextITBase {
 
         List<String> output = enableContextAndTrace();
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ string = \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" } }");
+                "{ \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -484,7 +484,7 @@ public abstract class AppContextITBase {
 
         List<String> output = enableContextAndTrace();
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ string = \"" + ContextInfoRetrieverStubs.OBJECT_VALUE.toString() + "\" } }");
+                "{ \"" + ContextInfoRetrieverStubs.OBJECT_VALUE.toString() + "\" } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
@@ -566,7 +566,7 @@ public abstract class AppContextITBase {
         assertFalse(output.isEmpty());
 
         testContextPresentInTrace(output, RETRIEVER_NAME_1, CONTEXT_NAME,
-                "{ string = \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" } }");
+                "{ \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" } }");
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }

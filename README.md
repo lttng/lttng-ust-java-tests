@@ -13,7 +13,7 @@ Prerequisites
 * Java 1.8
 * [Apache Maven](https://maven.apache.org/) 3.0+
 * A recent version of [LTTng-Tools](https://lttng.org/download/)
-* A recent version of [Babeltrace](http://www.efficios.com/babeltrace)
+* A recent version of [Babeltrace 2.x](http://www.efficios.com/babeltrace)
 * A git branch or version of LTTng-UST you want to test
 
 For example, on Ubuntu you can use the
@@ -22,7 +22,7 @@ OpenJDK from the main repository:
 
     sudo apt-add-repository ppa:lttng/ppa
     sudo apt-get update
-    sudo apt-get install lttng-tools babeltrace maven openjdk-8-jre
+    sudo apt-get install lttng-tools babeltrace2 maven openjdk-8-jre
 
 Also make sure `mvn -version` reports a `Java version: 1.8` or higher. If it
 does not, you may need to set your `JAVA_HOME` accordingly.

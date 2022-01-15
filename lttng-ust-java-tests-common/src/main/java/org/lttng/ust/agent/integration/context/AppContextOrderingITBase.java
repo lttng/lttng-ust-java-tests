@@ -147,7 +147,7 @@ public abstract class AppContextOrderingITBase {
         String traceRetriverName = RETRIEVER_NAME.replace('.', '_');
         String traceContextName = CONTEXT_NAME.replace('.', '_');
 
-        String expectedString = "_app_" + traceRetriverName + "_" + traceContextName + " = { string = \"" + CONTEXT_VALUE + "\" } }";
+        String expectedString = "_app_" + traceRetriverName + "_" + traceContextName + " = { \"" + CONTEXT_VALUE + "\" } }";
         output.forEach(line -> assertTrue(line.contains(expectedString)));
     }
 
