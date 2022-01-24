@@ -37,6 +37,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+    <!-- Work around bug SUREFIRE-1831 in failsafe 3.0.0-M5 -->
+    <failsafe.useModulePath>false</failsafe.useModulePath>
+
     <!-- Paths that come from UST's default "make install".
          Override to specify other locations. -->
     <common-jar-location>/usr/local/share/java/lttng-ust-agent-common-1.0.0.jar</common-jar-location>
@@ -64,7 +67,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.6.1</version>
+          <version>3.9.0</version>
           <configuration>
             <source>1.8</source>
             <target>1.8</target>
@@ -74,7 +77,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.19.1</version>
+          <version>3.0.0-M5</version>
           <executions>
             <execution>
               <goals>
