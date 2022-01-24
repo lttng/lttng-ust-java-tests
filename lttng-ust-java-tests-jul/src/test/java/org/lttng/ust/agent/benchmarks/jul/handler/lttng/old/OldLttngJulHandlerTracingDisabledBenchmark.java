@@ -18,10 +18,10 @@
 
 package org.lttng.ust.agent.benchmarks.jul.handler.lttng.old;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.LTTngAgent;
@@ -40,7 +40,7 @@ public class OldLttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchm
     /**
      * Test setup
      */
-    @Before
+    @BeforeEach
     public void testSetup() {
         agent = LTTngAgent.getLTTngAgent();
 
@@ -52,7 +52,7 @@ public class OldLttngJulHandlerTracingDisabledBenchmark extends JulHandlerBenchm
     /**
      * Test cleanup
      */
-    @After
+    @AfterEach
     public void testTeardown() {
         assertTrue(session.stop());
         session.close();

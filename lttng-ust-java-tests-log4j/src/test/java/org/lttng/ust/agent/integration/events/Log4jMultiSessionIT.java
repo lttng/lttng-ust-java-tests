@@ -23,10 +23,10 @@ import java.io.IOException;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
@@ -46,7 +46,7 @@ public class Log4jMultiSessionIT extends MultiSessionITBase {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void log4jClassSetup() {
         Log4jTestUtils.testClassSetup();
     }
@@ -54,7 +54,7 @@ public class Log4jMultiSessionIT extends MultiSessionITBase {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void log4jClassCleanup() {
         Log4jTestUtils.testClassCleanup();
     }
@@ -65,7 +65,7 @@ public class Log4jMultiSessionIT extends MultiSessionITBase {
 	 * @throws SecurityException
 	 * @throws IOException
 	 */
-    @Before
+    @BeforeEach
     public void log4jSetup() throws SecurityException, IOException {
         // TODO Wipe all existing LTTng sessions?
 
@@ -93,7 +93,7 @@ public class Log4jMultiSessionIT extends MultiSessionITBase {
     /**
      * Test teardown
      */
-    @After
+    @AfterEach
     public void log4jTeardown() {
         loggerA.removeAppender((Appender) handlerA);
         loggerB.removeAppender((Appender) handlerB);

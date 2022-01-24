@@ -18,48 +18,50 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.logging.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.lttng.tools.ILttngSession;
 import org.lttng.ust.agent.utils.Log4j2TestContext;
 import org.lttng.ust.agent.utils.Log4j2TestUtils;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Test suite for the list events command for the log4j domain
  */
+@ExtendWith(TestPrintExtension.class)
 public class Log4j2ListEventsIT {
 
     protected static final String LOGGER_NAME_1 = "org.lttng.somecomponent";
     protected static final String LOGGER_NAME_2 = "org.lttng.mycomponent";
     protected static final String LOGGER_NAME_3 = "org.lttng.myothercomponent-àéç";
 
+    @SuppressWarnings("unused")
     private Logger logger1;
+    @SuppressWarnings("unused")
     private Logger logger2;
+    @SuppressWarnings("unused")
     private Logger logger3;
 
     private ILttngSession session;
     private Log4j2TestContext testContext;
 
-    @Rule
-    public TestName testName = new TestName();
-
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void log4j2ClassSetup() {
         Log4j2TestUtils.testClassSetup();
     }
@@ -67,19 +69,21 @@ public class Log4j2ListEventsIT {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void log4j2ClassCleanup() {
         Log4j2TestUtils.testClassCleanup();
     }
 
     /**
      * Create a new session before each test.
+     * @param testInfo current test information
      */
-    @Before
-    public void testSetup() {
+    @SuppressWarnings("resource")
+    @BeforeEach
+    public void testSetup(TestInfo testInfo) {
         session = ILttngSession.createSession("Log4j2ListEventsIT", ILttngSession.Domain.LOG4J);
 
-        testContext = new Log4j2TestContext("log4j2." + testName.getMethodName() + ".xml");
+        testContext = new Log4j2TestContext("log4j2." + testInfo.getDisplayName().replaceAll("[()]", "") + ".xml");
 
         testContext.beforeTest();
 
@@ -91,7 +95,7 @@ public class Log4j2ListEventsIT {
     /**
      * Close the current session after each test.
      */
-    @After
+    @AfterEach
     public void testTeardown() {
         session.close();
         testContext.afterTest();

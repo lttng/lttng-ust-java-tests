@@ -18,19 +18,22 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.lttng.tools.ILttngSession;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Base class testing the "lttng list" command when using loggers organized as a
@@ -43,15 +46,11 @@ import org.lttng.tools.ILttngSession;
  *
  * @author Alexandre Montplaisir
  */
+@ExtendWith(TestPrintExtension.class)
 public abstract class LoggerHierachyListITBase {
 
     protected static final String PARENT_LOGGER = "org.lttng";
     protected static final String CHILD_LOGGER = "org.lttng.mycomponent";
-
-    protected final boolean parentLoggerActive;
-    protected final boolean parentLoggerHasHandler;
-    protected final boolean childLoggerActive;
-    protected final boolean childLoggerHasHandler;
 
     private ILttngSession session;
 
@@ -66,41 +65,6 @@ public abstract class LoggerHierachyListITBase {
      * except "parentActive" is necessarily true when "hasHandler" is true for a
      * given logger.
      *
-     * @return The test parameters
-     */
-    @Parameters(name = "{index}: parentActive={0}, parentHasHandler={1}, childActive={2}, childHasHandler={3}")
-    public static Iterable<Object[]> testCases() {
-        /*
-         * Kept the whole array for clarity, but some cases are commented out:
-         * it is impossible to attach an handler if the logger itself is not
-         * defined!
-         */
-        return Arrays.asList(new Object[][] {
-                { Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE },
-                { Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.FALSE },
-//                { Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE },
-                { Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE },
-
-                { Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE },
-                { Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE },
-//                { Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE },
-                { Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE },
-
-//                { Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE },
-//                { Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.FALSE },
-//                { Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE },
-//                { Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE },
-
-                { Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE },
-                { Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE },
-//                { Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE },
-                { Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE },
-        });
-    }
-
-    /**
-     * Test constructor
-     *
      * @param parentLoggerActive
      *            Parent logger has been instantiated
      * @param parentLoggerHasHandler
@@ -109,15 +73,37 @@ public abstract class LoggerHierachyListITBase {
      *            Child logger has been instantiated
      * @param childLoggerHasHandler
      *            Child logger has a LTTng handler attached to it
+     *
+     * @return The test parameters
      */
-    public LoggerHierachyListITBase(boolean parentLoggerActive,
-            boolean parentLoggerHasHandler,
-            boolean childLoggerActive,
-            boolean childLoggerHasHandler) {
-        this.parentLoggerActive = parentLoggerActive;
-        this.parentLoggerHasHandler = parentLoggerHasHandler;
-        this.childLoggerActive = childLoggerActive;
-        this.childLoggerHasHandler = childLoggerHasHandler;
+    protected static Stream<Arguments> provideArguments() {
+
+        /*
+         * Kept the whole array for clarity, but some cases are commented out:
+         * it is impossible to attach an handler if the logger itself is not
+         * defined!
+         */
+        return Stream.of(
+                Arguments.of( Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE ),
+                Arguments.of( Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.FALSE ),
+//              Arguments.of( Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE ),
+                Arguments.of( Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE ),
+
+                Arguments.of( Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE ),
+                Arguments.of( Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE ),
+//              Arguments.of( Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE ),
+                Arguments.of( Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE ),
+
+//              Arguments.of( Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE ),
+//              Arguments.of( Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.FALSE ),
+//              Arguments.of( Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE ),
+//              Arguments.of( Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE ),
+
+                Arguments.of( Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE ),
+                Arguments.of( Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE ),
+//              Arguments.of( Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE ),
+                Arguments.of( Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE )
+        );
     }
 
     protected ILttngSession getSession() {
@@ -131,7 +117,7 @@ public abstract class LoggerHierachyListITBase {
     /**
      * Common test setup
      */
-    @Before
+    @BeforeEach
     public void testSetup() {
         session = ILttngSession.createSession(null, getDomain());
     }
@@ -139,7 +125,7 @@ public abstract class LoggerHierachyListITBase {
     /**
      * Common test teardown
      */
-    @After
+    @AfterEach
     public void testTeardown() {
         session.close();
     }
@@ -150,7 +136,10 @@ public abstract class LoggerHierachyListITBase {
 
     protected abstract ILttngSession.Domain getDomain();
 
-    protected abstract void activateLoggers() throws IOException;
+    protected abstract void activateLoggers(boolean parentLoggerActive,
+            boolean parentLoggerHasHandler,
+            boolean childLoggerActive,
+            boolean childLoggerHasHandler) throws IOException;
 
     // ------------------------------------------------------------------------
     // Common tests
@@ -159,12 +148,29 @@ public abstract class LoggerHierachyListITBase {
     /**
      * Test the output of the "lttng list" command.
      *
+     * @param parentLoggerActive
+     *            Parent logger has been instantiated
+     * @param parentLoggerHasHandler
+     *            Parent logger has a LTTng handler attached to it
+     * @param childLoggerActive
+     *            Child logger has been instantiated
+     * @param childLoggerHasHandler
+     *            Child logger has a LTTng handler attached to it
+     *
      * @throws IOException
      *             Fails the test
      */
-    @Test
-    public void testList() throws IOException {
-        activateLoggers();
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testList(boolean parentLoggerActive,
+            boolean parentLoggerHasHandler,
+            boolean childLoggerActive,
+            boolean childLoggerHasHandler) throws IOException {
+
+        activateLoggers(parentLoggerActive,
+                parentLoggerHasHandler,
+                childLoggerActive,
+                childLoggerHasHandler);
 
         List<String> enabledEvents = session.listEvents();
         List<String> expectedEvents = new ArrayList<>();

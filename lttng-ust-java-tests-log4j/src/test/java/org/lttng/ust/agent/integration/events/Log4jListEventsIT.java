@@ -23,10 +23,10 @@ import java.io.IOException;
 import org.apache.log4j.Appender;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.tools.ILttngSession;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
@@ -42,7 +42,7 @@ public class Log4jListEventsIT extends ListEventsITBase {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void log4jClassSetup() {
         Log4jTestUtils.testClassSetup();
     }
@@ -50,7 +50,7 @@ public class Log4jListEventsIT extends ListEventsITBase {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void log4jClassCleanup() {
         Log4jTestUtils.testClassCleanup();
     }
@@ -61,7 +61,7 @@ public class Log4jListEventsIT extends ListEventsITBase {
      * @throws SecurityException
      * @throws IOException
      */
-    @Before
+    @BeforeEach
     public void log4jSetup() throws SecurityException, IOException {
         /* Try clearing the log4j logger configuration */
         LogManager.resetConfiguration();
@@ -82,7 +82,7 @@ public class Log4jListEventsIT extends ListEventsITBase {
     /**
      * Test teardown. Detach and close all log handlers.
      */
-    @After
+    @AfterEach
     public void log4jTeardown() {
         for (Logger logger : loggers) {
             for (Appender appender : appenders) {

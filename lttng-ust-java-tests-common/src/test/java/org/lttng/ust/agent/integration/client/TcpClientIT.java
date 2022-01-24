@@ -18,21 +18,21 @@
 
 package org.lttng.ust.agent.integration.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.LttngToolsHelper;
 import org.lttng.ust.agent.ILttngAgent;
@@ -42,7 +42,7 @@ import org.lttng.ust.agent.session.LogLevelSelector;
 import org.lttng.ust.agent.session.LogLevelSelector.LogLevelType;
 import org.lttng.ust.agent.utils.EventRuleFactory;
 import org.lttng.ust.agent.utils.ILogLevelStrings;
-import org.lttng.ust.agent.utils.TestPrintRunner;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Tests for the TCP client only, without using an agent.
@@ -53,7 +53,7 @@ import org.lttng.ust.agent.utils.TestPrintRunner;
  *
  * @author Alexandre Montplaisir
  */
-@RunWith(TestPrintRunner.class)
+@ExtendWith(TestPrintExtension.class)
 public class TcpClientIT {
 
     // ------------------------------------------------------------------------
@@ -86,7 +86,7 @@ public class TcpClientIT {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
         LttngToolsHelper.destroyAllSessions();
 
@@ -113,13 +113,13 @@ public class TcpClientIT {
         clientThread = new Thread(client);
         clientThread.start();
 
-        assertTrue("Timed out waiting for a sessiond", client.waitForConnection(5));
+        assertTrue(client.waitForConnection(5), "Timed out waiting for a sessiond");
     }
 
     /**
      * Class teardown
      */
-    @AfterClass
+    @AfterAll
     public static void teardownClass() {
         if (client != null) {
             client.close();
@@ -135,7 +135,7 @@ public class TcpClientIT {
     /**
      * Test setup
      */
-    @Before
+    @BeforeEach
     public void setup() {
         session = ILttngSession.createSession(null, SESSION_DOMAIN);
         clientListener.clearAllCommands();
@@ -144,7 +144,7 @@ public class TcpClientIT {
     /**
      * Test teardown
      */
-    @After
+    @AfterEach
     public void teardown() {
         session.close();
     }

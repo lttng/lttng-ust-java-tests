@@ -24,8 +24,8 @@ import java.nio.file.Path;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 
 /**
@@ -43,7 +43,7 @@ public class FileHandlerBenchmark extends JulHandlerBenchmarkBase {
 	 * @throws IOException
 	 *             If there is problem setting up the handler
 	 */
-	@Before
+	@BeforeEach
 	public void testSetup() throws SecurityException, IOException {
 		outputFile = Files.createTempFile(this.getClass().getSimpleName(), null);
 
@@ -57,7 +57,7 @@ public class FileHandlerBenchmark extends JulHandlerBenchmarkBase {
 	 * @throws IOException
 	 *             If we could not delete the test file
 	 */
-	@After
+	@AfterEach
 	public void testTeardown() throws IOException {
 		Files.deleteIfExists(outputFile);
 	}

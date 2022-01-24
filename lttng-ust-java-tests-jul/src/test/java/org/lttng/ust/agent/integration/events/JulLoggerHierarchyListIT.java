@@ -23,12 +23,10 @@ import java.util.logging.Handler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.JulTestUtils;
@@ -38,7 +36,6 @@ import org.lttng.ust.agent.utils.JulTestUtils;
  *
  * @author Alexandre Montplaisir
  */
-@RunWith(Parameterized.class)
 public class JulLoggerHierarchyListIT extends LoggerHierachyListITBase {
 
     private Logger parentLogger;
@@ -47,29 +44,6 @@ public class JulLoggerHierarchyListIT extends LoggerHierachyListITBase {
     private Handler parentHandler;
     private Handler childHandler;
 
-    /**
-     * Test constructor
-     *
-     * @param parentLoggerActive
-     *            Parent logger has been instantiated
-     * @param parentLoggerHasHandler
-     *            Parent logger has a LTTng handler attached to it
-     * @param childLoggerActive
-     *            Child logger has been instantiated
-     * @param childLoggerHasHandler
-     *            Child logger has a LTTng handler attached to it
-     */
-    public JulLoggerHierarchyListIT(boolean parentLoggerActive,
-            boolean parentLoggerHasHandler,
-            boolean childLoggerActive,
-            boolean childLoggerHasHandler) {
-        /* Set by parameters defined in the base class */
-        super(parentLoggerActive,
-                parentLoggerHasHandler,
-                childLoggerActive,
-                childLoggerHasHandler);
-    }
-
     // ------------------------------------------------------------------------
     // Maintenance
     // ------------------------------------------------------------------------
@@ -77,7 +51,7 @@ public class JulLoggerHierarchyListIT extends LoggerHierachyListITBase {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void julClassSetup() {
         JulTestUtils.testClassSetup();
     }
@@ -85,7 +59,7 @@ public class JulLoggerHierarchyListIT extends LoggerHierachyListITBase {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void julClassCleanup() {
         JulTestUtils.testClassCleanup();
     }
@@ -94,7 +68,7 @@ public class JulLoggerHierarchyListIT extends LoggerHierachyListITBase {
      * Test setup
      */
     @SuppressWarnings("static-method")
-    @Before
+    @BeforeEach
     public void setup() {
         /*
          * Kind of hackish, but it's the only way to ensure that loggers are
@@ -109,7 +83,7 @@ public class JulLoggerHierarchyListIT extends LoggerHierachyListITBase {
     /**
      * Test cleanup
      */
-    @After
+    @AfterEach
     public void cleanup() {
         if (parentLogger != null) {
             if (parentHandler != null) {
@@ -143,7 +117,10 @@ public class JulLoggerHierarchyListIT extends LoggerHierachyListITBase {
     }
 
     @Override
-    protected void activateLoggers() throws IOException {
+    protected void activateLoggers(boolean parentLoggerActive,
+            boolean parentLoggerHasHandler,
+            boolean childLoggerActive,
+            boolean childLoggerHasHandler) throws IOException {
         if (parentLoggerActive) {
             parentLogger = Logger.getLogger(PARENT_LOGGER);
             if (parentLoggerHasHandler) {

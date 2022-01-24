@@ -23,11 +23,11 @@ import java.io.IOException;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
@@ -47,7 +47,7 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void log4jClassSetup() {
         Log4jTestUtils.testClassSetup();
     }
@@ -55,7 +55,7 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void log4jClassCleanup() {
         Log4jTestUtils.testClassCleanup();
     }
@@ -66,7 +66,7 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
      * @throws SecurityException
      * @throws IOException
      */
-    @Before
+    @BeforeEach
     public void log4jSetup() throws SecurityException, IOException {
         loggerA = Logger.getLogger(EVENT_NAME_A);
         loggerB = Logger.getLogger(EVENT_NAME_B);
@@ -90,7 +90,7 @@ public class Log4jEnabledEventsIT extends EnabledEventsITBase {
     /**
      * Test teardown
      */
-    @After
+    @AfterEach
     public void log4jTeardown() {
         loggerA.removeAppender((Appender) handlerA);
         loggerB.removeAppender((Appender) handlerB);

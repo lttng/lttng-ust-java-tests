@@ -24,12 +24,18 @@ import java.net.URL;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 
+/**
+ * Log4j 2.x test context utilities.
+ */
 public class Log4j2TestContext {
 
     private final URI configFileUri;
 
     private LoggerContext loggerContext;
 
+    /**
+     * @param configFile path to the log4j configuration file.
+     */
     public Log4j2TestContext(String configFile) {
 
         URL resource = getClass().getClassLoader().getResource(configFile);
@@ -45,15 +51,24 @@ public class Log4j2TestContext {
         }
     }
 
+    /**
+     * @return the log4j2 logger context.
+     */
     public synchronized LoggerContext getLoggerContext() {
         return loggerContext;
     }
 
+    /**
+     * Initialize the log4j2 context before running a test.
+     */
     public synchronized void beforeTest() {
         loggerContext = (LoggerContext) LogManager.getContext(
                 ClassLoader.getSystemClassLoader(), false, configFileUri);
     }
 
+    /**
+     * Dispose of the log4j2 context after running a test.
+     */
     public synchronized void afterTest() {
         loggerContext.stop();
     }

@@ -18,10 +18,10 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -31,23 +31,23 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.LTTngAgent;
 import org.lttng.ust.agent.utils.JulTestUtils;
-import org.lttng.ust.agent.utils.TestPrintRunner;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Enabled events test for the LTTng-UST JUL log handler, using the legacy API.
  */
-@RunWith(TestPrintRunner.class)
+@ExtendWith(TestPrintExtension.class)
 @SuppressWarnings("deprecation")
 public class JulLegacyApiIT {
 
@@ -65,7 +65,7 @@ public class JulLegacyApiIT {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void julClassSetup() {
         JulTestUtils.testClassSetup();
     }
@@ -73,7 +73,7 @@ public class JulLegacyApiIT {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void julClassCleanup() {
         JulTestUtils.testClassCleanup();
     }
@@ -81,7 +81,7 @@ public class JulLegacyApiIT {
     /**
      * Test setup
      */
-    @Before
+    @BeforeEach
     public void setup() {
         /* Clear the JUL logger configuration */
         LogManager.getLogManager().reset();
@@ -100,7 +100,7 @@ public class JulLegacyApiIT {
     /**
      * Test cleanup
      */
-    @After
+    @AfterEach
     public void tearDown() {
         session.close();
 

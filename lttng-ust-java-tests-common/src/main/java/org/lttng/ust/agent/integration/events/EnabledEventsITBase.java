@@ -18,27 +18,27 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.ILttngHandler;
-import org.lttng.ust.agent.utils.TestPrintRunner;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Base abstract class to implement all sorts of integration tests verifying the
  * presence of enabled events in resulting traces.
  */
-@RunWith(TestPrintRunner.class)
+@ExtendWith(TestPrintExtension.class)
 public abstract class EnabledEventsITBase {
 
     protected static final String EVENT_NAME_A = "EventA";
@@ -67,7 +67,7 @@ public abstract class EnabledEventsITBase {
     /**
      * Base test setup
      */
-    @Before
+    @BeforeEach
     public void testSetup() {
         session = ILttngSession.createSession(null, getDomain());
     }
@@ -75,7 +75,7 @@ public abstract class EnabledEventsITBase {
     /**
      * Base test teardown
      */
-    @After
+    @AfterEach
     public void testTeardown() {
         session.close();
 

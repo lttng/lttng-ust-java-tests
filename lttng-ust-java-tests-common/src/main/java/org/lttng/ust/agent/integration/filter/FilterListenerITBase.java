@@ -18,7 +18,7 @@
 
 package org.lttng.ust.agent.integration.filter;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -27,10 +27,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.tools.ILttngSession;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.filter.FilterChangeNotifier;
@@ -40,14 +40,14 @@ import org.lttng.ust.agent.session.LogLevelSelector;
 import org.lttng.ust.agent.session.LogLevelSelector.LogLevelType;
 import org.lttng.ust.agent.utils.EventRuleFactory;
 import org.lttng.ust.agent.utils.ILogLevelStrings;
-import org.lttng.ust.agent.utils.TestPrintRunner;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Base test class for {@link IFilterChangeListener} tests.
  *
  * @author Alexandre Montplaisir
  */
-@RunWith(TestPrintRunner.class)
+@ExtendWith(TestPrintExtension.class)
 public abstract class FilterListenerITBase {
 
     private static final String EVENT_NAME_A = "eventA";
@@ -68,7 +68,7 @@ public abstract class FilterListenerITBase {
      * @throws SecurityException
      * @throws IOException
      */
-    @Before
+    @BeforeEach
     public void setup() throws SecurityException, IOException {
         handler = getLogHandler();
         listener = new TestFilterListener();
@@ -81,7 +81,7 @@ public abstract class FilterListenerITBase {
     /**
      * Test teardown
      */
-    @After
+    @AfterEach
     public void teardown() {
         session.close();
         FilterChangeNotifier.getInstance().unregisterListener(listener);

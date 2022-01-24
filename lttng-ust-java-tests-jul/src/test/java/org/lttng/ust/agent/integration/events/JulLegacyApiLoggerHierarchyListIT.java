@@ -18,7 +18,7 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,13 +27,12 @@ import java.util.List;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.LTTngAgent;
 import org.lttng.ust.agent.utils.JulTestUtils;
@@ -45,35 +44,12 @@ import org.lttng.ust.agent.utils.JulTestUtils;
  * @author Alexandre Montplaisir
  */
 @SuppressWarnings("deprecation")
-@RunWith(Parameterized.class)
+//@RunWith(Parameterized.class)
 public class JulLegacyApiLoggerHierarchyListIT extends LoggerHierachyListITBase {
 
     private LTTngAgent agent;
     private Logger parentLogger;
     private Logger childLogger;
-
-    /**
-     * Test constructor
-     *
-     * @param parentLoggerActive
-     *            Parent logger has been instantiated
-     * @param parentLoggerHasHandler
-     *            Parent logger has a LTTng handler attached to it
-     * @param childLoggerActive
-     *            Child logger has been instantiated
-     * @param childLoggerHasHandler
-     *            Child logger has a LTTng handler attached to it
-     */
-    public JulLegacyApiLoggerHierarchyListIT(boolean parentLoggerActive,
-            boolean parentLoggerHasHandler,
-            boolean childLoggerActive,
-            boolean childLoggerHasHandler) {
-        /* Set by parameters defined in the base class */
-        super(parentLoggerActive,
-                parentLoggerHasHandler,
-                childLoggerActive,
-                childLoggerHasHandler);
-    }
 
     // ------------------------------------------------------------------------
     // Maintenance
@@ -82,7 +58,7 @@ public class JulLegacyApiLoggerHierarchyListIT extends LoggerHierachyListITBase 
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void julClassSetup() {
         JulTestUtils.testClassSetup();
     }
@@ -90,7 +66,7 @@ public class JulLegacyApiLoggerHierarchyListIT extends LoggerHierachyListITBase 
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void julClassCleanup() {
         JulTestUtils.testClassCleanup();
     }
@@ -99,7 +75,7 @@ public class JulLegacyApiLoggerHierarchyListIT extends LoggerHierachyListITBase 
      * Test setup
      */
     @SuppressWarnings("static-method")
-    @Before
+    @BeforeEach
     public void setup() {
         LogManager.getLogManager().reset();
         System.gc();
@@ -108,7 +84,7 @@ public class JulLegacyApiLoggerHierarchyListIT extends LoggerHierachyListITBase 
     /**
      * Test cleanup
      */
-    @After
+    @AfterEach
     public void cleanup() {
         agent.dispose();
 
@@ -134,7 +110,10 @@ public class JulLegacyApiLoggerHierarchyListIT extends LoggerHierachyListITBase 
     }
 
     @Override
-    protected void activateLoggers() throws IOException {
+    protected void activateLoggers(boolean parentLoggerActive,
+            boolean parentLoggerHasHandler,
+            boolean childLoggerActive,
+            boolean childLoggerHasHandler) throws IOException {
         agent = LTTngAgent.getLTTngAgent();
 
         /*
@@ -161,10 +140,19 @@ public class JulLegacyApiLoggerHierarchyListIT extends LoggerHierachyListITBase 
      * the logger exists, it will be visible in "lttng list" because the single
      * log handler is attached to the root logger.
      */
+    @SuppressWarnings("resource")
     @Override
-    @Test
-    public void testList() throws IOException {
-        activateLoggers();
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testList(boolean parentLoggerActive,
+            boolean parentLoggerHasHandler,
+            boolean childLoggerActive,
+            boolean childLoggerHasHandler) throws IOException {
+
+        activateLoggers(parentLoggerActive,
+                parentLoggerHasHandler,
+                childLoggerActive,
+                childLoggerHasHandler);
 
         List<String> enabledEvents = getSession().listEvents();
         List<String> expectedEvents = new ArrayList<>();

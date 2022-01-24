@@ -18,8 +18,8 @@
 
 package org.lttng.ust.agent.integration.filter;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.utils.Log4j2TestContext;
 import org.lttng.ust.agent.utils.Log4j2TestUtils;
@@ -34,7 +34,7 @@ public class Log4j2FilterListenerOrderingIT extends FilterListenerOrderingITBase
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void log4j2ClassSetup() {
         Log4j2TestUtils.testClassSetup();
     }
@@ -42,7 +42,7 @@ public class Log4j2FilterListenerOrderingIT extends FilterListenerOrderingITBase
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void log4j2ClassCleanup() {
         Log4j2TestUtils.testClassCleanup();
     }

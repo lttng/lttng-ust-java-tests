@@ -23,10 +23,10 @@ import java.util.logging.Handler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.tools.ILttngSession;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.JulTestUtils;
@@ -42,7 +42,7 @@ public class JulListEventsIT extends ListEventsITBase {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void julClassSetup() {
         JulTestUtils.testClassSetup();
     }
@@ -50,7 +50,7 @@ public class JulListEventsIT extends ListEventsITBase {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void julClassCleanup() {
         JulTestUtils.testClassCleanup();
     }
@@ -61,7 +61,7 @@ public class JulListEventsIT extends ListEventsITBase {
      * @throws SecurityException
      * @throws IOException
      */
-    @Before
+    @BeforeEach
     public void julSetup() throws SecurityException, IOException {
         /* Clear the JUL logger configuration */
         LogManager.getLogManager().reset();
@@ -82,7 +82,7 @@ public class JulListEventsIT extends ListEventsITBase {
     /**
      * Test teardown. Detach and close all log handlers.
      */
-    @After
+    @AfterEach
     public void julTeardown() {
         for (Logger logger : loggers) {
             for (Handler handler : handlers) {

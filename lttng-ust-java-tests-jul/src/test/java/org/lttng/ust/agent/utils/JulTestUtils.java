@@ -18,8 +18,8 @@
 
 package org.lttng.ust.agent.utils;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -43,7 +43,7 @@ public final class JulTestUtils {
     public static void testClassSetup() {
         /* Make sure we can find the JNI library and lttng-tools */
         checkForJulLibrary();
-        assertTrue("lttng-tools is not working properly.", LttngUtils.checkForLttngTools(Domain.JUL));
+        assertTrue(LttngUtils.checkForLttngTools(Domain.JUL), "lttng-tools is not working properly.");
 
         LttngToolsHelper.destroyAllSessions();
     }

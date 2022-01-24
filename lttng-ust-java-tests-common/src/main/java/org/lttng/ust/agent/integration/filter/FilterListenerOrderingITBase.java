@@ -18,20 +18,22 @@
 
 package org.lttng.ust.agent.integration.filter;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.AfterEach;
 import org.lttng.tools.ILttngSession;
 import org.lttng.ust.agent.filter.FilterChangeNotifier;
 import org.lttng.ust.agent.integration.filter.FilterListenerITBase.TestFilterListener;
 import org.lttng.ust.agent.session.EventRule;
 import org.lttng.ust.agent.utils.EventRuleFactory;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * For the filter change notifications to work, several setup steps are
@@ -65,6 +67,7 @@ import org.lttng.ust.agent.utils.EventRuleFactory;
  * possibilities.
  * </p>
  */
+@ExtendWith(TestPrintExtension.class)
 @SuppressWarnings("javadoc")
 public abstract class FilterListenerOrderingITBase {
 
@@ -77,7 +80,7 @@ public abstract class FilterListenerOrderingITBase {
     /**
      * Base class cleanup
      */
-    @After
+    @AfterEach
     public void baseTeardown() {
         /*
          * Deregister the listener (should always be done after all the other

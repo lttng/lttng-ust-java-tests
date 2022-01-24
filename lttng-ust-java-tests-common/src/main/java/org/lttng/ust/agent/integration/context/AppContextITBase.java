@@ -18,29 +18,29 @@
 
 package org.lttng.ust.agent.integration.context;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.context.ContextInfoManager;
-import org.lttng.ust.agent.utils.TestPrintRunner;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Base abstract class to implement all sorts of integration tests verifying the
  * presence of enabled application contexts in resulting traces.
  */
-@RunWith(TestPrintRunner.class)
+@ExtendWith(TestPrintExtension.class)
 public abstract class AppContextITBase {
 
     protected static final String EVENT_NAME = "EventName";
@@ -65,7 +65,7 @@ public abstract class AppContextITBase {
     /**
      * Base test setup
      */
-    @Before
+    @BeforeEach
     public void testSetup() {
         try {
             cim = ContextInfoManager.getInstance();
@@ -79,7 +79,7 @@ public abstract class AppContextITBase {
     /**
      * Base test teardown
      */
-    @After
+    @AfterEach
     public void testTeardown() {
         session.close();
 

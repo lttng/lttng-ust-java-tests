@@ -18,25 +18,25 @@
 
 package org.lttng.ust.agent.context;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.lttng.ust.agent.utils.TestPrintRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Generic tests related to the context retrieval mechanisms.
  *
  * @author Alexandre Montplaisir
  */
-@RunWith(TestPrintRunner.class)
+@ExtendWith(TestPrintExtension.class)
 public class ContextRegistrationIT {
 
     private ContextInfoManager mgr;
@@ -44,7 +44,7 @@ public class ContextRegistrationIT {
     /**
      * Test setup
      */
-    @Before
+    @BeforeEach
     public void testSetup() {
         try {
             mgr = ContextInfoManager.getInstance();

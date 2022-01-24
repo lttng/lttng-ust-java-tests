@@ -21,7 +21,7 @@ package org.lttng.ust.agent.benchmarks.jul.handler.builtin;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 
 /**
@@ -33,7 +33,7 @@ public class DummyHandlerBenchmark extends JulHandlerBenchmarkBase {
 	/**
 	 * Test setup
 	 */
-	@Before
+	@BeforeEach
 	public void testSetup() {
 		handler = new DummyHandler();
 	}

@@ -21,10 +21,10 @@ package org.lttng.ust.agent.integration.events;
 import java.io.IOException;
 
 import org.apache.logging.log4j.core.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.utils.Log4j2TestContext;
@@ -52,7 +52,7 @@ public class Log4j2MultiSessionIT extends MultiSessionITBase {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void log4j2ClassSetup() {
         Log4j2TestUtils.testClassSetup();
     }
@@ -60,7 +60,7 @@ public class Log4j2MultiSessionIT extends MultiSessionITBase {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void log4j2ClassCleanup() {
         Log4j2TestUtils.testClassCleanup();
     }
@@ -71,7 +71,8 @@ public class Log4j2MultiSessionIT extends MultiSessionITBase {
 	 * @throws SecurityException
 	 * @throws IOException
 	 */
-    @Before
+    @SuppressWarnings("resource")
+    @BeforeEach
     public void log4j2Setup() throws SecurityException, IOException {
 
         testContext = new Log4j2TestContext("log4j2.Log4j2MultiSessionIT.xml");
@@ -92,7 +93,7 @@ public class Log4j2MultiSessionIT extends MultiSessionITBase {
     /**
      * Test teardown
      */
-    @After
+    @AfterEach
     public void log4j2Teardown() {
         loggerA = null;
         loggerB = null;

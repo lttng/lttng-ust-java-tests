@@ -18,8 +18,8 @@
 
 package org.lttng.ust.agent.benchmarks.jul.handler.builtin;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 
 /**
@@ -32,7 +32,7 @@ public class NoLoggerBenchmark extends JulHandlerBenchmarkBase {
      * Override the super class's setup() to avoid creating a Logger.
      */
     @Override
-    @Before
+    @BeforeEach
     public void setup() {
         logger = null;
         handler = null;
@@ -42,7 +42,7 @@ public class NoLoggerBenchmark extends JulHandlerBenchmarkBase {
      * Override the super class's teardown()
      */
     @Override
-    @After
+    @AfterEach
     public void teardown() {
     }
 }

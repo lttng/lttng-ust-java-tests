@@ -18,16 +18,16 @@
 
 package org.lttng.ust.agent.integration.context;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.JulTestUtils;
@@ -42,7 +42,7 @@ public class JulAppContextOrderingIT extends AppContextOrderingITBase {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void julClassSetup() {
         JulTestUtils.testClassSetup();
     }
@@ -50,7 +50,7 @@ public class JulAppContextOrderingIT extends AppContextOrderingITBase {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void julClassCleanup() {
         JulTestUtils.testClassCleanup();
     }
@@ -58,7 +58,7 @@ public class JulAppContextOrderingIT extends AppContextOrderingITBase {
     /**
      * Test teardown
      */
-    @After
+    @AfterEach
     public void julTeardown() {
         logger.removeHandler((Handler) logHandler);
         logger = null;

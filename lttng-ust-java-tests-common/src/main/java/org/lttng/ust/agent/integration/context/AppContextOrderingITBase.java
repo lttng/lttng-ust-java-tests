@@ -18,26 +18,26 @@
 
 package org.lttng.ust.agent.integration.context;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.LttngToolsHelper;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.context.ContextInfoManager;
 import org.lttng.ust.agent.context.IContextInfoRetriever;
-import org.lttng.ust.agent.utils.TestPrintRunner;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * To obtain application contexts in a trace, three steps are required:
@@ -51,7 +51,7 @@ import org.lttng.ust.agent.utils.TestPrintRunner;
  * These three steps however can occur in any order ; this means there are 6
  * possible cases. The goal of this class is to test all these cases.
  */
-@RunWith(TestPrintRunner.class)
+@ExtendWith(TestPrintExtension.class)
 public abstract class AppContextOrderingITBase {
 
     protected static final String EVENT_NAME = "EventName";
@@ -72,7 +72,7 @@ public abstract class AppContextOrderingITBase {
     /**
      * Base test setup
      */
-    @Before
+    @BeforeEach
     public void testSetup() {
         try {
             cim = ContextInfoManager.getInstance();
@@ -86,7 +86,7 @@ public abstract class AppContextOrderingITBase {
     /**
      * Base test cleanup
      */
-    @After
+    @AfterEach
     public void testCleanup() {
         session.close();
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME));
@@ -95,7 +95,7 @@ public abstract class AppContextOrderingITBase {
     /**
      * Base class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void julClassCleanup() {
         LttngToolsHelper.deleteAllTraces();
     }

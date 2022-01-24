@@ -18,15 +18,15 @@
 
 package org.lttng.ust.agent.integration.filter;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
@@ -42,7 +42,7 @@ public class Log4jFilterListenerOrderingIT extends FilterListenerOrderingITBase 
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void log4jClassSetup() {
         Log4jTestUtils.testClassSetup();
     }
@@ -50,7 +50,7 @@ public class Log4jFilterListenerOrderingIT extends FilterListenerOrderingITBase 
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void log4jClassCleanup() {
         Log4jTestUtils.testClassCleanup();
     }

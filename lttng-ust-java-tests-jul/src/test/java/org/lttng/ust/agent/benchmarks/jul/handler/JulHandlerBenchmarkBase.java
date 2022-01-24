@@ -24,14 +24,17 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Base abstract class for JUL benchmarks. Sub-classes can setup parameters to
  * test different types of log handlers.
  */
+@ExtendWith(TestPrintExtension.class)
 public abstract class JulHandlerBenchmarkBase {
 
     // ------------------------------------------------------------------------
@@ -61,7 +64,7 @@ public abstract class JulHandlerBenchmarkBase {
     /**
      * Base test setup
      */
-    @Before
+    @BeforeEach
     public void setup() {
         /* Set up the logger */
         logger = Logger.getLogger("Test logger");
@@ -74,7 +77,7 @@ public abstract class JulHandlerBenchmarkBase {
     /**
      * Base test teardown
      */
-    @After
+    @AfterEach
     public void teardown() {
         if (handler != null) {
             logger.removeHandler(handler);

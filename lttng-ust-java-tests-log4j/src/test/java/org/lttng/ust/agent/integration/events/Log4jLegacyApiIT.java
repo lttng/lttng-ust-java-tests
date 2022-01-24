@@ -18,10 +18,10 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -29,24 +29,24 @@ import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.LTTngAgent;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
-import org.lttng.ust.agent.utils.TestPrintRunner;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Enabled events test for the LTTng-UST Log4j log handler, using the legacy
  * API.
  */
-@RunWith(TestPrintRunner.class)
+@ExtendWith(TestPrintExtension.class)
 @SuppressWarnings("deprecation")
 public class Log4jLegacyApiIT {
 
@@ -64,7 +64,7 @@ public class Log4jLegacyApiIT {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void log4jClassSetup() {
         Log4jTestUtils.testClassSetup();
     }
@@ -72,7 +72,7 @@ public class Log4jLegacyApiIT {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void log4jClassCleanup() {
         Log4jTestUtils.testClassCleanup();
     }
@@ -80,7 +80,7 @@ public class Log4jLegacyApiIT {
     /**
      * Test setup
      */
-    @Before
+    @BeforeEach
     public void setup() {
         loggerA = Logger.getLogger(EVENT_NAME_A);
         agent = LTTngAgent.getLTTngAgent();
@@ -95,7 +95,7 @@ public class Log4jLegacyApiIT {
     /**
      * Test cleanup
      */
-    @After
+    @AfterEach
     public void tearDown() {
         session.close();
 

@@ -18,25 +18,25 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.ILttngHandler;
-import org.lttng.ust.agent.utils.TestPrintRunner;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Base abstract class for tests with multiple concurrent tracing sessions
  */
-@RunWith(TestPrintRunner.class)
+@ExtendWith(TestPrintExtension.class)
 public abstract class MultiSessionITBase {
 
     protected static final String EVENT_NAME_A = "EventA";
@@ -63,7 +63,7 @@ public abstract class MultiSessionITBase {
     /**
      * Base test setup
      */
-    @Before
+    @BeforeEach
     public void testSetup() {
         session1 = ILttngSession.createSession(null, getDomain());
         session2 = ILttngSession.createSession(null, getDomain());
@@ -73,7 +73,7 @@ public abstract class MultiSessionITBase {
     /**
      * Base test teardown
      */
-    @After
+    @AfterEach
     public void testTeardown() {
         session1.close();
         session2.close();

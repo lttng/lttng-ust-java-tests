@@ -45,8 +45,8 @@
     </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
       <!-- Special case here, we ship abstract test classes in the jar, so we
            need the JUnit dependency all the time. -->
       <scope>compile</scope>

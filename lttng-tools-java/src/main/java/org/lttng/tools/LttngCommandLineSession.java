@@ -143,6 +143,7 @@ class LttngCommandLineSession implements ILttngSession {
                 .map(e -> e.trim())
                 .filter(e -> e.startsWith("- "))
                 .map(e -> e.substring(2))
+                .filter(e -> !e.startsWith("org.junit"))
                 .collect(Collectors.toList());
     }
 

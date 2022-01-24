@@ -19,18 +19,15 @@
 package org.lttng.ust.agent.integration.events;
 
 import java.io.IOException;
-import java.util.Map;
 
-import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.ILttngHandler;
-import org.lttng.ust.agent.log4j2.LttngLogAppender;
 import org.lttng.ust.agent.utils.Log4j2TestContext;
 import org.lttng.ust.agent.utils.Log4j2TestUtils;
 
@@ -55,7 +52,7 @@ public class Log4j2EnabledEventsIT extends EnabledEventsITBase {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void log4j2ClassSetup() {
         Log4j2TestUtils.testClassSetup();
     }
@@ -63,7 +60,7 @@ public class Log4j2EnabledEventsIT extends EnabledEventsITBase {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void log4j2ClassCleanup() {
         Log4j2TestUtils.testClassCleanup();
     }
@@ -75,7 +72,7 @@ public class Log4j2EnabledEventsIT extends EnabledEventsITBase {
      * @throws IOException
      */
     @SuppressWarnings("resource")
-    @Before
+    @BeforeEach
     public void log4j2Setup() throws SecurityException, IOException {
 
         testContext = new Log4j2TestContext("log4j2.Log4j2EnabledEventsIT.xml");
@@ -95,7 +92,7 @@ public class Log4j2EnabledEventsIT extends EnabledEventsITBase {
     /**
      * Test teardown
      */
-    @After
+    @AfterEach
     public void log4j2Teardown() {
         loggerA = null;
         loggerB = null;

@@ -20,8 +20,8 @@ package org.lttng.ust.agent.integration.filter;
 
 import java.io.IOException;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.lttng.tools.ILttngSession;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.jul.LttngLogHandler;
@@ -38,7 +38,7 @@ public class JulFilterListenerIT extends FilterListenerITBase {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void julClassSetup() {
         JulTestUtils.testClassSetup();
     }
@@ -46,7 +46,7 @@ public class JulFilterListenerIT extends FilterListenerITBase {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void julClassCleanup() {
         JulTestUtils.testClassCleanup();
     }

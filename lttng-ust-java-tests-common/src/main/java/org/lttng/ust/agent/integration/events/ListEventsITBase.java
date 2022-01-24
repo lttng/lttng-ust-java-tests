@@ -18,21 +18,24 @@
 
 package org.lttng.ust.agent.integration.events;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.lttng.tools.ILttngSession;
+import org.lttng.ust.agent.utils.TestPrintExtension;
 
 /**
  * Base class for the list events command tests
  */
+@ExtendWith(TestPrintExtension.class)
 public abstract class ListEventsITBase {
 
     protected static final String LOGGER_NAME_1 = "org.lttng.somecomponent";
@@ -44,7 +47,7 @@ public abstract class ListEventsITBase {
     /**
      * Common test setup
      */
-    @Before
+    @BeforeEach
     public void testSetup() {
         session = ILttngSession.createSession(null, getDomain());
     }
@@ -52,7 +55,7 @@ public abstract class ListEventsITBase {
     /**
      * Common test teardown
      */
-    @After
+    @AfterEach
     public void testTeardown() {
         session.close();
     }

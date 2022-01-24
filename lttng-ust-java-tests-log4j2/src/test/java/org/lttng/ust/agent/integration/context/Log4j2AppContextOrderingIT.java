@@ -20,9 +20,9 @@ package org.lttng.ust.agent.integration.context;
 
 
 import org.apache.logging.log4j.core.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.utils.Log4j2TestContext;
@@ -39,7 +39,7 @@ public class Log4j2AppContextOrderingIT extends AppContextOrderingITBase {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void log4j2ClassSetup() {
         Log4j2TestUtils.testClassSetup();
     }
@@ -47,7 +47,7 @@ public class Log4j2AppContextOrderingIT extends AppContextOrderingITBase {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void log4j2ClassCleanup() {
         Log4j2TestUtils.testClassCleanup();
     }
@@ -55,7 +55,7 @@ public class Log4j2AppContextOrderingIT extends AppContextOrderingITBase {
     /**
      * Test teardown
      */
-    @After
+    @AfterEach
     public void log4j2Teardown() {
         logger = null;
         logHandler = null;
@@ -68,6 +68,7 @@ public class Log4j2AppContextOrderingIT extends AppContextOrderingITBase {
         return Domain.LOG4J;
     }
 
+    @SuppressWarnings("resource")
     @Override
     protected void registerAgent() {
         testContext = new Log4j2TestContext("log4j2.Log4j2AppContextOrderingIT.xml");

@@ -18,16 +18,16 @@
 
 package org.lttng.ust.agent.integration.context;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
@@ -42,7 +42,7 @@ public class Log4jAppContextOrderingIT extends AppContextOrderingITBase {
     /**
      * Class setup
      */
-    @BeforeClass
+    @BeforeAll
     public static void log4jClassSetup() {
         Log4jTestUtils.testClassSetup();
     }
@@ -50,7 +50,7 @@ public class Log4jAppContextOrderingIT extends AppContextOrderingITBase {
     /**
      * Class cleanup
      */
-    @AfterClass
+    @AfterAll
     public static void log4jClassCleanup() {
         Log4jTestUtils.testClassCleanup();
     }
@@ -58,7 +58,7 @@ public class Log4jAppContextOrderingIT extends AppContextOrderingITBase {
     /**
      * Test teardown
      */
-    @After
+    @AfterEach
     public void log4jTeardown() {
         logger.removeAppender((Appender) logHandler);
         logger = null;
