@@ -98,6 +98,20 @@ the first test set that is empty. See [2] for more info.
 [1] http://maven.apache.org/surefire/maven-failsafe-plugin/index.html
 [2] http://maven.apache.org/surefire/maven-failsafe-plugin/examples/single-test.html
 
+Running tests by tags
+---------------------
+
+Tests can also be filtered by Junit tags or tag expressions [1], for example to
+run only the Log4 1.x agent tests:
+
+    mvn clean verify -Dgroups='agent:log4j'
+
+Or to exclude the tests of the Log4j2 domain:
+
+   mvn clean verify -Dgroups='!domain:log4j2'
+
+[1] https://junit.org/junit5/docs/current/user-guide/#running-tests-tags
+
 Debugging a test
 ----------------------
 

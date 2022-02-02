@@ -58,9 +58,18 @@ public abstract class FilterListenerITBase {
     private TestFilterListener listener;
     private ILttngHandler handler;
 
+    protected EventRuleFactory eventRuleFactory;
+
     protected abstract ILttngSession.Domain getSessionDomain();
     protected abstract ILttngHandler getLogHandler() throws SecurityException, IOException;
     protected abstract ILogLevelStrings getLogLevelStrings();
+
+    protected EventRuleFactory getEventRuleFactory() {
+        if (eventRuleFactory == null) {
+            eventRuleFactory = new EventRuleFactory(getSessionDomain());
+        }
+        return eventRuleFactory;
+    }
 
     /**
      * Test setup
@@ -104,7 +113,7 @@ public abstract class FilterListenerITBase {
     @Test
     public void testOneRule() {
         Set<EventRule> rules = Collections.singleton(
-                EventRuleFactory.createRule(EVENT_NAME_A));
+                getEventRuleFactory().createRule(EVENT_NAME_A));
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
 
@@ -118,9 +127,9 @@ public abstract class FilterListenerITBase {
     @Test
     public void testManyRules() {
         Set<EventRule> rules = Stream.of(
-                    EventRuleFactory.createRule(EVENT_NAME_A),
-                    EventRuleFactory.createRule(EVENT_NAME_B),
-                    EventRuleFactory.createRule(EVENT_NAME_C))
+                getEventRuleFactory().createRule(EVENT_NAME_A),
+                getEventRuleFactory().createRule(EVENT_NAME_B),
+                getEventRuleFactory().createRule(EVENT_NAME_C))
                 .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
@@ -137,7 +146,7 @@ public abstract class FilterListenerITBase {
     @Test
     public void testManyRulesDisableSome() {
         Set<EventRule> rules = Collections.singleton(
-                EventRuleFactory.createRule(EVENT_NAME_A));
+                getEventRuleFactory().createRule(EVENT_NAME_A));
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, null);
@@ -179,9 +188,9 @@ public abstract class FilterListenerITBase {
         LogLevelSelector lls3 = new LogLevelSelector(getLogLevelStrings().infoInt(), LogLevelType.LTTNG_EVENT_LOGLEVEL_RANGE);
 
         Set<EventRule> rules = Stream.of(
-                    EventRuleFactory.createRule(EVENT_NAME_A, lls1),
-                    EventRuleFactory.createRule(EVENT_NAME_A, lls2),
-                    EventRuleFactory.createRule(EVENT_NAME_A, lls3))
+                getEventRuleFactory().createRule(EVENT_NAME_A, lls1),
+                getEventRuleFactory().createRule(EVENT_NAME_A, lls2),
+                getEventRuleFactory().createRule(EVENT_NAME_A, lls3))
                 .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, getLogLevelStrings().warningName(), false, null);
@@ -201,9 +210,9 @@ public abstract class FilterListenerITBase {
         String filterB = "filterB";
 
         Set<EventRule> rules = Stream.of(
-                    EventRuleFactory.createRule(EVENT_NAME_A),
-                    EventRuleFactory.createRule(EVENT_NAME_B, EventRuleFactory.LOG_LEVEL_UNSPECIFIED, filterA),
-                    EventRuleFactory.createRule(EVENT_NAME_C, EventRuleFactory.LOG_LEVEL_UNSPECIFIED, filterB))
+                getEventRuleFactory().createRule(EVENT_NAME_A),
+                getEventRuleFactory().createRule(EVENT_NAME_B, getEventRuleFactory().LOG_LEVEL_UNSPECIFIED, filterA),
+                getEventRuleFactory().createRule(EVENT_NAME_C, getEventRuleFactory().LOG_LEVEL_UNSPECIFIED, filterB))
                 .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
@@ -221,8 +230,8 @@ public abstract class FilterListenerITBase {
     @Test
     public void testDetachingListener() {
         Set<EventRule> rules = Stream.of(
-                        EventRuleFactory.createRule(EVENT_NAME_A),
-                        EventRuleFactory.createRule(EVENT_NAME_B))
+                getEventRuleFactory().createRule(EVENT_NAME_A),
+                getEventRuleFactory().createRule(EVENT_NAME_B))
                 .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
@@ -247,8 +256,8 @@ public abstract class FilterListenerITBase {
         fcn.registerListener(listener3);
 
         Set<EventRule> rules = Stream.of(
-                EventRuleFactory.createRule(EVENT_NAME_A),
-                EventRuleFactory.createRule(EVENT_NAME_B))
+                getEventRuleFactory().createRule(EVENT_NAME_A),
+                getEventRuleFactory().createRule(EVENT_NAME_B))
             .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
@@ -284,8 +293,8 @@ public abstract class FilterListenerITBase {
         fcn.unregisterListener(listener2);
 
         Set<EventRule> rules = Stream.of(
-                EventRuleFactory.createRule(EVENT_NAME_A),
-                EventRuleFactory.createRule(EVENT_NAME_B))
+                getEventRuleFactory().createRule(EVENT_NAME_A),
+                getEventRuleFactory().createRule(EVENT_NAME_B))
             .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);
@@ -311,12 +320,12 @@ public abstract class FilterListenerITBase {
         TestFilterListener listener2 = new TestFilterListener();
 
         Set<EventRule> rules1 = Stream.of(
-                EventRuleFactory.createRule(EVENT_NAME_A),
-                EventRuleFactory.createRule(EVENT_NAME_B))
+                getEventRuleFactory().createRule(EVENT_NAME_A),
+                getEventRuleFactory().createRule(EVENT_NAME_B))
             .collect(Collectors.toSet());
         Set<EventRule> rules2 = Stream.of(
-                EventRuleFactory.createRule(EVENT_NAME_A),
-                EventRuleFactory.createRule(EVENT_NAME_C))
+                getEventRuleFactory().createRule(EVENT_NAME_A),
+                getEventRuleFactory().createRule(EVENT_NAME_C))
             .collect(Collectors.toSet());
 
         session.enableEvent(EVENT_NAME_A, null, false, null);

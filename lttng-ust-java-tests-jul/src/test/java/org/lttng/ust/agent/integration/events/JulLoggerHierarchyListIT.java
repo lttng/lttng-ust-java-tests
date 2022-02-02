@@ -27,6 +27,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.JulTestUtils;
@@ -36,6 +37,8 @@ import org.lttng.ust.agent.utils.JulTestUtils;
  *
  * @author Alexandre Montplaisir
  */
+@Tag("agent:jul")
+@Tag("domain:jul")
 public class JulLoggerHierarchyListIT extends LoggerHierachyListITBase {
 
     private Logger parentLogger;

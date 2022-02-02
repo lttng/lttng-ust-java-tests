@@ -20,12 +20,16 @@ package org.lttng.ust.agent.benchmarks.jul.handler.builtin;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 
 /**
  * Benchmark that will avoid creating a Logger entirely, to benchmark just the
  * bare worker.
  */
+@Tag("agent:jul")
+@Tag("domain:jul")
+@Tag("benchmark")
 public class NoLoggerBenchmark extends JulHandlerBenchmarkBase {
 
     /**

@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.LTTngAgent;
@@ -35,6 +36,9 @@ import org.lttng.ust.agent.jul.LttngLogHandler;
  * Benchmark for the LTTng-UST handler, using the legacy API. Tracing is
  * enabled in the tracing session.
  */
+@Tag("agent:jul")
+@Tag("domain:jul")
+@Tag("benchmark")
 @SuppressWarnings("deprecation")
 public class OldLttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchmarkBase {
 

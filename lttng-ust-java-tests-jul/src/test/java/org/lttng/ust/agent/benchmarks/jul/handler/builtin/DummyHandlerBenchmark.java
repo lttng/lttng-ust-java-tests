@@ -22,12 +22,16 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 
 /**
  * Test suite of using a "dummy" handler, which means a handler that does
  * exactly nothing.
  */
+@Tag("agent:jul")
+@Tag("domain:jul")
+@Tag("benchmark")
 public class DummyHandlerBenchmark extends JulHandlerBenchmarkBase {
 
 	/**

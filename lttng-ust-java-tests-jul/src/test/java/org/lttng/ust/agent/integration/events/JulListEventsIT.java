@@ -27,6 +27,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.lttng.tools.ILttngSession;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.JulTestUtils;
@@ -34,6 +35,8 @@ import org.lttng.ust.agent.utils.JulTestUtils;
 /**
  * Test suite for the list events command for the JUL domain
  */
+@Tag("agent:jul")
+@Tag("domain:jul")
 public class JulListEventsIT extends ListEventsITBase {
 
     private Logger[] loggers;

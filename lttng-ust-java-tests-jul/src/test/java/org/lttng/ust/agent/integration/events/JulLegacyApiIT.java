@@ -35,6 +35,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lttng.tools.ILttngSession;
@@ -49,6 +50,8 @@ import org.lttng.ust.agent.utils.TestPrintExtension;
  */
 @ExtendWith(TestPrintExtension.class)
 @SuppressWarnings("deprecation")
+@Tag("agent:jul")
+@Tag("domain:jul")
 public class JulLegacyApiIT {
 
     private static final Domain DOMAIN = Domain.JUL;

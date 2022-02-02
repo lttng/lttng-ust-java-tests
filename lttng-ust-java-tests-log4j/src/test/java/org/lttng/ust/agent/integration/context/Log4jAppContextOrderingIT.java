@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
 import org.lttng.ust.agent.utils.Log4jTestUtils;
@@ -35,6 +36,8 @@ import org.lttng.ust.agent.utils.Log4jTestUtils;
 /**
  * Implementation of {@link AppContextOrderingITBase} for the log4j API.
  */
+@Tag("agent:log4j")
+@Tag("domain:log4j")
 public class Log4jAppContextOrderingIT extends AppContextOrderingITBase {
 
     private Logger logger;

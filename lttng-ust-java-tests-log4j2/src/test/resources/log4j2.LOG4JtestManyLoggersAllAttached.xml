@@ -4,9 +4,9 @@
         <Console name="Console" target="SYSTEM_OUT">
           <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-        <Lttng name="Lttng1"/>
-        <Lttng name="Lttng2"/>
-        <Lttng name="Lttng3"/>
+        <Lttng name="Lttng1" domain="LOG4J"/>
+        <Lttng name="Lttng2" domain="LOG4J"/>
+        <Lttng name="Lttng3" domain="LOG4J"/>
     </Appenders>
     <Loggers>
         <Logger name="org.lttng.somecomponent">

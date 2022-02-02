@@ -26,11 +26,15 @@ import java.util.logging.SimpleFormatter;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 
 /**
  * Test class using a {@link FileHandler}, which a {@link SimpleFormatter}.
  */
+@Tag("agent:jul")
+@Tag("domain:jul")
+@Tag("benchmark")
 public class FileHandlerBenchmark extends JulHandlerBenchmarkBase {
 
     private Path outputFile;

@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.JulTestUtils;
@@ -34,6 +35,8 @@ import org.lttng.ust.agent.utils.JulTestUtils;
 /**
  * Implementation of {@link FilterListenerOrderingITBase} for the JUL API.
  */
+@Tag("agent:jul")
+@Tag("domain:jul")
 public class JulFilterListenerOrderingIT extends FilterListenerOrderingITBase {
 
     private Logger logger;

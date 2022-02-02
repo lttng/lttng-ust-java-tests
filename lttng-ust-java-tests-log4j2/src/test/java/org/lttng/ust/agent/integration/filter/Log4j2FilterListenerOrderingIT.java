@@ -18,48 +18,19 @@
 
 package org.lttng.ust.agent.integration.filter;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.lttng.tools.ILttngSession.Domain;
-import org.lttng.ust.agent.utils.Log4j2TestContext;
-import org.lttng.ust.agent.utils.Log4j2TestUtils;
+
 
 /**
  * Implementation of {@link FilterListenerOrderingITBase} for the log4j API.
  */
-public class Log4j2FilterListenerOrderingIT extends FilterListenerOrderingITBase {
-
-    private Log4j2TestContext testContext;
-
-    /**
-     * Class setup
-     */
-    @BeforeAll
-    public static void log4j2ClassSetup() {
-        Log4j2TestUtils.testClassSetup();
-    }
-
-    /**
-     * Class cleanup
-     */
-    @AfterAll
-    public static void log4j2ClassCleanup() {
-        Log4j2TestUtils.testClassCleanup();
-    }
+@Tag("agent:log4j2")
+@Tag("domain:log4j2")
+public class Log4j2FilterListenerOrderingIT extends Log4j2FilterListenerOrderingITBase {
 
     @Override
     protected Domain getDomain() {
-        return Domain.LOG4J;
-    }
-
-    @Override
-    protected void registerAgent() {
-        testContext = new Log4j2TestContext("log4j2.Log4j2FilterListenerOrderingIT.xml");
-        testContext.beforeTest();
-    }
-
-    @Override
-    protected void deregisterAgent() {
-        testContext.afterTest();
+        return Domain.LOG4J2;
     }
 }

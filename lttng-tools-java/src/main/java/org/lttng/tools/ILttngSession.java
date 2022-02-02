@@ -32,13 +32,18 @@ public interface ILttngSession extends AutoCloseable {
      */
     enum Domain {
         /** The JUL (java.util.logging) domain */
-        JUL("-j"), /** The log4j (org.apache.log4j) domain */
-        LOG4J("-l");
+        JUL("--jul", ">=", Integer.MIN_VALUE), /** The log4j (org.apache.log4j) domain */
+        LOG4J("--log4j", ">=", Integer.MIN_VALUE),
+        LOG4J2("--log4j2", "<=", Integer.MAX_VALUE);
 
         private final String flag;
+        private final String rangeOperator;
+        private final int levelAllValue;
 
-        private Domain(String flag) {
+        private Domain(String flag, String rangeOperator, int levelAllValue) {
             this.flag = flag;
+            this.rangeOperator = rangeOperator;
+            this.levelAllValue = levelAllValue;
         }
 
         /**
@@ -47,6 +52,14 @@ public interface ILttngSession extends AutoCloseable {
          */
         public String flag() {
             return flag;
+        }
+
+        public String rangeOperator() {
+            return rangeOperator;
+        }
+
+        public int levelAllValue() {
+            return levelAllValue;
         }
     }
 

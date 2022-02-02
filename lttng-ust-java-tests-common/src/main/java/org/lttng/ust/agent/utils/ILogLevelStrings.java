@@ -98,4 +98,29 @@ public interface ILogLevelStrings {
         }
     };
 
+    /**
+     * Values for log4j 2.x
+     */
+    ILogLevelStrings LOG4J2_LOGLEVEL_STRINGS = new ILogLevelStrings() {
+
+        @Override
+        public String warningName() {
+            return "warn";
+        }
+
+        @Override
+        public int warningInt() {
+            return 300;
+        }
+
+        @Override
+        public String infoName() {
+            return "info";
+        }
+
+        @Override
+        public int infoInt() {
+            return 400;
+        }
+    };
 }

@@ -18,70 +18,19 @@
 
 package org.lttng.ust.agent.integration.context;
 
-
-import org.apache.logging.log4j.core.Logger;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.lttng.tools.ILttngSession.Domain;
-import org.lttng.ust.agent.ILttngHandler;
-import org.lttng.ust.agent.utils.Log4j2TestContext;
-import org.lttng.ust.agent.utils.Log4j2TestUtils;
+
 
 /**
  * Implementation of {@link AppContextOrderingITBase} for the log4j API.
  */
-public class Log4j2AppContextOrderingIT extends AppContextOrderingITBase {
-
-    private Log4j2TestContext testContext;
-    private Logger logger;
-
-    /**
-     * Class setup
-     */
-    @BeforeAll
-    public static void log4j2ClassSetup() {
-        Log4j2TestUtils.testClassSetup();
-    }
-
-    /**
-     * Class cleanup
-     */
-    @AfterAll
-    public static void log4j2ClassCleanup() {
-        Log4j2TestUtils.testClassCleanup();
-    }
-
-    /**
-     * Test teardown
-     */
-    @AfterEach
-    public void log4j2Teardown() {
-        logger = null;
-        logHandler = null;
-
-        testContext.afterTest();
-    }
+@Tag("agent:log4j2")
+@Tag("domain:log4j2")
+public class Log4j2AppContextOrderingIT extends Log4j2AppContextOrderingITBase {
 
     @Override
     protected Domain getDomain() {
-        return Domain.LOG4J;
-    }
-
-    @SuppressWarnings("resource")
-    @Override
-    protected void registerAgent() {
-        testContext = new Log4j2TestContext("log4j2.Log4j2AppContextOrderingIT.xml");
-
-        testContext.beforeTest();
-
-        logger = testContext.getLoggerContext().getLogger(EVENT_NAME);
-
-        logHandler = (ILttngHandler) logger.getAppenders().get("Lttng");
-    }
-
-    @Override
-    protected void sendEventsToLoggers() {
-        Log4j2TestUtils.send10Events(logger);
+        return Domain.LOG4J2;
     }
 }

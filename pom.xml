@@ -74,6 +74,16 @@
           </configuration>
         </plugin>
 
+	<!-- Set Surefire to the same version as Failsafe even if we don't use
+	     it. Otherwise, Maven will invoke a random default version and if
+	     we specify a user property used by both plugins on the command
+	     line things could go wrong. -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.0.0-M5</version>
+        </plugin>
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
@@ -165,7 +175,6 @@
         <groupId>org.lttng.ust</groupId>
         <artifactId>lttng-ust-java-tests-common</artifactId>
         <version>1.1.0-SNAPSHOT</version>
-        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>

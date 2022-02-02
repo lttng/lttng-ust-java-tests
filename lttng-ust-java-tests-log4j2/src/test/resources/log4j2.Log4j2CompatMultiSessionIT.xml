@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="Log4j2CompatMultiSessionIT" status="debug">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+          <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <Lttng name="LttngA" domain="LOG4J"/>
+        <Lttng name="LttngB" domain="LOG4J"/>
+        <Lttng name="LttngC" domain="LOG4J"/>
+        <Lttng name="LttngD" domain="LOG4J"/>
+    </Appenders>
+    <Loggers>
+        <Logger name="EventA">
+          <AppenderRef ref="Console"/>
+          <AppenderRef ref="LttngA"/>
+        </Logger>
+        <Logger name="EventAB">
+          <AppenderRef ref="Console"/>
+          <AppenderRef ref="LttngB"/>
+        </Logger>
+        <Logger name="EventABC">
+          <AppenderRef ref="Console"/>
+          <AppenderRef ref="LttngC"/>
+        </Logger>
+        <Logger name="EventABCDÉ">
+          <AppenderRef ref="Console"/>
+          <AppenderRef ref="LttngD"/>
+        </Logger>
+        <Root level="all"/>
+    </Loggers>
+</Configuration>

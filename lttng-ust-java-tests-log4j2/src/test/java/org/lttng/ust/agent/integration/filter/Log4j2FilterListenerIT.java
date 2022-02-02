@@ -18,52 +18,25 @@
 
 package org.lttng.ust.agent.integration.filter;
 
-import java.io.IOException;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.lttng.tools.ILttngSession;
-import org.lttng.ust.agent.ILttngHandler;
-import org.lttng.ust.agent.log4j2.LttngLogAppender;
 import org.lttng.ust.agent.utils.ILogLevelStrings;
-import org.lttng.ust.agent.utils.Log4j2TestUtils;
+
 
 /**
  * Filter notifications tests using the log4j logging API.
- *
- * @author Alexandre Montplaisir
  */
-public class Log4j2FilterListenerIT extends FilterListenerITBase {
-
-    /**
-     * Class setup
-     */
-    @BeforeAll
-    public static void log4j2ClassSetup() {
-        Log4j2TestUtils.testClassSetup();
-    }
-
-    /**
-     * Class cleanup
-     */
-    @AfterAll
-    public static void log4j2ClassCleanup() {
-        Log4j2TestUtils.testClassCleanup();
-    }
+@Tag("agent:log4j2")
+@Tag("domain:log4j2")
+public class Log4j2FilterListenerIT extends Log4j2FilterListenerITBase {
 
     @Override
     protected ILttngSession.Domain getSessionDomain() {
-        return ILttngSession.Domain.LOG4J;
-    }
-
-    @Override
-    protected ILttngHandler getLogHandler() throws SecurityException, IOException {
-        return LttngLogAppender.createAppender("Log4j2FilterListenerIT", null, null);
+        return ILttngSession.Domain.LOG4J2;
     }
 
     @Override
     protected ILogLevelStrings getLogLevelStrings() {
-        return ILogLevelStrings.LOG4J_LOGLEVEL_STRINGS;
+        return ILogLevelStrings.LOG4J2_LOGLEVEL_STRINGS;
     }
-
 }

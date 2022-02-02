@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lttng.ust.agent.utils.TestPrintExtension;
@@ -35,6 +36,9 @@ import org.lttng.ust.agent.utils.TestPrintExtension;
  * test different types of log handlers.
  */
 @ExtendWith(TestPrintExtension.class)
+@Tag("agent:jul")
+@Tag("domain:jul")
+@Tag("benchmark")
 public abstract class JulHandlerBenchmarkBase {
 
     // ------------------------------------------------------------------------

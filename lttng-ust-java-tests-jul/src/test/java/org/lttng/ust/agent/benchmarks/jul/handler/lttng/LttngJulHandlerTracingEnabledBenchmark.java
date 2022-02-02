@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.lttng.tools.ILttngSession;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
@@ -32,6 +33,9 @@ import org.lttng.ust.agent.jul.LttngLogHandler;
 /**
  * Test the LTTng-JUL handler, with it actually sending events to the tracer.
  */
+@Tag("agent:jul")
+@Tag("domain:jul")
+@Tag("benchmark")
 public class LttngJulHandlerTracingEnabledBenchmark extends JulHandlerBenchmarkBase {
 
     private ILttngSession session;

@@ -27,6 +27,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.lttng.tools.ILttngSession.Domain;
 import org.lttng.ust.agent.jul.LttngLogHandler;
 import org.lttng.ust.agent.utils.JulTestUtils;
@@ -34,6 +35,8 @@ import org.lttng.ust.agent.utils.JulTestUtils;
 /**
  * Enabled app contexts test for the LTTng-UST JUL log handler.
  */
+@Tag("agent:jul")
+@Tag("domain:jul")
 public class JulAppContextIT extends AppContextITBase {
 
     private static final Domain DOMAIN = Domain.JUL;

@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.lttng.tools.ILttngSession;
 import org.lttng.ust.agent.ILttngHandler;
 import org.lttng.ust.agent.log4j.LttngLogAppender;
@@ -33,6 +34,8 @@ import org.lttng.ust.agent.utils.Log4jTestUtils;
  *
  * @author Alexandre Montplaisir
  */
+@Tag("agent:log4j")
+@Tag("domain:log4j")
 public class Log4jFilterListenerIT extends FilterListenerITBase {
 
     /**
@@ -65,5 +68,4 @@ public class Log4jFilterListenerIT extends FilterListenerITBase {
     protected ILogLevelStrings getLogLevelStrings() {
         return ILogLevelStrings.LOG4J_LOGLEVEL_STRINGS;
     }
-
 }

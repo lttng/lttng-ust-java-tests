@@ -18,12 +18,16 @@
 
 package org.lttng.ust.agent.benchmarks.jul.handler.builtin;
 
+import org.junit.jupiter.api.Tag;
 import org.lttng.ust.agent.benchmarks.jul.handler.JulHandlerBenchmarkBase;
 
 /**
  * Benchmark that will attach no {@link java.util.logging.Handler} to the
  * {@link java.util.logging.Logger} object.
  */
+@Tag("agent:jul")
+@Tag("domain:jul")
+@Tag("benchmark")
 public class NoHandlerBenchmark extends JulHandlerBenchmarkBase {
 
 	/* Do not setup any handler */

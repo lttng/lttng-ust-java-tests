@@ -74,6 +74,8 @@ public abstract class FilterListenerOrderingITBase {
     protected static final String EVENT_NAME_A = "EventA";
     private static final String EVENT_NAME_B = "EventB";
 
+    protected EventRuleFactory eventRuleFactory;
+
     private ILttngSession session;
     private TestFilterListener listener;
 
@@ -116,6 +118,13 @@ public abstract class FilterListenerOrderingITBase {
         session = null;
     }
 
+    protected EventRuleFactory getEventRuleFactory() {
+        if (eventRuleFactory == null) {
+            eventRuleFactory = new EventRuleFactory(getDomain());
+        }
+        return eventRuleFactory;
+    }
+
     // ------------------------------------------------------------------------
     // Test methods
     // ------------------------------------------------------------------------
@@ -126,8 +135,8 @@ public abstract class FilterListenerOrderingITBase {
      */
     private void checkOngoingConditions() {
         Set<EventRule> exptectedRules = Stream.of(
-                EventRuleFactory.createRule(EVENT_NAME_A),
-                EventRuleFactory.createRule(EVENT_NAME_B))
+                getEventRuleFactory().createRule(EVENT_NAME_A),
+                getEventRuleFactory().createRule(EVENT_NAME_B))
                 .collect(Collectors.toSet());
 
         assertEquals(2, listener.getNbNotifications());

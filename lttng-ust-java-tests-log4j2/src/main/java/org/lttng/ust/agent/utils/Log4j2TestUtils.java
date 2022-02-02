@@ -40,11 +40,12 @@ public final class Log4j2TestUtils {
 
     /**
      * Setup method common to most log4j tests. To be called in a @BeforeClass.
+     * @param domain the tracing domain to operate on
      */
-    public static void testClassSetup() {
+    public static void testClassSetup(Domain domain) {
         /* Make sure we can find the JNI library and lttng-tools */
-        checkForLog4jLibrary();
-        assertTrue(LttngUtils.checkForLttngTools(Domain.LOG4J), "lttng-tools is not working properly.");
+        checkForLog4jLibrary(domain);
+        assertTrue(LttngUtils.checkForLttngTools(domain), "lttng-tools is not working properly.");
 
         LttngToolsHelper.destroyAllSessions();
     }
@@ -60,11 +61,11 @@ public final class Log4j2TestUtils {
      * Check the the Log4j native library is available, effectively allowing
      * LTTng Log4j appenders to be used.
      */
-    private static void checkForLog4jLibrary() {
+    private static void checkForLog4jLibrary(Domain domain) {
         try {
-            LttngLogAppender testAppender = LttngLogAppender.createAppender("checkForLttngTools", null, null);
+            LttngLogAppender testAppender = LttngLogAppender.createAppender("checkForLttngTools", domain.toString(), null, null);
             testAppender.close();
-        } catch (SecurityException | IOException e) {
+        } catch (SecurityException e) {
             fail(e.getMessage());
         }
     }

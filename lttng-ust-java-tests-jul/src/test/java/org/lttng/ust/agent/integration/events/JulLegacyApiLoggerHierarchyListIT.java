@@ -31,6 +31,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.lttng.tools.ILttngSession.Domain;
@@ -45,6 +46,8 @@ import org.lttng.ust.agent.utils.JulTestUtils;
  */
 @SuppressWarnings("deprecation")
 //@RunWith(Parameterized.class)
+@Tag("agent:jul")
+@Tag("domain:jul")
 public class JulLegacyApiLoggerHierarchyListIT extends LoggerHierachyListITBase {
 
     private LTTngAgent agent;

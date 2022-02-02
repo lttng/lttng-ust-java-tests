@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="ManyLoggersSomeAttached" status="debug">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+          <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <Lttng name="Lttng1" domain="LOG4J"/>
+        <Lttng name="Lttng2" domain="LOG4J"/>
+        <Lttng name="Lttng3" domain="LOG4J"/>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.lttng.somecomponent">
+          <AppenderRef ref="Console"/>
+          <AppenderRef ref="Lttng1"/>
+        </Logger>
+        <Logger name="org.lttng.mycomponent">
+          <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.lttng.myothercomponent-àéç">
+          <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="all"/>
+    </Loggers>
+</Configuration>
