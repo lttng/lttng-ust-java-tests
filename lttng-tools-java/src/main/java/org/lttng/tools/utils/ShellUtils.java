@@ -98,7 +98,7 @@ public final class ShellUtils {
             Path tempFile = Files.createTempFile("test-output", null);
 
             ProcessBuilder builder = new ProcessBuilder(command);
-            builder.redirectErrorStream(true);
+            builder.redirectErrorStream(false);
             builder.redirectOutput(Redirect.to(tempFile.toFile()));
 
             Process p = builder.start();
