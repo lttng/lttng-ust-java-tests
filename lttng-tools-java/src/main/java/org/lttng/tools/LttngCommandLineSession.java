@@ -144,6 +144,7 @@ class LttngCommandLineSession implements ILttngSession {
                 .filter(e -> e.startsWith("- "))
                 .map(e -> e.substring(2))
                 .filter(e -> !e.startsWith("org.junit"))
+                .filter(e -> !e.startsWith("java.lang"))
                 .collect(Collectors.toList());
     }
 
