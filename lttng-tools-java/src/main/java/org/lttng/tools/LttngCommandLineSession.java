@@ -20,13 +20,18 @@ package org.lttng.tools;
 
 import static org.lttng.tools.utils.ShellUtils.executeCommand;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
 import org.lttng.tools.utils.ShellUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 /**
  * Implementation of {@link ILttngSession} which uses the command-line "lttng"
@@ -138,14 +143,29 @@ class LttngCommandLineSession implements ILttngSession {
 
     @Override
     public List<String> listEvents() {
-        List<String> output = ShellUtils.getOutputFromCommand(true, Arrays.asList("lttng", "list", domain.flag()));
-        return output.stream()
-                .map(e -> e.trim())
-                .filter(e -> e.startsWith("- "))
-                .map(e -> e.substring(2))
-                .filter(e -> !e.startsWith("org.junit"))
-                .filter(e -> !e.startsWith("java.lang"))
-                .collect(Collectors.toList());
+        List<String> output = ShellUtils.getOutputFromCommand(true, Arrays.asList("lttng", "--mi=xml", "list", domain.flag()));
+        ArrayList<String> results = new ArrayList<String>();
+        try {
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = db.parse(new InputSource(new StringReader(String.join("\n", output))));
+            NodeList events = doc.getElementsByTagName("event");
+            for (int i = 0; i < events.getLength(); i++) {
+                NodeList children = events.item(i).getChildNodes();
+                for (int c = 0; c < children.getLength(); c++) {
+                    if (children.item(c).getNodeName() == "name") {
+                        results.add(children.item(c).getTextContent());
+                        break;
+                    }
+                }
+            }
+        } catch(Exception e) {
+            System.out.println(String.format("Exception while listing events: %s", e.getMessage()));
+            return results;
+        }
+
+        results.removeIf(e -> e != null && e.startsWith("org.junit"));
+        results.removeIf(e -> e != null && e.startsWith("java.lang"));
+        return results;
     }
 
     @Override
