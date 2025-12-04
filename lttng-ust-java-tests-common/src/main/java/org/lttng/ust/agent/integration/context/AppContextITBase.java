@@ -102,10 +102,7 @@ public abstract class AppContextITBase {
      * trace output.
      */
     private static void testContextPresentInTrace(List<String> traceOutput, String retrieverName, String contextName, String contextValue) {
-        String traceRetrieverName = convertToNameInTrace(retrieverName);
-        String traceContextName = convertToNameInTrace(contextName);
-
-        String fullString = "_app_" + traceRetrieverName + "_" + traceContextName + " = " + contextValue;
+        String fullString = "$app." + retrieverName + ":" + contextName + " = " + contextValue;
         traceOutput.forEach(line -> assertTrue(line.contains(fullString)));
     }
 
@@ -114,19 +111,8 @@ public abstract class AppContextITBase {
      * trace output
      */
     private static void testContextNotPresentInTrace(List<String> traceOutput, String retrieverName, String contextName) {
-        String traceRetrieverName = convertToNameInTrace(retrieverName);
-        String traceContextName = convertToNameInTrace(contextName);
-
-        String fullString = "_app_" + traceRetrieverName + "_" + traceContextName;
+        String fullString = "$app." + retrieverName + ":" + contextName;
         traceOutput.forEach(line -> assertFalse(line.contains(fullString)));
-    }
-
-    /**
-     * LTTng accepts periods in context names, but ends up printing them as
-     * underscores in the trace, so the metadata grammar remains valid.
-     */
-    private static String convertToNameInTrace(String name) {
-        return name.replace('.', '_');
     }
 
     /**
@@ -144,8 +130,8 @@ public abstract class AppContextITBase {
         assertNotNull(output);
         assertFalse(output.isEmpty());
 
-        /* Test that there is no "_app" contexts in the output */
-        output.forEach(line -> assertFalse(line.contains("_app")));
+        /* Test that there is no "$app" contexts in the output */
+        output.forEach(line -> assertFalse(line.contains("$app")));
     }
 
     /**
@@ -166,8 +152,8 @@ public abstract class AppContextITBase {
         assertNotNull(output);
         assertFalse(output.isEmpty());
 
-        /* Test that there is no "_app" contexts in the output */
-        output.forEach(line -> assertFalse(line.contains("_app")));
+        /* Test that there is no "$app" contexts in the output */
+        output.forEach(line -> assertFalse(line.contains("$app")));
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
