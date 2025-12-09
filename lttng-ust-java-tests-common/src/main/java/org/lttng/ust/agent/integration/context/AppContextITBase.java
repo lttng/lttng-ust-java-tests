@@ -560,4 +560,41 @@ public abstract class AppContextITBase {
 
         assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
     }
+
+    // ------------------------------------------------------------------------
+    // CTF 1.8 format test
+    // ------------------------------------------------------------------------
+
+    /**
+     * Test that app context fields use the legacy format when using CTF 1.8.
+     *
+     * CTF 1.8 uses the format: _app_<retriever>_<context>
+     * CTF 2 uses the format: $app.<retriever>:<context>
+     */
+    @Test
+    public void testContextAvailableAndEnabledCtf1() {
+        assertTrue(cim.registerContextInfoRetriever(RETRIEVER_NAME_1, ContextInfoRetrieverStubs.STRING_RETRIEVER));
+
+        try (ILttngSession ctf1Session = ILttngSession.createSession(null, getDomain(), "ctf-1.8")) {
+            assertTrue(ctf1Session.enableAllEvents());
+            assertTrue(ctf1Session.enableAppContext(RETRIEVER_NAME_1, CONTEXT_NAME));
+
+            assertTrue(ctf1Session.start());
+            sendEventsToLoggers();
+            assertTrue(ctf1Session.stop());
+
+            List<String> output = ctf1Session.view();
+            assertNotNull(output);
+            assertFalse(output.isEmpty());
+
+            /* CTF 1.8 format: _app_<retriever>_<context> (periods replaced with underscores) */
+            String ctf1RetrieverName = RETRIEVER_NAME_1.replace('.', '_');
+            String ctf1ContextName = CONTEXT_NAME.replace('.', '_');
+            String expectedString = "_app_" + ctf1RetrieverName + "_" + ctf1ContextName + " = "
+                    + "{ \"" + ContextInfoRetrieverStubs.STRING_VALUE + "\" }";
+            output.forEach(line -> assertTrue(line.contains(expectedString)));
+        }
+
+        assertTrue(cim.unregisterContextInfoRetriever(RETRIEVER_NAME_1));
+    }
 }
