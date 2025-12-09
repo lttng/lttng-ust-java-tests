@@ -78,7 +78,25 @@ public interface ILttngSession extends AutoCloseable {
      * @return The new session object
      */
     static ILttngSession createSession(String sessionName, Domain domain) {
-        return createCommandLineSession(sessionName, domain);
+        return createCommandLineSession(sessionName, domain, null);
+    }
+
+    /**
+     * Create a new LTTng tracing session using the default backend with a
+     * specific trace format.
+     *
+     * @param sessionName
+     *            The name of the session to use. It can be null, in which case
+     *            we will provide a unique random name.
+     * @param domain
+     *            The tracing domain of this session
+     * @param traceFormat
+     *            The trace format to use (e.g., "ctf-1.8"). May be null to use
+     *            the default format.
+     * @return The new session object
+     */
+    static ILttngSession createSession(String sessionName, Domain domain, String traceFormat) {
+        return createCommandLineSession(sessionName, domain, traceFormat);
     }
 
     /**
@@ -90,10 +108,13 @@ public interface ILttngSession extends AutoCloseable {
      *            we will provide a unique random name.
      * @param domain
      *            The tracing domain of this session
+     * @param traceFormat
+     *            The trace format to use (e.g., "ctf-1.8"). May be null to use
+     *            the default format.
      * @return The new session object
      */
-    static ILttngSession createCommandLineSession(String sessionName, Domain domain) {
-        return new LttngCommandLineSession(sessionName, domain);
+    static ILttngSession createCommandLineSession(String sessionName, Domain domain, String traceFormat) {
+        return new LttngCommandLineSession(sessionName, domain, traceFormat);
     }
 
     // ------------------------------------------------------------------------

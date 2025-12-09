@@ -55,8 +55,11 @@ class LttngCommandLineSession implements ILttngSession {
      *            we will provide a unique random name.
      * @param domain
      *            The tracing domain of this session
+     * @param traceFormat
+     *            The trace format to use (e.g., "ctf-1.8"). May be null to use
+     *            the default format.
      */
-    public LttngCommandLineSession(String sessionName, Domain domain) {
+    public LttngCommandLineSession(String sessionName, Domain domain, String traceFormat) {
         if (sessionName != null) {
             this.sessionName = sessionName;
         } else {
@@ -65,7 +68,13 @@ class LttngCommandLineSession implements ILttngSession {
         this.domain = domain;
 
         /* Create the session in LTTng */
-        executeCommand(Arrays.asList("lttng", "create", this.sessionName));
+        List<String> command = new ArrayList<>(Arrays.asList("lttng", "create", this.sessionName));
+
+        if (traceFormat != null) {
+            command.add("--trace-format=" + traceFormat);
+        }
+
+        executeCommand(command);
     }
 
     @Override

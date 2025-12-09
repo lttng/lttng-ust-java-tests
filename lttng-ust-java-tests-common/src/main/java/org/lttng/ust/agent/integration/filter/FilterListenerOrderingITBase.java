@@ -106,7 +106,7 @@ public abstract class FilterListenerOrderingITBase {
     }
 
     private void enableRulesInSession() {
-        session = ILttngSession.createCommandLineSession(null, getDomain());
+        session = ILttngSession.createCommandLineSession(null, getDomain(), null);
         session.enableEvent(EVENT_NAME_A, null, false, null);
         session.enableEvent(EVENT_NAME_B, null, false, null);
     }
